@@ -31,16 +31,17 @@ import handleLogout from '@/actions/auth/logout';
 import { mutate } from 'swr';
 import UserProps from '@/types/user';
 import { useUser } from '@/hooks/useUser';
+import Image from 'next/image';
 
 
 export default function Navbar() {
 
     const [user, setUser] = useState<UserProps | null>(null);
 
-    useEffect(()=>{
+    useEffect(() => {
         const userData: UserProps | null = useUser();
-        if(userData) setUser(userData)
-    },[])
+        if (userData) setUser(userData)
+    }, [])
 
 
     const router = useRouter();
@@ -224,14 +225,24 @@ export default function Navbar() {
                             <DropdownMenu>
                                 <DropdownMenuTrigger asChild>
                                     <Button variant="ghost" className="flex items-center gap-2">
-                                        <div className="w-8 h-8 rounded-full bg-gradient-to-r from-violet-400 to-fuchsia-400 flex items-center justify-center">
-                                            <span className="text-white text-sm font-medium">{userInitials}</span>
+                                        <div className="w-8 h-8 rounded-full bg-gradient-to-r from-violet-400 to-fuchsia-400 flex items-center justify-center overflow-hidden">
+                                            {user.image ? (
+                                                <Image src={user.image} alt=''
+                                                    width={40}
+                                                    height={40} />
+                                            ) : (
+                                                <span className="text-white text-sm font-medium">
+                                                    {userInitials}
+                                                </span>
+                                            )}
                                         </div>
                                         <ChevronDown className="h-4 w-4" />
                                     </Button>
                                 </DropdownMenuTrigger>
                                 <DropdownMenuContent align="end" className="w-56">
-                                    <DropdownMenuLabel>My Account</DropdownMenuLabel>
+                                    <DropdownMenuLabel>
+                                        {user.name}
+                                    </DropdownMenuLabel>
                                     <DropdownMenuSeparator />
                                     <DropdownMenuItem onClick={() => router.push('/profile')}>
                                         <User className="mr-2 h-4 w-4" />
@@ -315,6 +326,6 @@ export default function Navbar() {
                     </motion.div>
                 )}
             </AnimatePresence>
-        </header>
+        </header >
     );
 };

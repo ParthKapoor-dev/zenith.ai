@@ -2,10 +2,10 @@
 
 import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import ProfileCard from "./ProfileCard"
-import List from "./List"
 import User from '@/types/user';
 import Candidate from '@/types/candidate';
+import ProfileCard from '@/components/candidate/ProfileCard';
+import List from '@/components/candidate/List';
 
 interface CandDashProps {
     user: User,
@@ -13,7 +13,7 @@ interface CandDashProps {
 }
 
 const CandidateDashboard = ({ user, candidate }: CandDashProps) => {
-  
+
     return (
         <div className="">
             <div className="max-w-7xl mx-auto p-6 space-y-6">
