@@ -7,20 +7,13 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import {
     Sheet,
     SheetContent,
-    SheetHeader,
-    SheetTitle,
     SheetTrigger,
 } from '@/components/ui/sheet';
 import {
     MenuIcon,
-    Send,
-    Bot,
-    User2,
-    Loader2,
     Plus,
     MessageSquare,
     CornerRightDown,
-    X,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { DialogTitle } from '@/components/ui/dialog';
