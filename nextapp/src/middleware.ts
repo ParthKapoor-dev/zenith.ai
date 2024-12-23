@@ -16,11 +16,11 @@ export default async function middleware(req: NextRequest) {
     const cookie = (await cookies()).get('session')?.value
     const session = await decrypt(cookie)
 
-    console.log("session : " , session)
+    console.log("Middleware session : ", session?.user)
 
     // 4. Redirect to /login if the user is not authenticated
     if (isProtectedRoute && !session?.token) {
-        return NextResponse.redirect(new URL('/login', req.nextUrl))
+        return NextResponse.redirect(new URL('/auth/login', req.nextUrl))
     }
 
     // 5. Redirect to /dashboard if the user is authenticated
@@ -31,8 +31,15 @@ export default async function middleware(req: NextRequest) {
     ) {
         return NextResponse.redirect(new URL('/dashboard', req.nextUrl))
     }
+    // 3. Pass user data to the client through headers
+    const response = NextResponse.next()
+    if (session?.user) response.cookies.set('user', JSON.stringify(session?.user), {
+        path: '/',
+        httpOnly: false,  // Allow JS access on the client-side
+        maxAge: 60 * 60 * 24,  // Cookie expiration time
+    })
 
-    return NextResponse.next()
+    return response;
 }
 
 // Routes Middleware should not run on

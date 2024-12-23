@@ -23,7 +23,7 @@ const LoginPage = () => {
       await handleGoogleLogin(role);
 
     } catch (error: any) {
-      
+
       console.log(error);
 
       toast({
@@ -44,18 +44,7 @@ const LoginPage = () => {
   };
 
   return (
-    <div className="relative min-h-screen w-full overflow-hidden bg-gradient-to-br from-slate-50 via-fuchsia-50 to-violet-50 flex items-center justify-center p-4">
-      {/* Animated background patterns */}
-      <motion.div
-        className="absolute inset-0 z-0"
-        initial="initial"
-        animate="animate"
-        variants={backgroundPatterns}
-      >
-        <div className="absolute top-20 left-20 w-72 h-72 bg-purple-200 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob" />
-        <div className="absolute top-40 right-20 w-72 h-72 bg-rose-200 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob animation-delay-2000" />
-        <div className="absolute bottom-40 left-1/2 w-72 h-72 bg-violet-200 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob animation-delay-4000" />
-      </motion.div>
+    <div className="relative min-h-[90vh] w-full overflow-hidden flex items-center justify-center p-4">
 
       <motion.div
         initial={{ opacity: 0, y: 20 }}
@@ -69,7 +58,7 @@ const LoginPage = () => {
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              transition={{ delay: 0.6 }}
+              transition={{ delay: 0.2 }}
               className="text-center mb-8"
             >
 
@@ -117,7 +106,7 @@ const LoginPage = () => {
                   initial={{ opacity: 0, x: 20 }}
                   animate={{ opacity: 1, x: 0 }}
                   exit={{ opacity: 0, x: -20 }}
-                  transition={{ duration: 0.2 }}
+                  transition={{ duration: 0.4 }}
                 >
                   <TabsContent value="candidate" className="mt-0 space-y-6">
                     <div className="bg-violet-50 rounded-lg p-4 flex items-start space-x-3">

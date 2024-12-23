@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import Providers from "@/Providers";
+import Navbar from "@/components/Header";
 
 export const metadata: Metadata = {
   title: "JobVerse.AI",
@@ -15,10 +16,14 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={``}
+        className={`bg-gradient-to-br from-slate-50 via-fuchsia-50 to-violet-50`}
       >
         <Providers>
-          {children}
+          {/* <Navbar /> */}
+          <Navbar />
+          <main className="py-[10vh] max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            {children}
+          </main>
         </Providers>
       </body>
     </html>

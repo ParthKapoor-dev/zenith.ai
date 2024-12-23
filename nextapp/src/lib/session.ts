@@ -2,6 +2,7 @@ import 'server-only'
 import { SignJWT, jwtVerify } from 'jose'
 import { cookies } from 'next/headers'
 import User from '@/types/user';
+import { redirect } from 'next/navigation';
 
 const secretKey = process.env.SESSION_SECRET || "Zm8srkWSwRlmmCQ4+ctXzo0ddj8VSFhwtS1q8JMn8OY=";
 const encodedKey = new TextEncoder().encode(secretKey)
@@ -21,33 +22,23 @@ export async function createSession(user: User, token: string) {
     })
 }
 
-export async function updateSession() {
-    const session = (await cookies()).get('session')?.value
-    const payload = await decrypt(session)
+export async function verifySession() {
 
-    if (!session || !payload) {
-        return null
+    const cookie = (await cookies()).get('session')?.value;
+    const session = await decrypt(cookie);
+
+    if (!session?.token) redirect("/auth/login");
+    return {
+        user: session.user as User | null,
+        token: session.token as string | null
     }
-
-    const expires = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)
-
-    const cookieStore = await cookies()
-    cookieStore.set('session', session, {
-        httpOnly: true,
-        secure: true,
-        expires: expires,
-        sameSite: 'lax',
-        path: '/',
-    })
 }
 
 export async function deleteSession() {
     const cookieStore = await cookies()
-    cookieStore.delete('session')
+    cookieStore.delete('session');
+    cookieStore.delete('user');
 }
-
-
-
 
 // Encryption & Decryption methods from Jose Lib
 export async function encrypt(payload: any) {

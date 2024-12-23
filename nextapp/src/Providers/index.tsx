@@ -2,14 +2,14 @@
 import { Toaster } from "@/components/ui/toaster"
 import { ReactNode } from "react"
 
-export default function Providers({children} : {
-    children : ReactNode
-}){
+export default function Providers({ children }: {
+    children: ReactNode
+}) {
 
-    return(
+    return (
         <>
-        {children}
-        <Toaster />
+            {children}
+            <Toaster />
         </>
-    )   
+    )
 }

@@ -1,10 +1,10 @@
-import schema from "@/db/schema"
 
 export type UserRole = 'candidate' | 'recruiter'
 
-export default interface User{
+export default interface User {
     id: number,
-    name : string,
-    email : string,
-    role : UserRole
+    name: string,
+    email: string,
+    role: UserRole,
+    image: string | null
 }

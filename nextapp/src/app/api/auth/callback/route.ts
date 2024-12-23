@@ -18,6 +18,6 @@ export async function GET(req: NextRequest) {
         
     } catch (error) {
         console.error(error);
-        return NextResponse.redirect(process.env.NEXT_PUBLIC_BASE_URL!);
+        // return NextResponse.redirect(process.env.NEXT_PUBLIC_BASE_URL!);
     }
 }

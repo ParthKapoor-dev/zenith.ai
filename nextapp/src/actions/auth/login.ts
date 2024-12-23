@@ -8,10 +8,9 @@ import { db } from "@/db";
 import { eq } from "drizzle-orm";
 import schema from "@/db/schema";
 import { createSession } from "@/lib/session";
-import { NextResponse } from "next/server";
 
 export default async function handleGoogleLogin(role: UserRole, code?: string) {
-    try {   
+    try {
         if (!code) {
             // Step 1: Redirect to Google OAuth
             await googleOauth(role);
@@ -37,10 +36,13 @@ export default async function handleGoogleLogin(role: UserRole, code?: string) {
             await db.insert(schema.Users).values({
                 name: userInfo.name,
                 email: userInfo.email,
-                role
-            }).onDuplicateKeyUpdate({ set: {
-                name : userInfo.name
-            } })
+                role,
+                image : userInfo.picture
+            }).onDuplicateKeyUpdate({
+                set: {
+                    name: userInfo.name
+                }
+            })
 
             const user = await db.query.Users.findFirst({
                 where: eq(schema.Users.email, userInfo.email)
@@ -50,7 +52,7 @@ export default async function handleGoogleLogin(role: UserRole, code?: string) {
             }
 
             // Step 6: Create a session
-            await createSession(user , response.data.idToken)
+            await createSession(user, response.data.id_token);
         }
     } catch (error) {
         console.error("Authentication error:", error);
