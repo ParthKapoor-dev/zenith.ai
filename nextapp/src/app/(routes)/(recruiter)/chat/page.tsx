@@ -17,7 +17,7 @@ import {
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { DialogTitle } from '@/components/ui/dialog';
-import ChatArea from './ChatArea';
+import ChatArea from '../../../../components/recruiter/chat/ChatArea';
 import { ChatInput, ChatResponse, ChatSession } from '@/types/chatbot';
 import getAllSessions from '@/actions/recruiter/chat/getAllSessions';
 import fetchServerAction from '@/lib/fetchHelper';
@@ -27,7 +27,7 @@ import handelUserInput from '@/actions/recruiter/chat/handleInput';
 import createChatSession from "@/actions/recruiter/chat/createSession";
 import getSession from "@/actions/recruiter/chat/getSession";
 import Loader from './Loader';
-import ChatSidebar from './Sidebar';
+import ChatSidebar from '../../../../components/recruiter/chat/Sidebar';
 
 
 const MIN_HEIGHT = 64;
