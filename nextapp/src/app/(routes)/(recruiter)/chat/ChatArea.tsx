@@ -1,9 +1,9 @@
-import { ChatMessage } from '@/types/chatbot';
+import { ChatInput, ChatResponse } from '@/types/chatbot';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Bot, Loader2, User2 } from 'lucide-react';
 
 interface ChatAreaProps {
-    messages: ChatMessage[]
+    messages: (ChatInput | ChatResponse)[]
     isTyping: boolean
 }
 
@@ -35,19 +35,19 @@ export default function ChatArea({ messages, isTyping }: ChatAreaProps) {
                                 className="flex gap-4"
                             >
                                 <div className={`flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center
-                                            ${message.type === 'user'
+                                            ${(message as ChatInput).input
                                         ? 'bg-violet-100 dark:bg-violet-900/50 text-violet-600 dark:text-violet-400'
                                         : 'bg-emerald-100 dark:bg-emerald-900/50 text-emerald-600 dark:text-emerald-400'
                                     }`}
                                 >
-                                    {message.type === 'user' ? (
+                                    {(message as ChatInput).input ? (
                                         <User2 className="w-4 h-4" />
                                     ) : (
                                         <Bot className="w-4 h-4" />
                                     )}
                                 </div>
                                 <div className="flex-1 prose prose-zinc dark:prose-invert max-w-none">
-                                    {message.content}
+                                    {(message as ChatInput).input || (message as ChatResponse).response}
                                 </div>
                             </motion.div>
                         ))}
@@ -77,4 +77,9 @@ export default function ChatArea({ messages, isTyping }: ChatAreaProps) {
         </div>
 
     )
+}
+
+
+function isChatInput(message: ChatInput | ChatResponse): message is ChatInput {
+    return (message as ChatInput).input !== undefined
 }

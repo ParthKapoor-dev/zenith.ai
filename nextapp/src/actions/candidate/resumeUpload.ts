@@ -2,14 +2,20 @@
 
 import { db } from "@/db";
 import schema from "@/db/schema";
+import { verifySession } from "@/lib/session";
 import axios from "axios";
 
-export default async function uploadResume(formData: FormData, userId: number) {
-    const url = `https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/upload`;
+export default async function uploadResume(formData: FormData) {
+    const url =
+        `https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/upload`;
 
     try {
+
+        const session = await verifySession();
+        const userId = session.user.id;
+
         // Append required fields
-        formData.append("upload_preset", "ml_default");
+        formData.append("upload_preset", process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET!);
         formData.append("resource_type", "raw"); // Specify 'raw' for PDFs
 
         // Send the request with FormData as the body
@@ -20,10 +26,10 @@ export default async function uploadResume(formData: FormData, userId: number) {
         });
 
         // TODO: reusume Link => response.data.secure_url;
-        await db.insert(schema.Candidate).values({
+        await db.insert(schema.Candidates).values({
             resume: response.data.secure_url,
-            userId 
-        })  
+            userId
+        })
 
 
     } catch (error: any) {

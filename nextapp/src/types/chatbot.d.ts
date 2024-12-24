@@ -1,13 +1,24 @@
 
-export interface ChatMessage {
-    id: string;
-    type: 'user' | 'bot';
-    content: string;
-    timestamp: Date;
+export interface ChatResponse {
+    id: number;
+    sessionId: number,
+    response: string;
+    updatedAt: Date;
+    createdAt: Date;
+}
+
+export interface ChatInput {
+    id: number;
+    sessionId: number,
+    input: string;
+    updatedAt: Date;
+    createdAt: Date;
 }
 
 export interface ChatSession {
-    id: string;
+    id: number;
+    userId: number;
     title: string;
-    timestamp: Date;
+    updatedAt: Date;
+    createdAt: Date;
 }

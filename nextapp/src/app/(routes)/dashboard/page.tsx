@@ -21,6 +21,9 @@ export default async function Dash() {
         if (!roleInfo) redirect('/onboarding/resume');
     }
 
+    // TODO : Create Recruiter Dashboard
+    if( role == 'recruiter') redirect('/chat')
+
     return (
         <div className="h-full">
             {role == 'candidate' && (

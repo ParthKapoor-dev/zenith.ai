@@ -52,8 +52,6 @@ export default function Navbar() {
         { id: 2, text: "Interview scheduled", time: "1h ago" },
     ]);
 
-    console.log("Navbar Data : ", user);
-
     const userRole = user?.role || null;
     const userInitials = user?.name
         ? user.name.split(' ').map((n: any) => n[0]).join('').toUpperCase()

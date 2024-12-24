@@ -29,8 +29,8 @@ export async function verifySession() {
 
     if (!session?.token) redirect("/auth/login");
     return {
-        user: session.user as User | null,
-        token: session.token as string | null
+        user: session.user as User,
+        token: session.token as string
     }
 }
 
