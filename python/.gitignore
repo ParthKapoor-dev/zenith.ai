@@ -1,0 +1,25 @@
+# Python cache files
+__pycache__/
+*.pyc
+
+# Virtual environment folder
+venv/
+
+# Test output and temporary files
+*.log
+*.tmp
+*.bak
+*.swp
+
+# IDE or editor config files
+.vscode/
+.idea/
+
+# PDF files in tests/resumes
+tests/resumes/*.pdf
+
+# MacOS specific (if applicable)
+.DS_Store
+
+# Windows specific (if applicable)
+Thumbs.db
