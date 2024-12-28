@@ -91,7 +91,7 @@ const CandOnBoardPage = () => {
 
 
             // TODO: Replace with your actual API endpoint
-            const response = await uploadResume(formData, user.id);
+            const response = await uploadResume(formData);
 
             toast({
                 title: 'Resume uploaded successfully!',
@@ -114,7 +114,7 @@ const CandOnBoardPage = () => {
     };
 
     return (
-        <div className="relative h-full w-full overflow-hidden flex items-center justify-center p-4">
+        <div className="relative h-full w-full overflow-hidden flex items-center justify-center p-4 max-md:text-sm">
 
             <motion.div
                 initial={{ opacity: 0, y: 20 }}
@@ -137,7 +137,7 @@ const CandOnBoardPage = () => {
                             transition={{ delay: 0.2 }}
                             className="text-center mb-8"
                         >
-                            <h1 className="text-3xl font-bold mb-2 flex items-center justify-center gap-4">
+                            <h1 className="text-3xl font-bold mb-2 flex items-center justify-center gap-4 max-md:flex-col">
                                 <motion.div
                                     initial={{ scale: 0.8, opacity: 0 }}
                                     animate={{ scale: 1, opacity: 1 }}
