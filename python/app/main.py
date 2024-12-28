@@ -1,6 +1,7 @@
-
-from fastapi import FastAPI
-from app.routes import resume
+from fastapi import APIRouter, HTTPException, Depends, status
+from fastapi import FastAPI, Request
+from fastapi.security.api_key import APIKeyHeader
+from app.routes import candidates
 
 app = FastAPI(
     title="Jobverse AI",
@@ -8,8 +9,21 @@ app = FastAPI(
     version="1.0.0",
 )
 
+# # API Key Authentication
+# API_KEY = "my-secret-api-key"
+# api_key_header = APIKeyHeader(name="X-API-Key", auto_error=True)
+
+# @app.middleware('http')
+# async def verify_auth(request : Request, call_next):
+#     if api_key != API_KEY:
+#         raise HTTPException(
+#             status_code=status.HTTP_401_UNAUTHORIZED,
+#             detail="Invalid API Key"
+#         )
+
 #Register Routes
-app.include_router(resume.router , prefix="/resume" , tags=['Resume Parsing'])
+app.include_router(candidates.router , prefix="/candidates" , tags=['Candidates Routes'])
+
 
 #Root endpoint
 @app.get("/")

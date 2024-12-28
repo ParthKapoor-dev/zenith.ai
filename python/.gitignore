@@ -10,7 +10,7 @@ venv/
 *.tmp
 *.bak
 *.swp
-
+R
 # IDE or editor config files
 .vscode/
 .idea/
@@ -23,3 +23,6 @@ tests/resumes/*.pdf
 
 # Windows specific (if applicable)
 Thumbs.db
+
+
+app/.env
