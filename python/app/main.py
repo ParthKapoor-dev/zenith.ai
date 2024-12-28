@@ -1,7 +1,7 @@
 from fastapi import APIRouter, HTTPException, Depends, status
 from fastapi import FastAPI, Request
 from fastapi.security.api_key import APIKeyHeader
-from app.routes import candidates
+from app.routes import candidates, testing, recruiters
 
 app = FastAPI(
     title="Jobverse AI",
@@ -22,8 +22,9 @@ app = FastAPI(
 #         )
 
 #Register Routes
-app.include_router(candidates.router , prefix="/candidates" , tags=['Candidates Routes'])
-
+app.include_router(candidates.router, prefix="/candidates", tags=['Candidates Routes'])
+app.include_router(recruiters.router, prefix='/recruiters', tags=['Recruiters Routes'])
+app.include_router(testing.router, prefix='/testing', tags=['Testing Routes'])
 
 #Root endpoint
 @app.get("/")
