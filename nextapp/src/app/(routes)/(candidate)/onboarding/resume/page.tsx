@@ -1,11 +1,10 @@
 "use client"
 
-
 import React, { useState, useCallback, ChangeEvent, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Upload, FileText, CheckCircle2, XCircle, Loader2, Sparkles } from 'lucide-react';
+import { Upload, FileText, CheckCircle2, Loader2, Sparkles } from 'lucide-react';
 import { toast } from '@/hooks/use-toast';
 import { IoMdPlanet } from "react-icons/io";
 import uploadResume from '@/actions/candidate/resumeUpload';
@@ -122,22 +121,17 @@ const CandOnBoardPage = () => {
                 className="w-full max-w-lg relative z-10 flex flex-col gap-8"
             >
 
-                <div className="bg-violet-50 rounded-lg p-4 flex px-8 gap-1 items-center max-md:flex-col">
-                    <Sparkles className="w-5 h-5 text-violet-600 mt-1 flex-shrink-0" />
-                    <p className="text-sm text-violet-700 text-center">
-                        Take the first step towards your dream job. Upload your resume to access AI-powered job matching and career opportunities.
-                    </p>
-                </div>
+
 
                 <Card className="backdrop-blur-xl bg-white/80 shadow-2xl border-0">
-                    <CardContent className="py-8 px-8">
+                    <CardContent className="py-8 px-8 flex flex-col gap-10">
                         <motion.div
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
                             transition={{ delay: 0.2 }}
-                            className="text-center mb-8"
+                            className="text-center flex flex-col gap-4"
                         >
-                            <h1 className="text-3xl font-bold mb-2 flex items-center justify-center gap-4 max-md:flex-col">
+                            <h1 className="text-3xl font-bold flex items-center justify-center gap-4 max-md:flex-col">
                                 <motion.div
                                     initial={{ scale: 0.8, opacity: 0 }}
                                     animate={{ scale: 1, opacity: 1 }}
@@ -150,11 +144,21 @@ const CandOnBoardPage = () => {
                                     Submit Resume
                                 </span>
                             </h1>
-                            <p className="text-slate-600">Upload your resume to continue with JobverseAI</p>
+
+                            <div className="flex gap-1 items-center max-md:flex-col">
+                                <Sparkles className="w-5 h-5 text-violet-600 mt-1 flex-shrink-0" />
+                                <p className="text-sm text-violet-700 text-center">
+                                    Take the first step towards your dream job. Upload your resume to access AI-powered job matching and career opportunities.
+                                </p>
+                            </div>
+
+                            {/* <p className="text-slate-600">
+                                Upload your resume to continue with JobverseAI
+                            </p> */}
                         </motion.div>
 
                         <motion.div
-                            className="mt-8 space-y-6"
+                            className="space-y-6"
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
                             transition={{ delay: 0.4 }}
