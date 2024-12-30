@@ -14,8 +14,11 @@ export const Candidates = mysqlTable('candidates', {
     employmentType: mysqlEnum(employmentTypes),
     preferredRole: json().$type<Role[]>(),
     availability: mysqlEnum(availabilities),
+    proficientSkills : json().$type<string[]>(),
+    otherSkills: json().$type<string[]>(),
     ...timestamps,
 });
+
 
 // Experiences Table
 export const Experiences = mysqlTable('experiences', {
@@ -37,12 +40,3 @@ export const Projects = mysqlTable('projects', {
     endDate: date(),
     description: text(),
 });
-
-// Skills Table
-export const Skills = mysqlTable('skills', {
-    id: int().primaryKey().autoincrement(),
-    userId: int().notNull().references(() => Candidates.userId),
-    skillName: varchar({ length: 255 }).notNull(),
-    isProficient: boolean().default(false).notNull(),
-});
-

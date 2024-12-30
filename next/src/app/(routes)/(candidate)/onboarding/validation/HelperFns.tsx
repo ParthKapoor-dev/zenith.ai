@@ -14,32 +14,53 @@ export default function validationHelperFns(
     // Skills Helper Functions
     const handleAddSkill = () => {
         if (newSkill.trim()) {
-            const updatedSkills = {
-                ...formData.skills,
-                [skillType]: [...formData.skills[skillType], newSkill.trim()]
-            };
-            setFormData({ ...formData, skills: updatedSkills });
+
+            if (skillType == 'proficient')
+                setFormData({
+                    ...formData,
+                    proficientSkills: [
+                        ...formData.proficientSkills,
+                        newSkill.trim()
+                    ]
+                });
+            else setFormData({
+                ...formData,
+                otherSkills: [
+                    ...formData.otherSkills,
+                    newSkill.trim()
+                ]
+            });
+
             setNewSkill('');
         }
     };
 
     const handleRemoveSkill = (type: 'proficient' | 'other_skills', skill: string) => {
-        const updatedSkills = {
-            ...formData.skills,
-            [type]: formData.skills[type].filter(s => s !== skill)
-        };
-        setFormData({ ...formData, skills: updatedSkills });
+        if (type == 'proficient')
+            setFormData({
+                ...formData,
+                proficientSkills: [
+                    ...formData.proficientSkills.filter(s => s !== skill)
+                ]
+            });
+        else setFormData({
+            ...formData,
+            otherSkills: [
+                ...formData.otherSkills.filter(s => s !== skill)
+            ]
+        })
+
     };
 
     // Experiences Helper Functions
     const addNewExperience = () => {
         const newExperience: Experience = {
-            job_title: '',
-            company_name: '',
-            start_date: '',
-            end_date: '',
+            jobTitle: '',
+            companyName: '',
+            startDate: '',
+            endDate: '',
             description: '',
-            id : -1
+            id: -1
         };
         setFormData({
             ...formData,
@@ -61,11 +82,11 @@ export default function validationHelperFns(
     // Project Helper Functions
     const addNewProject = () => {
         const newProject: Project = {
-            project_title: '',
-            start_date: '',
-            end_date: '',
+            projectTitle: '',
+            startDate: '',
+            endDate: '',
             description: '',
-            id : -1
+            id: -1
         };
         setFormData({
             ...formData,

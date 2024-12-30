@@ -14,7 +14,7 @@ export default async function CandidateLayout({
 }>) {
 
     const session = await verifySession();
-    if (session.user?.role !== 'candidate') redirect('/')
+    if (session?.user?.role !== 'candidate') redirect('/')
 
     return (
         <>

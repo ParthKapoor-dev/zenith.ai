@@ -11,12 +11,21 @@ import { Badge } from '@/components/ui/badge';
 import { Plus, Minus, Save, Loader2, ChevronDown, ChevronUp, X, AlertTriangle } from 'lucide-react';
 import validationHelperFns from './HelperFns';
 import Candidate from '@/types/candidate';
+import updateProfile from '@/actions/candidate/updateProfile';
+import fetchServerAction from '@/lib/fetchHelper';
+import fetchCandidate from '@/actions/candidate/fetchCandidate';
 
 
 const ValidationPage = () => {
 
-    const initialData: Candidate = mockData;
-    const [formData, setFormData] = useState<Candidate>(initialData);
+    const getCurrentData = async () => {
+        const data = await fetchServerAction<Candidate | undefined>(fetchCandidate, undefined)
+        console.log(data);
+
+        if (data) setFormData(data)
+    }
+
+    const [formData, setFormData] = useState<Candidate>(mockData);
     const [expandedSections, setExpandedSections] = useState({
         experiences: false,
         projects: false,
@@ -26,6 +35,10 @@ const ValidationPage = () => {
     const [newSkill, setNewSkill] = useState('');
     const [skillType, setSkillType] = useState<'proficient' | 'other_skills'>('proficient');
     const [validationErrors, setValidationErrors] = useState<string[]>([]);
+
+    useEffect(() => {
+        getCurrentData();
+    }, [])
 
     // Helper Functions
     const {
@@ -47,15 +60,15 @@ const ValidationPage = () => {
         const errors: string[] = [];
 
         formData.experiences.forEach((exp, index) => {
-            if (!exp.job_title) errors.push(`Experience ${index + 1}: Job title is required`);
-            if (!exp.company_name) errors.push(`Experience ${index + 1}: Company name is required`);
+            if (!exp.jobTitle) errors.push(`Experience ${index + 1}: Job title is required`);
+            if (!exp.companyName) errors.push(`Experience ${index + 1}: Company name is required`);
         });
 
         formData.projects.forEach((proj, index) => {
-            if (!proj.project_title) errors.push(`Project ${index + 1}: Project title is required`);
+            if (!proj.projectTitle) errors.push(`Project ${index + 1}: Project title is required`);
         });
 
-        if (formData.skills.proficient.length === 0) {
+        if (formData.proficientSkills.length === 0) {
             errors.push('At least one proficient skill is required');
         }
 
@@ -68,7 +81,7 @@ const ValidationPage = () => {
 
         setIsSubmitting(true);
         try {
-            await new Promise(resolve => setTimeout(resolve, 1500));
+            await updateProfile(formData);
             console.log('Submitted data:', formData);
         } catch (error) {
             console.error('Error submitting form:', error);
@@ -147,26 +160,26 @@ const ValidationPage = () => {
                                         </Button>
                                         <div className="grid grid-cols-2 gap-4">
                                             <Input
-                                                value={exp.job_title}
-                                                onChange={(e) => handleExperienceChange(index, 'job_title', e.target.value)}
+                                                value={exp.jobTitle}
+                                                onChange={(e) => handleExperienceChange(index, 'jobTitle', e.target.value)}
                                                 placeholder="Job Title"
                                             />
                                             <Input
-                                                value={exp.company_name}
-                                                onChange={(e) => handleExperienceChange(index, 'company_name', e.target.value)}
+                                                value={exp.companyName}
+                                                onChange={(e) => handleExperienceChange(index, 'companyName', e.target.value)}
                                                 placeholder="Company Name"
                                             />
                                         </div>
                                         <div className="grid grid-cols-2 gap-4">
                                             <Input
                                                 type="date"
-                                                value={exp.start_date}
-                                                onChange={(e) => handleExperienceChange(index, 'start_date', e.target.value)}
+                                                value={exp.startDate}
+                                                onChange={(e) => handleExperienceChange(index, 'startDate', e.target.value)}
                                             />
                                             <Input
                                                 type="date"
-                                                value={exp.end_date}
-                                                onChange={(e) => handleExperienceChange(index, 'end_date', e.target.value)}
+                                                value={exp.endDate}
+                                                onChange={(e) => handleExperienceChange(index, 'endDate', e.target.value)}
                                             />
                                         </div>
                                         <Textarea
@@ -233,20 +246,20 @@ const ValidationPage = () => {
                                             <X className="w-4 h-4" />
                                         </Button>
                                         <Input
-                                            value={project.project_title}
-                                            onChange={(e) => handleProjectChange(index, 'project_title', e.target.value)}
+                                            value={project.projectTitle}
+                                            onChange={(e) => handleProjectChange(index, 'projectTitle', e.target.value)}
                                             placeholder="Project Title"
                                         />
                                         <div className="grid grid-cols-2 gap-4">
                                             <Input
                                                 type="date"
-                                                value={project.start_date}
-                                                onChange={(e) => handleProjectChange(index, 'start_date', e.target.value)}
+                                                value={project.startDate}
+                                                onChange={(e) => handleProjectChange(index, 'startDate', e.target.value)}
                                             />
                                             <Input
                                                 type="date"
-                                                value={project.end_date}
-                                                onChange={(e) => handleProjectChange(index, 'end_date', e.target.value)}
+                                                value={project.endDate}
+                                                onChange={(e) => handleProjectChange(index, 'endDate', e.target.value)}
                                             />
                                         </div>
                                         <Textarea
@@ -277,7 +290,7 @@ const ValidationPage = () => {
                     <CardTitle className="flex justify-between items-center">
                         <span className="flex items-center gap-2">
                             <Badge variant="secondary" className="bg-violet-100 text-violet-800">
-                                {formData.skills.proficient.length + formData.skills.other_skills.length}
+                                {formData.proficientSkills.length + formData.otherSkills.length}
                             </Badge>
                             Skills
                         </span>
@@ -297,7 +310,7 @@ const ValidationPage = () => {
                                     <div>
                                         <h3 className="font-medium mb-2">Proficient Skills</h3>
                                         <div className="flex flex-wrap gap-2 mb-4">
-                                            {formData.skills.proficient.map((skill) => (
+                                            {formData.proficientSkills.map((skill) => (
                                                 <Badge
                                                     key={skill}
                                                     variant="secondary"
@@ -315,7 +328,7 @@ const ValidationPage = () => {
                                     <div>
                                         <h3 className="font-medium mb-2">Other Skills</h3>
                                         <div className="flex flex-wrap gap-2 mb-4">
-                                            {formData.skills.other_skills.map((skill) => (
+                                            {formData.otherSkills.map((skill) => (
                                                 <Badge
                                                     key={skill}
                                                     variant="outline"
@@ -387,37 +400,38 @@ export default ValidationPage;
 
 
 
-const mockData = {
+const mockData: Candidate = {
     "userId": 1,
-    "resume" : "",
+    "resume": "",
+    "proficientSkills": ['react'],
+    "otherSkills": ['react'],
     "experiences": [
         {
-            "job_title": "Backend Developer",
-            "company_name": "Tech Solutions",
-            "start_date": "2019-06-01",
-            "end_date": "2022-05-01",
+            "id": -1,
+            "jobTitle": "Backend Developer",
+            "companyName": "Tech Solutions",
+            "startDate": "2019-06-01",
+            "endDate": "2022-05-01",
             "description": "Developed RESTful APIs using Python and Django. Integrated Docker for containerized deployments.",
         },
         {
-            "job_title": "Software Engineer",
-            "company_name": "Innovatech",
-            "start_date": "2022-06-01",
-            "end_date": "2023-06-01",
+            "id": -1,
+            "jobTitle": "Software Engineer",
+            "companyName": "Innovatech",
+            "startDate": "2022-06-01",
+            "endDate": "2023-06-01",
             "description": "Enhanced scalability of the backend using Flask and optimized database queries in MongoDB.",
         },
     ],
     "projects": [
         {
-            "project_title": "E-commerce API",
-            "start_date": "2021-01-01",
-            "end_date": "2021-06-01",
+            "id": -1,
+            "projectTitle": "E-commerce API",
+            "startDate": "2021-01-01",
+            "endDate": "2021-06-01",
             "description": "Built a scalable e-commerce API using Django and integrated payment gateways.",
         }
     ],
-    "skills": {
-        "proficient": ["Python", "Django", "Docker"],
-        "other_skills": ["Flask", "MongoDB"],
-    },
-    updatedAt : new Date(),
-    createdAt : new Date()
+    updatedAt: new Date(),
+    createdAt: new Date()
 }

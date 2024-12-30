@@ -16,14 +16,17 @@ export default async function Dash() {
 
     let roleInfo = null;
     if (role == 'candidate') {
-        roleInfo = await db.query.Candidates.findFirst({
-            where: eq(schema.Candidates.userId, session.user.id),
-            with: {
-                experiences: true,
-                projects: true,
-                skills: true
-            }
-        }) as Candidate | undefined
+        try {
+            roleInfo = await db.query.Candidates.findFirst({
+                where: eq(schema.Candidates.userId, session.user.id),
+                with: {
+                    experiences: true,
+                    projects: true,
+                }
+            }) as Candidate | undefined
+        } catch (error) {
+            console.log("Unexpected Error Occoured ", error)
+        }
         if (!roleInfo?.salaryExpectation) redirect('/onboarding/resume');
     }
 

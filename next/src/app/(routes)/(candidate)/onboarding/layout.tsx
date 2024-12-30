@@ -22,7 +22,7 @@ export default async function OnboardingLayout({
     let currentStep = 0;
     const session = await verifySession();
     const candidate = await db.query.Candidates.findFirst({
-        where: eq(schema.Candidates.userId, session.user.id)
+        where: eq(schema.Candidates.userId, session?.user?.id)
     });
 
     const headersList = await headers();

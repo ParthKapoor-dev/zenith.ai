@@ -1,8 +1,13 @@
+'use server';
+
 import 'server-only'
 import { SignJWT, jwtVerify } from 'jose'
 import { cookies } from 'next/headers'
 import User from '@/types/user';
 import { redirect } from 'next/navigation';
+import { db } from '@/db';
+import { eq } from 'drizzle-orm';
+import schema from '@/db/schema/_index';
 
 const secretKey = process.env.SESSION_SECRET || "Zm8srkWSwRlmmCQ4+ctXzo0ddj8VSFhwtS1q8JMn8OY=";
 const encodedKey = new TextEncoder().encode(secretKey)
@@ -22,12 +27,13 @@ export async function createSession(user: User, token: string) {
     })
 }
 
-export async function verifySession() {
+export async function verifySession(): Promise<{ user: User, token: string }> {
 
     const cookie = (await cookies()).get('session')?.value;
     const session = await decrypt(cookie);
 
-    if (!session?.token) redirect("/auth/login");
+    if (!session?.token || !session.user) redirect("/auth/login");
+
     return {
         user: session.user as User,
         token: session.token as string

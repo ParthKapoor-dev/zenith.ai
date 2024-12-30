@@ -6,36 +6,32 @@ export default interface Candidate {
     phoneNumber?: string,
     experiences: Experience[],
     projects: Project[],
-    skills: Skills,
+    proficientSkills: string[],
+    otherSkills: string[],
     salaryExpectation?: string,
-    currencyType?: typeof currencies,
-    salaryPeriod?: typeof periods,
-    employmentType?: typeof employmentTypes,
+    currencyType?: typeof currencies[number],
+    salaryPeriod?: typeof periods[number],
+    employmentType?: typeof employmentTypes[number],
     preferredRole?: Role[],
-    availability?: typeof availabilities,
+    availability?: typeof availabilities[number],
     updatedAt: Date;
     createdAt: Date;
 }
 
 
 export interface Experience {
-    id : number,
-    job_title: string;
-    company_name: string;
-    start_date: string;
-    end_date: string;
+    id: number,
+    jobTitle: string;
+    companyName: string;
+    startDate: string;
+    endDate: string;
     description: string;
 }
 
 export interface Project {
     id: number,
-    project_title: string;
-    start_date: string;
-    end_date: string;
+    projectTitle: string;
+    startDate: string;
+    endDate: string;
     description: string;
-}
-
-export interface Skills {
-    proficient: string[];
-    other_skills: string[];
 }

@@ -4,7 +4,7 @@ export default async function fetchServerAction<T>(
     action: () => Promise<T>,
     errResult?: any,
     errFunc?: (msg: string) => void
-): Promise<T | null> {
+): Promise<T | null | typeof errResult> {
     try {
         const result = await action();
         return result;
@@ -18,6 +18,6 @@ export default async function fetchServerAction<T>(
             variant: 'destructive',
             title: errorMessage
         });
-        return errResult || null;
+        return (!!errResult) || null;
     }
 }

@@ -1,7 +1,7 @@
 import { relations } from 'drizzle-orm';
 
 import { Users } from "./user"
-import { Candidates, Experiences, Projects, Skills } from './candidate';
+import { Candidates, Experiences, Projects } from './candidate';
 import { ChatSessions, ChatInputs, ChatResponses } from './recruiter';
 
 
@@ -17,7 +17,6 @@ export const CandidateRelations = relations(Candidates, ({ one, many }) => ({
     user: one(Users, { fields: [Candidates.userId], references: [Users.id] }),
     experiences: many(Experiences),
     projects: many(Projects),
-    skills: many(Skills)
 }));
 
 export const ExperienceRelations = relations(Experiences, ({ one }) => ({
@@ -28,11 +27,6 @@ export const ExperienceRelations = relations(Experiences, ({ one }) => ({
 export const ProjectRelations = relations(Projects, ({ one }) => ({
     candidate: one(Candidates,
         { fields: [Projects.userId], references: [Candidates.userId] })
-}))
-
-export const SkillRelations = relations(Skills, ({ one }) => ({
-    candidate: one(Candidates,
-        { fields: [Skills.userId], references: [Candidates.userId] })
 }))
 
 
@@ -61,7 +55,6 @@ const schema = {
     ChatResponses,
     Experiences,
     Projects,
-    Skills
 };
 export default schema;
 
@@ -73,5 +66,4 @@ export {
     ChatResponses,
     Experiences,
     Projects,
-    Skills
 } 
