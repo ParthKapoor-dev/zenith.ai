@@ -6,7 +6,7 @@ import axios from "axios"
 import jwt from "jsonwebtoken"
 import { db } from "@/db";
 import { eq } from "drizzle-orm";
-import schema from "@/db/schema";
+import schema from "@/db/schema/_index";
 import { createSession } from "@/lib/session";
 
 export default async function handleGoogleLogin(role: UserRole, code?: string) {
@@ -37,7 +37,7 @@ export default async function handleGoogleLogin(role: UserRole, code?: string) {
                 name: userInfo.name,
                 email: userInfo.email,
                 role,
-                image : userInfo.picture
+                image: userInfo.picture
             }).onDuplicateKeyUpdate({
                 set: {
                     name: userInfo.name

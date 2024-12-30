@@ -1,36 +1,11 @@
-export interface Experience {
-    job_title: string;
-    company_name: string;
-    start_date: string;
-    end_date: string;
-    description: string;
-}
-
-export interface Project {
-    project_title: string;
-    start_date: string;
-    end_date: string;
-    description: string;
-}
-
-export interface Skills {
-    proficient: string[];
-    other_skills: string[];
-}
-
-export interface ResumeData {
-    userId: number;
-    experiences: Experience[];
-    projects: Project[];
-    skills: Skills;
-}
+import Candidate, { Experience, Project } from "@/types/candidate";
 
 
 export default function validationHelperFns(
-    formData: ResumeData,
+    formData: Candidate,
     newSkill: string,
     skillType: 'proficient' | 'other_skills',
-    setFormData: React.Dispatch<ResumeData>,
+    setFormData: React.Dispatch<Candidate>,
     setNewSkill: React.Dispatch<React.SetStateAction<string>>
 ) {
 
@@ -63,7 +38,8 @@ export default function validationHelperFns(
             company_name: '',
             start_date: '',
             end_date: '',
-            description: ''
+            description: '',
+            id : -1
         };
         setFormData({
             ...formData,
@@ -88,7 +64,8 @@ export default function validationHelperFns(
             project_title: '',
             start_date: '',
             end_date: '',
-            description: ''
+            description: '',
+            id : -1
         };
         setFormData({
             ...formData,

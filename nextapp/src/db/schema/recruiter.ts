@@ -1,0 +1,27 @@
+import { int, mysqlTable, varchar } from 'drizzle-orm/mysql-core';
+import { timestamps } from './timestamp';
+import { Users } from './user';
+
+//Recruiter Chat Session Table
+export const ChatSessions = mysqlTable('chatSessions', {
+    id: int().primaryKey().autoincrement(),
+    userId: int().references(() => Users.id).notNull(),
+    title: varchar({ length: 255 }).notNull(),
+    ...timestamps
+})
+
+//Recruiter User Inputs Table
+export const ChatInputs = mysqlTable('chatInputs', {
+    id: int().primaryKey().autoincrement(),
+    sessionId: int().references(() => ChatSessions.id).notNull(),
+    input: varchar({ length: 1000 }).notNull(),
+    ...timestamps
+})
+
+// Recruiter ChatBot Responses Table
+export const ChatResponses = mysqlTable('chatResponses', {
+    id: int().primaryKey().autoincrement(),
+    sessionId: int().references(() => ChatSessions.id).notNull(),
+    response: varchar({ length: 1000 }).notNull(),
+    ...timestamps
+})

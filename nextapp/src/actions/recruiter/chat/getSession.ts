@@ -1,7 +1,7 @@
 "use server"
 
 import { db } from "@/db";
-import schema from "@/db/schema";
+import schema from "@/db/schema/_index";
 import { verifySession } from "@/lib/session"
 import { ChatInput, ChatResponse, ChatSession } from "@/types/chatbot";
 import { eq } from "drizzle-orm";

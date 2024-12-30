@@ -1,0 +1,48 @@
+import { boolean, date, int, json, mysqlEnum, mysqlTable, text, varchar } from 'drizzle-orm/mysql-core';
+import { timestamps } from './timestamp';
+import { Users } from './user';
+import { availabilities, currencies, employmentTypes, periods, Role, roles } from './enum';
+
+// Candidate Table
+export const Candidates = mysqlTable('candidates', {
+    userId: int().primaryKey().references(() => Users.id),
+    resume: varchar({ length: 1000 }).notNull(),
+    phoneNumber: varchar({ length: 255 }),
+    salaryExpectation: varchar({ length: 255 }),
+    currencyType: mysqlEnum(currencies),
+    salaryPeriod: mysqlEnum(periods),
+    employmentType: mysqlEnum(employmentTypes),
+    preferredRole: json().$type<Role[]>(),
+    availability: mysqlEnum(availabilities),
+    ...timestamps,
+});
+
+// Experiences Table
+export const Experiences = mysqlTable('experiences', {
+    id: int().primaryKey().autoincrement(),
+    userId: int().notNull().references(() => Candidates.userId),
+    jobTitle: varchar({ length: 255 }).notNull(),
+    companyName: varchar({ length: 255 }).notNull(),
+    startDate: date().notNull(),
+    endDate: date(),
+    description: text(),
+});
+
+// Projects Table
+export const Projects = mysqlTable('projects', {
+    id: int().primaryKey().autoincrement(),
+    userId: int().notNull().references(() => Candidates.userId),
+    projectTitle: varchar({ length: 255 }).notNull(),
+    startDate: date().notNull(),
+    endDate: date(),
+    description: text(),
+});
+
+// Skills Table
+export const Skills = mysqlTable('skills', {
+    id: int().primaryKey().autoincrement(),
+    userId: int().notNull().references(() => Candidates.userId),
+    skillName: varchar({ length: 255 }).notNull(),
+    isProficient: boolean().default(false).notNull(),
+});
+

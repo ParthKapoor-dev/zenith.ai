@@ -99,7 +99,8 @@ const CandOnBoardPage = () => {
 
 
             // TODO: Add redirect logic here
-            // router.push('/complete-profile');
+            window.location.reload()
+            // router.push('/onboarding/validation');
 
         } catch (error) {
             toast({

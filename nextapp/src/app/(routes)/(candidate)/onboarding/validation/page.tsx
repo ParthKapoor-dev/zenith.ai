@@ -9,13 +9,14 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
 import { Plus, Minus, Save, Loader2, ChevronDown, ChevronUp, X, AlertTriangle } from 'lucide-react';
-import validationHelperFns, { ResumeData } from './HelperFns';
+import validationHelperFns from './HelperFns';
+import Candidate from '@/types/candidate';
 
 
 const ValidationPage = () => {
 
-    const initialData: ResumeData = mockData;
-    const [formData, setFormData] = useState<ResumeData>(initialData);
+    const initialData: Candidate = mockData;
+    const [formData, setFormData] = useState<Candidate>(initialData);
     const [expandedSections, setExpandedSections] = useState({
         experiences: false,
         projects: false,
@@ -388,6 +389,7 @@ export default ValidationPage;
 
 const mockData = {
     "userId": 1,
+    "resume" : "",
     "experiences": [
         {
             "job_title": "Backend Developer",
@@ -415,5 +417,7 @@ const mockData = {
     "skills": {
         "proficient": ["Python", "Django", "Docker"],
         "other_skills": ["Flask", "MongoDB"],
-    }
+    },
+    updatedAt : new Date(),
+    createdAt : new Date()
 }

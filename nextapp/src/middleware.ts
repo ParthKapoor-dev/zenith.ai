@@ -16,8 +16,6 @@ export default async function middleware(req: NextRequest) {
     const cookie = (await cookies()).get('session')?.value
     const session = await decrypt(cookie)
 
-    console.log("Middleware session : ", session?.user)
-
     // 4. Redirect to /login if the user is not authenticated
     if (isProtectedRoute && !session?.token) {
         return NextResponse.redirect(new URL('/auth/login', req.nextUrl))
@@ -39,6 +37,7 @@ export default async function middleware(req: NextRequest) {
         maxAge: 60 * 60 * 24,  // Cookie expiration time
     })
 
+    response.headers.set('x-current-url', path);
     return response;
 }
 
