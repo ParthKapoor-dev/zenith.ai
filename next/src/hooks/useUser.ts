@@ -1,6 +1,6 @@
 
 import User from "@/types/user";
-import Cookies from "js-cookie"
+import Cookies from "../../node_modules/@types/js-cookie"
 import { redirect } from "next/navigation";
 
 export function useUser() {
