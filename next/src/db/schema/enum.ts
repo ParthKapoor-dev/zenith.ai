@@ -2,11 +2,11 @@
 export const userRoles = ['recruiter', 'candidate'] as const
 
 export const currencies = [
-    'US Dollar',
-    'Euro',
-    'British Pound',
-    'Indian Rupee',
-    'Japanese Yen',
+    'USD',
+    'EUR',
+    'GBP',
+    'INR',
+    'JPY',
 ] as const
 
 export const periods = [

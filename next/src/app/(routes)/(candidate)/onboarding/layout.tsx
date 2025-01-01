@@ -31,7 +31,7 @@ export default async function OnboardingLayout({
     if (!candidate?.resume) {
         currentStep = 0;
         if (pathname != steps.resume) redirect(steps.resume)
-    } else if (!candidate.salaryExpectation) {
+    } else if (!candidate.isComplete) {
         if (pathname != steps.validation && pathname != steps.final)
             redirect(steps.validation)
         if (pathname == steps.validation) currentStep = 1;

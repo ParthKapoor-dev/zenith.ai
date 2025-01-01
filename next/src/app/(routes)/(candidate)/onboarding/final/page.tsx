@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -9,6 +9,15 @@ import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue, SelectGroup, SelectLabel } from "@/components/ui/select";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Loader2, DollarSign, Briefcase, Clock, AlertCircle, X } from 'lucide-react';
+import { employmentTypes as empTypes, roles as availRoles } from '@/db/schema/enum';
+
+import { useRef } from 'react';
+import { Check } from 'lucide-react';
+import fetchServerAction from '@/lib/fetchHelper';
+import fetchCandidate from '@/actions/candidate/fetchCandidate';
+import Candidate from '@/types/candidate';
+import finalizeAccount from '@/actions/candidate/finalizeCandidate';
+import { useRouter } from 'next/navigation';
 
 const currencies = [
     { code: 'USD', symbol: '$', name: 'US Dollar' },
@@ -50,7 +59,7 @@ const jobCategories = {
     ]
 };
 
-const employmentTypes = [
+const employmentTypes: typeof empTypes = [
     "Full Time",
     "Part Time",
     "Internship",
@@ -67,7 +76,7 @@ const availabilityOptions = [
     { value: "summer", label: "Summer 2024" }
 ];
 
-type role = typeof jobCategories[keyof typeof jobCategories][number]
+type role = typeof availRoles[number]
 
 interface FormDataProps {
     salary: string,
@@ -79,34 +88,39 @@ interface FormDataProps {
 }
 
 const UserPreferencesPage = () => {
-    const [formData, setFormData] = useState<FormDataProps>({
-        salary: '60000',
-        currency: 'USD',
-        salaryPeriod: 'annual',
-        employmentType: 'Full Time',
-        selectedRoles: [],
-        availability: 'immediate'
-    });
+
+    const router = useRouter();
+    const [formData, setFormData] = useState<Candidate>();
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [error, setError] = useState('');
 
-    const handleRoleSelect = (role: string) => {
-        if (formData.selectedRoles.length >= 5 && !formData.selectedRoles.includes(role)) {
-            setError('You can select up to 5 roles');
-            return;
-        }
-        console.log('role is ', role)
-        setFormData(prev => ({
-            ...prev,
-            selectedRoles: prev.selectedRoles.includes(role)
-                ? prev.selectedRoles.filter(r => r !== role)
-                : [...prev.selectedRoles, role]
-        }));
-        setError('');
-    };
+    // Server Actions
+    const getCurrentData = async () =>
+        setFormData(await fetchServerAction<Candidate | undefined>(fetchCandidate, undefined))
+
+    // const handleRoleSelect = (role: string) => {
+    //     if (formData.selectedRoles.length >= 5 && !formData.selectedRoles.includes(role)) {
+    //         setError('You can select up to 5 roles');
+    //         return;
+    //     }
+    //     console.log('role is ', role)
+    //     setFormData(prev => ({
+    //         ...prev,
+    //         selectedRoles: prev.selectedRoles.includes(role)
+    //             ? prev.selectedRoles.filter(r => r !== role)
+    //             : [...prev.selectedRoles, role]
+    //     }));
+    //     setError('');
+    // };
+
+    useEffect(() => {
+        getCurrentData();
+    }, [])
+
+    if (!formData) return <>Loading</>
 
     const handleSubmit = async () => {
-        if (!formData.salary || formData.selectedRoles.length === 0 || !formData.availability) {
+        if (!formData.salaryExpectation || formData.preferredRole?.length === 0 || !formData.availability) {
             setError('Please fill in all required fields');
             return;
         }
@@ -116,9 +130,13 @@ const UserPreferencesPage = () => {
 
         try {
             await new Promise(resolve => setTimeout(resolve, 3000));
+            await finalizeAccount(formData);
+            router.push('/')
             console.log(formData);
         } catch (error) {
             console.error('Error:', error);
+        } finally {
+            setIsSubmitting(false);
         }
     };
 
@@ -139,7 +157,9 @@ const UserPreferencesPage = () => {
                             <Loader2 className="w-16 h-16 text-violet-600 animate-spin mx-auto" />
                         </motion.div>
                         <h2 className="text-2xl font-bold text-gray-800">Setting Up Your Preferences</h2>
-                        <p className="text-gray-600">Please keep this tab open while we process your information...</p>
+                        <p className="text-gray-600">
+                            Please keep this tab open while we process your information...
+                        </p>
                         <div className="space-y-2">
                             <div className="h-2 bg-violet-100 rounded-full overflow-hidden">
                                 <motion.div
@@ -182,19 +202,19 @@ const UserPreferencesPage = () => {
                                         <div className="relative">
                                             <Input
                                                 type="number"
-                                                value={formData.salary}
-                                                onChange={(e) => setFormData({ ...formData, salary: e.target.value })}
+                                                value={formData.salaryExpectation || ""}
+                                                onChange={(e) => setFormData({ ...formData, salaryExpectation: e.target.value })}
                                                 placeholder="Enter amount"
                                                 className="pl-8"
                                             />
                                             <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500">
-                                                {currencies.find(c => c.code === formData.currency)?.symbol}
+                                                {currencies.find(c => c.code === formData.currencyType)?.symbol}
                                             </span>
                                         </div>
 
                                         <Select
-                                            value={formData.currency}
-                                            onValueChange={(value: any) => setFormData({ ...formData, currency: value })}
+                                            value={formData.currencyType || undefined}
+                                            onValueChange={(value: any) => setFormData({ ...formData, currencyType: value })}
                                         >
                                             <SelectTrigger>
                                                 <SelectValue placeholder="Select currency" />
@@ -209,7 +229,7 @@ const UserPreferencesPage = () => {
                                         </Select>
 
                                         <Select
-                                            value={formData.salaryPeriod}
+                                            value={formData.salaryPeriod || undefined}
                                             onValueChange={(value: any) => setFormData({ ...formData, salaryPeriod: value })}
                                         >
                                             <SelectTrigger>
@@ -257,8 +277,8 @@ const UserPreferencesPage = () => {
                                         Preferred Roles (Select up to 5)
                                     </label>
                                     <MultiSelectRoles
-                                        selected={formData.selectedRoles}
-                                        onChange={(roles: role[]) => setFormData({ ...formData, selectedRoles: roles })}
+                                        selected={formData.preferredRole || []}
+                                        onChange={(roles) => setFormData({ ...formData, preferredRole: roles })}
                                         maxSelections={5}
                                     />
                                 </div>
@@ -309,9 +329,6 @@ export default UserPreferencesPage;
 
 
 
-import { useRef } from 'react';
-import { Check } from 'lucide-react';
-
 const MultiSelectRoles = ({
     selected,
     onChange,
@@ -336,7 +353,7 @@ const MultiSelectRoles = ({
         )
         : allRoles;
 
-    const handleSelect = (role: string) => {
+    const handleSelect = (role: role) => {
         setSearchValue('')
         if (selected.includes(role)) {
             onChange(selected.filter(r => r !== role));
@@ -407,7 +424,7 @@ const MultiSelectRoles = ({
                                     Object.entries(jobCategories).map(([category, roles]) => {
                                         const filteredCategoryRoles = roles.filter(role =>
                                             role.toLowerCase().includes(searchValue.toLowerCase())
-                                        );
+                                        ) as role[];
 
                                         if (filteredCategoryRoles.length === 0) return null;
 
@@ -422,9 +439,9 @@ const MultiSelectRoles = ({
                                                         className={`
                               flex items-center justify-between px-2 py-1.5 text-sm cursor-pointer
                               ${selected.includes(role)
-                                ? 'bg-violet-50 text-violet-900'
-                                : 'hover:bg-gray-50'
-                                }`}
+                                                                ? 'bg-violet-50 text-violet-900'
+                                                                : 'hover:bg-gray-50'
+                                                            }`}
                                                         onClick={() => handleSelect(role)}
                                                     >
                                                         <span>{role}</span>

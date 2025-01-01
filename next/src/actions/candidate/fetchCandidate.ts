@@ -18,14 +18,8 @@ export default async function fetchCandidate() {
             with: {
                 experiences : true,
                 projects : true,
-                // user : true
             }
         }) as Candidate | undefined;
-
-        // candidate.experiences = [];
-        // candidate.projects = [];
-        // candidate.proficientSkills = [];
-        // candidate.otherSkills = []
 
         console.log("Candidate is ", candidate)
 

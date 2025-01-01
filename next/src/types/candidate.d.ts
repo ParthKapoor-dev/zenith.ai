@@ -14,6 +14,7 @@ export default interface Candidate {
     employmentType?: typeof employmentTypes[number],
     preferredRole?: Role[],
     availability?: typeof availabilities[number],
+    isComplete? : boolean,
     updatedAt: Date;
     createdAt: Date;
 }

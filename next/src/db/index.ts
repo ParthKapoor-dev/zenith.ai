@@ -5,10 +5,11 @@ import * as schema from "./schema/_index";
 const db_url = process.env.DATABASE_URL;
 
 const poolConnection = mysql.createPool({
-    host: "localhost",
-    user: "root",
-    database: "jobverse_ai",
-    password: 'Password@1234'
+    host: '127.0.0.1',
+    port: 3306,
+    user: 'root',
+    password: 'rootpass',
+    database: 'jobversedb'
 });
 
 export const db = db_url

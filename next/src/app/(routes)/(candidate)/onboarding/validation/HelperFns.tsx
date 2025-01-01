@@ -106,6 +106,12 @@ export default function validationHelperFns(
         setFormData({ ...formData, projects: newProjects });
     };
 
+    // format date
+    const formatDate = (dateString: string | Date) => {
+        if (!dateString) return '';
+        const date = new Date(dateString);
+        return date.toISOString().split('T')[0];
+    };
 
     return {
         handleAddSkill,
@@ -115,7 +121,8 @@ export default function validationHelperFns(
         deleteProject,
         addNewExperience,
         handleExperienceChange,
-        deleteExperience
+        deleteExperience,
+        formatDate
     }
 
 }

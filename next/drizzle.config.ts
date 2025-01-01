@@ -5,10 +5,11 @@ export default defineConfig({
     schema: './src/db/schema/_index.ts',
     dialect: 'mysql',
     dbCredentials: {
-        host: "localhost",
-        user: "root",
-        database: "jobverse_ai",
-        password: 'Password@1234',
+        host: '127.0.0.1',
+        port: 3306,        
+        user: 'root',
+        password: 'rootpass',
+        database: 'jobversedb',
         // url: process.env.DATABASE_URL!,
     },
 });

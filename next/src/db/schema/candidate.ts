@@ -14,8 +14,9 @@ export const Candidates = mysqlTable('candidates', {
     employmentType: mysqlEnum(employmentTypes),
     preferredRole: json().$type<Role[]>(),
     availability: mysqlEnum(availabilities),
-    proficientSkills : json().$type<string[]>(),
-    otherSkills: json().$type<string[]>(),
+    proficientSkills: json().$type<string[]>().default([]),
+    otherSkills: json().$type<string[]>().default([]),
+    isComplete : boolean().notNull().default(false),
     ...timestamps,
 });
 

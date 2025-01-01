@@ -14,18 +14,16 @@ import Candidate from '@/types/candidate';
 import updateProfile from '@/actions/candidate/updateProfile';
 import fetchServerAction from '@/lib/fetchHelper';
 import fetchCandidate from '@/actions/candidate/fetchCandidate';
+import { useRouter } from 'next/navigation';
+import { Checkbox } from '@/components/ui/checkbox';
 
 
 const ValidationPage = () => {
 
-    const getCurrentData = async () => {
-        const data = await fetchServerAction<Candidate | undefined>(fetchCandidate, undefined)
-        console.log(data);
+    const getCurrentData = async () =>
+        setFormData(await fetchServerAction<Candidate | undefined>(fetchCandidate, undefined))
 
-        if (data) setFormData(data)
-    }
-
-    const [formData, setFormData] = useState<Candidate>(mockData);
+    const [formData, setFormData] = useState<Candidate>();
     const [expandedSections, setExpandedSections] = useState({
         experiences: false,
         projects: false,
@@ -35,10 +33,14 @@ const ValidationPage = () => {
     const [newSkill, setNewSkill] = useState('');
     const [skillType, setSkillType] = useState<'proficient' | 'other_skills'>('proficient');
     const [validationErrors, setValidationErrors] = useState<string[]>([]);
+    const router = useRouter();
 
     useEffect(() => {
         getCurrentData();
     }, [])
+
+    if (!formData)
+        return (<LoadingScreen />)
 
     // Helper Functions
     const {
@@ -49,7 +51,8 @@ const ValidationPage = () => {
         deleteProject,
         addNewExperience,
         handleExperienceChange,
-        deleteExperience
+        deleteExperience,
+        formatDate
     } = validationHelperFns(formData, newSkill, skillType, setFormData, setNewSkill)
 
     const toggleSection = (section: keyof typeof expandedSections) => {
@@ -83,6 +86,7 @@ const ValidationPage = () => {
         try {
             await updateProfile(formData);
             console.log('Submitted data:', formData);
+            router.push('/onboarding/final', {});
         } catch (error) {
             console.error('Error submitting form:', error);
         } finally {
@@ -173,14 +177,34 @@ const ValidationPage = () => {
                                         <div className="grid grid-cols-2 gap-4">
                                             <Input
                                                 type="date"
-                                                value={exp.startDate}
+                                                value={formatDate(exp.startDate)}
                                                 onChange={(e) => handleExperienceChange(index, 'startDate', e.target.value)}
                                             />
-                                            <Input
-                                                type="date"
-                                                value={exp.endDate}
-                                                onChange={(e) => handleExperienceChange(index, 'endDate', e.target.value)}
-                                            />
+
+                                            <div className="space-y-2">
+                                                <Input
+                                                    type="date"
+                                                    value={formatDate(exp.endDate)}
+                                                    onChange={(e) => handleExperienceChange(index, 'endDate', e.target.value)}
+                                                    disabled={!exp.endDate}
+                                                    className="border-violet-200 focus:border-violet-400"
+                                                />
+                                                <div className="flex items-center space-x-2">
+                                                    <Checkbox
+                                                        id={`currently-working-exp-${index}`}
+                                                        checked={!exp.endDate}
+                                                        onCheckedChange={(checked: boolean) =>
+                                                            handleExperienceChange(index, 'endDate', checked ? '' : new Date().toString())
+                                                        }
+                                                    />
+                                                    <label
+                                                        htmlFor={`currently-working-exp-${index}`}
+                                                        className="text-sm text-gray-600"
+                                                    >
+                                                        Currently working here
+                                                    </label>
+                                                </div>
+                                            </div>
                                         </div>
                                         <Textarea
                                             value={exp.description}
@@ -253,14 +277,34 @@ const ValidationPage = () => {
                                         <div className="grid grid-cols-2 gap-4">
                                             <Input
                                                 type="date"
-                                                value={project.startDate}
+                                                value={formatDate(project.startDate)}
                                                 onChange={(e) => handleProjectChange(index, 'startDate', e.target.value)}
                                             />
-                                            <Input
-                                                type="date"
-                                                value={project.endDate}
-                                                onChange={(e) => handleProjectChange(index, 'endDate', e.target.value)}
-                                            />
+                                            <div className="space-y-2">
+                                                <Input
+                                                    type="date"
+                                                    value={formatDate(project.endDate)}
+                                                    onChange={(e) => handleProjectChange(index, 'endDate', e.target.value)}
+                                                    disabled={!project.endDate}
+                                                    className="border-violet-200 focus:border-violet-400"
+                                                />
+                                                <div className="flex items-center space-x-2">
+                                                    <Checkbox
+                                                        id={`currently-working-proj-${index}`}
+                                                        checked={!project.endDate}
+                                                        onCheckedChange={(checked: boolean) =>
+                                                            handleProjectChange(index, 'endDate', checked ? '' : new Date().toString())
+                                                        }
+                                                    />
+                                                    <label
+                                                        htmlFor={`currently-working-proj-${index}`}
+                                                        className="text-sm text-gray-600"
+                                                    >
+                                                        Currently working on this
+                                                    </label>
+                                                </div>
+                                            </div>
+
                                         </div>
                                         <Textarea
                                             value={project.description}
@@ -373,18 +417,26 @@ const ValidationPage = () => {
                 <Button
                     onClick={handleSubmit}
                     disabled={isSubmitting}
-                    className="w-full sm:w-auto bg-gradient-to-r from-violet-600 to-fuchsia-600 text-white hover:opacity-90 transition-opacity"
+                    className="w-full sm:w-auto bg-gradient-to-r from-violet-600 to-fuchsia-600 text-white hover:opacity-90 transition-all duration-300"
                 >
                     {isSubmitting ? (
-                        <>
+                        <motion.div
+                            className="flex items-center"
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                        >
                             <Loader2 className="w-4 h-4 mr-2 animate-spin" />
                             Validating with AI...
-                        </>
+                        </motion.div>
                     ) : (
-                        <>
+                        <motion.div
+                            className="flex items-center"
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                        >
                             <Save className="w-4 h-4 mr-2" />
                             Confirm and Save
-                        </>
+                        </motion.div>
                     )}
                 </Button>
             </div>
@@ -400,38 +452,38 @@ export default ValidationPage;
 
 
 
-const mockData: Candidate = {
-    "userId": 1,
-    "resume": "",
-    "proficientSkills": ['react'],
-    "otherSkills": ['react'],
-    "experiences": [
-        {
-            "id": -1,
-            "jobTitle": "Backend Developer",
-            "companyName": "Tech Solutions",
-            "startDate": "2019-06-01",
-            "endDate": "2022-05-01",
-            "description": "Developed RESTful APIs using Python and Django. Integrated Docker for containerized deployments.",
-        },
-        {
-            "id": -1,
-            "jobTitle": "Software Engineer",
-            "companyName": "Innovatech",
-            "startDate": "2022-06-01",
-            "endDate": "2023-06-01",
-            "description": "Enhanced scalability of the backend using Flask and optimized database queries in MongoDB.",
-        },
-    ],
-    "projects": [
-        {
-            "id": -1,
-            "projectTitle": "E-commerce API",
-            "startDate": "2021-01-01",
-            "endDate": "2021-06-01",
-            "description": "Built a scalable e-commerce API using Django and integrated payment gateways.",
-        }
-    ],
-    updatedAt: new Date(),
-    createdAt: new Date()
-}
+
+// Loading component
+const LoadingScreen = () => (
+    <div className="absolute inset-0 min-h-screen flex flex-col items-center justify-center bg-gradient-to-r from-violet-50 to-fuchsia-50">
+        <motion.div
+            initial={{ scale: 0.8, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            transition={{ duration: 0.5 }}
+            className="text-center space-y-6 items-center flex justify-center flex-col"
+        >
+            <div className="relative w-24 h-24 ">
+                <motion.div
+                    className="absolute inset-0 rounded-full border-4 border-violet-200"
+                    style={{ borderTopColor: 'transparent' }}
+                    animate={{ rotate: 360 }}
+                    transition={{ duration: 1.5, repeat: Infinity, ease: "linear" }}
+                />
+                <motion.div
+                    className="absolute inset-2 rounded-full border-4 border-fuchsia-300"
+                    style={{ borderTopColor: 'transparent', borderRightColor: 'transparent' }}
+                    animate={{ rotate: -360 }}
+                    transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
+                />
+            </div>
+            <motion.h2
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.3 }}
+                className="text-xl font-semibold bg-gradient-to-r from-violet-600 to-fuchsia-600 bg-clip-text text-transparent"
+            >
+                Loading Your Profile...
+            </motion.h2>
+        </motion.div>
+    </div>
+);

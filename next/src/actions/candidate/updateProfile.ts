@@ -56,7 +56,7 @@ export default async function updateProfile(
                 startDate: new Date(proj.startDate),
                 endDate: proj.endDate ? new Date(proj.endDate) : null,
                 description: proj.description
-            }).where(eq(schema.Experiences.id, proj.id))
+            }).where(eq(schema.Projects.id, proj.id))
         }
 
 

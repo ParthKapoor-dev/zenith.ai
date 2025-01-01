@@ -28,7 +28,8 @@ export default async function uploadResume(formData: FormData) {
         // TODO: reusume Link => response.data.secure_url;
         await db.insert(schema.Candidates).values({
             resume: response.data.secure_url,
-            userId
+            userId,
+            isComplete: false
         })
 
 

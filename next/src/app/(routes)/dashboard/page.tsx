@@ -27,7 +27,7 @@ export default async function Dash() {
         } catch (error) {
             console.log("Unexpected Error Occoured ", error)
         }
-        if (!roleInfo?.salaryExpectation) redirect('/onboarding/resume');
+        if (!roleInfo?.isComplete) redirect('/onboarding/resume');
     }
 
     // TODO : Create Recruiter Dashboard
