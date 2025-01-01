@@ -2,6 +2,9 @@ import { Clock, File } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import UploadResDialog from "./uploadResDialog";
+import { Button } from "../ui/button";
+import { cn } from "@/lib/utils";
+import { redirect } from "next/navigation";
 interface Card02Props {
     name?: string;
     email?: string;
@@ -18,6 +21,11 @@ export default function ProfileCard({
     resume_link,
     rating,
 }: Card02Props) {
+
+
+    function handleUpdateAccount() {
+        redirect('/update/resume');
+    }
 
 
     return (
@@ -78,7 +86,14 @@ export default function ProfileCard({
                                     </Link>
                                 </div>
 
-                                <UploadResDialog className="text-sm" />
+                                <Button
+                                    onClick={handleUpdateAccount}
+                                    className={cn("bg-gradient-to-r from-violet-600 to-fuchsia-600 text-white hover:from-violet-700 hover:to-fuchsia-700 flex px-4 py-2 rounded-lg items-center")}
+                                >
+                                    Update Account
+                                </Button>
+
+                                {/* <UploadResDialog className="text-sm" /> */}
                             </div>
                         </div>
 
@@ -90,4 +105,3 @@ export default function ProfileCard({
         </div>
     );
 }
-

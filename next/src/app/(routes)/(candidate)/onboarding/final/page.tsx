@@ -9,7 +9,7 @@ import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue, SelectGroup, SelectLabel } from "@/components/ui/select";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Loader2, DollarSign, Briefcase, Clock, AlertCircle, X } from 'lucide-react';
-import { employmentTypes as empTypes, roles as availRoles } from '@/db/schema/enum';
+import { employmentTypes, roles as availRoles } from '@/db/schema/enum';
 
 import { useRef } from 'react';
 import { Check } from 'lucide-react';
@@ -25,7 +25,6 @@ const currencies = [
     { code: 'GBP', symbol: '£', name: 'British Pound' },
     { code: 'INR', symbol: '₹', name: 'Indian Rupee' },
     { code: 'JPY', symbol: '¥', name: 'Japanese Yen' },
-    // Add more currencies as needed
 ];
 
 const jobCategories = {
@@ -59,14 +58,6 @@ const jobCategories = {
     ]
 };
 
-const employmentTypes: typeof empTypes = [
-    "Full Time",
-    "Part Time",
-    "Internship",
-    "Freelance",
-    "Contract"
-];
-
 const availabilityOptions = [
     { value: "immediate", label: "Immediate" },
     { value: "15days", label: "15 Days Notice" },
@@ -78,15 +69,6 @@ const availabilityOptions = [
 
 type role = typeof availRoles[number]
 
-interface FormDataProps {
-    salary: string,
-    currency: typeof currencies[number]['code'],
-    salaryPeriod: 'annual' | 'monthly',
-    employmentType: typeof employmentTypes[number],
-    selectedRoles: role[],
-    availability: typeof availabilityOptions[number]['value']
-}
-
 const UserPreferencesPage = () => {
 
     const router = useRouter();
@@ -97,21 +79,6 @@ const UserPreferencesPage = () => {
     // Server Actions
     const getCurrentData = async () =>
         setFormData(await fetchServerAction<Candidate | undefined>(fetchCandidate, undefined))
-
-    // const handleRoleSelect = (role: string) => {
-    //     if (formData.selectedRoles.length >= 5 && !formData.selectedRoles.includes(role)) {
-    //         setError('You can select up to 5 roles');
-    //         return;
-    //     }
-    //     console.log('role is ', role)
-    //     setFormData(prev => ({
-    //         ...prev,
-    //         selectedRoles: prev.selectedRoles.includes(role)
-    //             ? prev.selectedRoles.filter(r => r !== role)
-    //             : [...prev.selectedRoles, role]
-    //     }));
-    //     setError('');
-    // };
 
     useEffect(() => {
         getCurrentData();

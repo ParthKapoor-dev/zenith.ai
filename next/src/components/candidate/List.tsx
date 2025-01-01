@@ -42,8 +42,8 @@ const categoryStyles = {
 const TRANSACTIONS: Transaction[] = [
     {
         id: "1",
-        title: "Welcome to Purity AI",
-        email: "purity.ai@gmail.com",
+        title: "Welcome to Jobverse AI",
+        email: "jobverse.ai@gmail.com",
         type: "incoming",
         category: "shopping",
         icon: PartyPopper,
@@ -52,24 +52,14 @@ const TRANSACTIONS: Transaction[] = [
     },
     {
         id: "2",
-        title: "Upload Your Resume",
-        email: "purity_ai@gmail.com",
+        title: "Resume Uploaded",
+        email: "jobverse.ai@gmail.com",
         type: "incoming",
         category: "transport",
         icon: File,
         timestamp: "Today, 9:00 AM",
         status: "completed",
     },
-    // {
-    //     id: "3",
-    //     title: "Netflix Subscription",
-    //     amount: "$15.99",
-    //     type: "outgoing",
-    //     category: "entertainment",
-    //     icon: CreditCard,
-    //     timestamp: "Yesterday",
-    //     status: "pending",
-    // },
 ];
 
 export default function List({

@@ -11,7 +11,7 @@ import uploadResume from '@/actions/candidate/resumeUpload';
 import User from '@/types/user';
 import { useUser } from '@/hooks/useUser';
 
-const CandOnBoardPage = () => {
+const UploadResumePage = () => {
     const [isDragging, setIsDragging] = useState(false);
     const [file, setFile] = useState<File | null>(null);
     const [isUploading, setIsUploading] = useState(false);
@@ -234,4 +234,4 @@ const CandOnBoardPage = () => {
     );
 };
 
-export default CandOnBoardPage
+export default UploadResumePage

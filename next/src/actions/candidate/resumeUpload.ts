@@ -25,12 +25,18 @@ export default async function uploadResume(formData: FormData) {
             },
         });
 
-        // TODO: reusume Link => response.data.secure_url;
+        // TODO: Extract Resume Information from Python Server
+
+        // TODO: Update Candidate Information
+
+        // TODO: resume Link => response.data.secure_url;
         await db.insert(schema.Candidates).values({
             resume: response.data.secure_url,
             userId,
-            isComplete: false
-        })
+        }).onDuplicateKeyUpdate({ set : {
+            resume : response.data.secure_url
+        }})
+
 
 
     } catch (error: any) {
