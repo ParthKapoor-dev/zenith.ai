@@ -8,7 +8,7 @@ export const Users = mysqlTable('users', {
     id: int().primaryKey().autoincrement(),
     name: varchar({ length: 255 }).notNull(),
     email: varchar({ length: 255 }).notNull().unique(),
-    role: mysqlEnum([...userRoles]).notNull(),
+    role: mysqlEnum(userRoles).notNull(),
     image: varchar({ length: 1000 }),
     ...timestamps,
 });

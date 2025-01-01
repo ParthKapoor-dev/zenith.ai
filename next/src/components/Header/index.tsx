@@ -107,12 +107,11 @@ export default function Navbar() {
             ]
         },
         {
-            trigger: 'Analytics',
-            icon: <PieChart className="w-4 h-4 mr-2" />,
+            trigger: 'Job Postings',
+            icon: <Briefcase className="w-4 h-4 mr-2" />,
             content: [
-                { title: 'Dashboard', description: 'View recruitment metrics', href: '/dashboard' },
-                { title: 'Reports', description: 'Generate detailed reports', href: '/reports' },
-                { title: 'Performance', description: 'Track hiring performance', href: '/performance' },
+                { title: 'Jobs Dashboard', description: 'View recruitment metrics', href: '/dashboard' },
+                { title: 'New Posting +', description: 'Create a new Job posting', href: '/application/create' },
             ]
         }
     ];

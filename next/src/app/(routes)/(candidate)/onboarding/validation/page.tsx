@@ -16,6 +16,7 @@ import fetchServerAction from '@/lib/fetchHelper';
 import fetchCandidate from '@/actions/candidate/fetchCandidate';
 import { useRouter } from 'next/navigation';
 import { Checkbox } from '@/components/ui/checkbox';
+import { formatDate } from '@/lib/formatDates';
 
 
 const ValidationPage = () => {
@@ -52,7 +53,6 @@ const ValidationPage = () => {
         addNewExperience,
         handleExperienceChange,
         deleteExperience,
-        formatDate
     } = validationHelperFns(formData, newSkill, skillType, setFormData, setNewSkill)
 
     const toggleSection = (section: keyof typeof expandedSections) => {
