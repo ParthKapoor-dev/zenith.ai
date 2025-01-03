@@ -28,7 +28,7 @@ export default function ChatArea({ messages, isTyping }: ChatAreaProps) {
                     <AnimatePresence initial={false}>
                         {messages.map((message) => (
                             <motion.div
-                                key={message.id}
+                                key={message.id + (isChatInput(message) ? '-input' : '-resp') }
                                 initial={{ opacity: 0, y: 20 }}
                                 animate={{ opacity: 1, y: 0 }}
                                 exit={{ opacity: 0, y: -20 }}

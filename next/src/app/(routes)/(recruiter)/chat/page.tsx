@@ -51,7 +51,7 @@ const AIChatInterface = () => {
         (await fetchServerAction<string>(() => handelUserInput(msg)))!;
 
     const createSession = async (title?: string) => {
-        const sessionId = (await fetchServerAction<number>(() => createChatSession(title)))!;
+        const sessionId: number = (await fetchServerAction<number>(() => createChatSession(title)))!;
         setCurrentSession(sessionId);
         return sessionId;
     }

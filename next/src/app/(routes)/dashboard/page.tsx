@@ -5,6 +5,7 @@ import { verifySession } from "@/lib/session"
 import Candidate from "@/types/candidate";
 import { eq } from "drizzle-orm";
 import { redirect } from "next/navigation";
+import RecruiterDashboard from "./RecDash";
 
 
 export default async function Dash() {
@@ -30,13 +31,17 @@ export default async function Dash() {
         if (!roleInfo?.isComplete) redirect('/onboarding/resume');
     }
 
-    // TODO : Create Recruiter Dashboard
-    if (role == 'recruiter') redirect('/chat')
+    // // TODO : Create Recruiter Dashboard
+    // if (role == 'recruiter') redirect('/chat')
 
     return (
         <div className="h-full">
             {role == 'candidate' && (
                 <CandidateDash candidate={roleInfo!} user={session.user} />
+            )}
+
+            {role == 'recruiter' && (
+                <RecruiterDashboard />
             )}
 
         </div>
