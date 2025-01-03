@@ -13,3 +13,10 @@ export interface Job {
     createdAt: Date;
 }
 
+
+export interface JobApplication {
+    applicantId: number,
+    jobId: string,
+    updatedAt: Date;
+    createdAt: Date;
+}

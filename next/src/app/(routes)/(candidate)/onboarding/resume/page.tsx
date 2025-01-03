@@ -89,8 +89,7 @@ const UploadResumePage = () => {
             formData.append('file', file);
 
 
-            // TODO: Replace with your actual API endpoint
-            const response = await uploadResume(formData);
+            await uploadResume(formData);
 
             toast({
                 title: 'Resume uploaded successfully!',
@@ -98,9 +97,7 @@ const UploadResumePage = () => {
             });
 
 
-            // TODO: Add redirect logic here
             window.location.reload()
-            // router.push('/onboarding/validation');
 
         } catch (error) {
             toast({

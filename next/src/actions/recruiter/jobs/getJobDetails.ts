@@ -4,7 +4,7 @@ import { db } from "@/db";
 import schema from "@/db/schema/_index";
 import { verifySession } from "@/lib/session";
 import { Job } from "@/types/job";
-import { count, eq, gt, sql } from "drizzle-orm";
+import { and, count, eq, gt, sql } from "drizzle-orm";
 
 export default async function getJobDetails(
     jobId: string
@@ -22,17 +22,15 @@ export default async function getJobDetails(
 
         if (!job) throw new Error("Invalid Job Id");
 
-        // const totalCount = await db.select({ count: count() })
-        //     .from(schema.JobApplications)
-        //     .where(eq(schema.JobApplications.jobId, jobId));
-
         const indivCount = await db
             .select({
                 date: sql`DATE(${schema.JobApplications.createdAt})`.as('date'),
                 count: sql`COUNT(*)`.as('count'),
             })
             .from(schema.JobApplications)
-            .where(gt(schema.JobApplications.createdAt, job?.createdAt))
+            .where(and(
+                gt(schema.JobApplications.createdAt, job?.createdAt),
+                eq(schema.JobApplications.jobId, jobId)))
             .groupBy(sql`DATE(${schema.JobApplications.createdAt})`)
             .orderBy(sql`DATE(${schema.JobApplications.createdAt})`)
             .execute();

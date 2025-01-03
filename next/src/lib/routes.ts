@@ -2,8 +2,8 @@ const routes = {
     dashboard: '/dashboard',
     chat: '/chat',
     createJobs: '/postings/forge',
-    job: (id: string) => `postings/${id}`,
-    application: (id: string) => `apply/${id}`,
+    job: (id: string) => `/postings/${id}`,
+    application: (id: string) => `/apply/${id}`,
     onboarding: {
         resume: '/onboarding/resume',
         validation: '/onboarding/validation',
@@ -14,7 +14,7 @@ const routes = {
         validation: '/update/validation',
         final: '/update/final'
     },
-    login: 'auth/login'
+    login: '/auth/login'
 }
 
 export default routes;
