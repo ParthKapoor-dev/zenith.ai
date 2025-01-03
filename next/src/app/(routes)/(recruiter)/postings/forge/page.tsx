@@ -37,7 +37,8 @@ const JobPostingPage = () => {
         setIsSubmitting(true);
         try {
             await new Promise(resolve => setTimeout(resolve, 3000));
-            await createJob(formData)
+            await createJob(formData);
+            router.push('/postings/' + formData.id);
         } finally {
             setIsSubmitting(false);
         }

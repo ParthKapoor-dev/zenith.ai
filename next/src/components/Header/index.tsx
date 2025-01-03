@@ -111,7 +111,7 @@ export default function Navbar() {
             icon: <Briefcase className="w-4 h-4 mr-2" />,
             content: [
                 { title: 'Jobs Dashboard', description: 'View recruitment metrics', href: '/dashboard' },
-                { title: 'New Posting +', description: 'Create a new Job posting', href: '/application/create' },
+                { title: 'New Posting +', description: 'Create a new Job posting', href: '/postings/forge' },
             ]
         }
     ];

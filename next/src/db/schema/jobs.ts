@@ -1,11 +1,10 @@
 import { char, date, int, mysqlTable, primaryKey, varchar } from "drizzle-orm/mysql-core";
 import { timestamps } from "./timestamp";
-import { sql } from "drizzle-orm";
 import { Users } from "./user";
 import { Candidates } from "./candidate";
 
 // Job Postings
-export const Jobs = mysqlTable('Jobs', {
+export const Jobs = mysqlTable('jobs', {
     id: char({ length: 36 }).notNull().unique().primaryKey(),
     createdBy: int().references(() => Users.id),
     title: varchar({ length: 255 }).notNull(),
@@ -22,6 +21,7 @@ export const Jobs = mysqlTable('Jobs', {
 export const JobApplications = mysqlTable('jobApplications', {
     applicantId: int().notNull().references(() => Candidates.userId),
     jobId: char({ length: 36 }).notNull().references(() => Jobs.id),
+    ...timestamps
 }, (table) => ([
     primaryKey({ columns: [table.applicantId, table.jobId] }),
 ]));
