@@ -58,7 +58,7 @@ export const JobsRelations = relations(Jobs, ({ one, many }) => ({
     recruiter: one(Users, {
         fields: [Jobs.createdBy], references: [Users.id]
     }),
-    applicants: many(JobApplications)
+    applications: many(JobApplications)
 }))
 
 export const JobApplicationsRelations = relations(JobApplications, ({ one }) => ({
