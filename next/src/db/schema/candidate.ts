@@ -32,6 +32,18 @@ export const Experiences = mysqlTable('experiences', {
     description: text(),
 });
 
+
+// Education Table
+export const Education = mysqlTable('education', {
+    id: int().primaryKey().autoincrement(),
+    userId: int().notNull().references(() => Candidates.userId),
+    courseName: varchar({ length: 255 }).notNull(),
+    instituteName: varchar({ length: 255 }).notNull(),
+    startDate: date().notNull(),
+    endDate: date(),
+});
+
+
 // Projects Table
 export const Projects = mysqlTable('projects', {
     id: int().primaryKey().autoincrement(),

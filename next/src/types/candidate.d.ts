@@ -6,6 +6,7 @@ export default interface Candidate {
     phoneNumber?: string,
     experiences: Experience[],
     projects: Project[],
+    education: Education[],
     proficientSkills: string[],
     otherSkills: string[],
     salaryExpectation?: string,
@@ -14,9 +15,17 @@ export default interface Candidate {
     employmentType?: typeof employmentTypes[number],
     preferredRole?: Role[],
     availability?: typeof availabilities[number],
-    isComplete? : boolean,
+    isComplete?: boolean,
     updatedAt: Date;
     createdAt: Date;
+}
+
+export interface Education {
+    id: number,
+    instituteName: string;
+    courseName: string;
+    startDate: string;
+    endDate: string;
 }
 
 

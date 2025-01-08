@@ -18,7 +18,7 @@ export const Jobs = mysqlTable('jobs', {
 });
 
 // Candidate's Application to Job
-export const JobApplications = mysqlTable('jobApplications', {
+export const JobApplications = mysqlTable('job_applications', {
     applicantId: int().notNull().references(() => Candidates.userId),
     jobId: char({ length: 36 }).notNull().references(() => Jobs.id),
     ...timestamps

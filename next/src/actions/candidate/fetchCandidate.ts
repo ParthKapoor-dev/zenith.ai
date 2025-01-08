@@ -16,8 +16,9 @@ export default async function fetchCandidate() {
         const candidate = await db.query.Candidates.findFirst({
             where: eq(schema.Candidates.userId, userId),
             with: {
-                experiences : true,
-                projects : true,
+                experiences: true,
+                projects: true,
+                education: true
             }
         }) as Candidate | undefined;
 

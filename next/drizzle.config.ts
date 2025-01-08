@@ -9,7 +9,7 @@ export default defineConfig({
         port: 3306,        
         user: 'root',
         password: 'rootpass',
-        database: 'jobversedb',
+        database: 'db',
         // url: process.env.DATABASE_URL!,
     },
 });

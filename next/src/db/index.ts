@@ -9,7 +9,7 @@ const poolConnection = mysql.createPool({
     port: 3306,
     user: 'root',
     password: 'rootpass',
-    database: 'jobversedb'
+    database: 'db'
 });
 
 export const db = db_url

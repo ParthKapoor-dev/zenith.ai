@@ -1,4 +1,4 @@
-import Candidate, { Experience, Project } from "@/types/candidate";
+import Candidate, { Education, Experience, Project } from "@/types/candidate";
 
 
 export default function validationHelperFns(
@@ -107,6 +107,34 @@ export default function validationHelperFns(
     };
 
 
+    // Education Helper Functions
+    const addNewEdu = () => {
+        const newEdu: Education = {
+            courseName: '',
+            startDate: '',
+            endDate: '',
+            instituteName: '',
+            id: -1
+        };
+        setFormData({
+            ...formData,
+            education: [...formData.education, newEdu]
+        });
+    };
+
+    const handleEduChange = (index: number, field: keyof Education, value: string) => {
+        const Edu = [...formData.education];
+        Edu[index] = { ...Edu[index], [field]: value };
+        setFormData({ ...formData, education: Edu });
+    };
+
+
+    const deleteEdu = (index: number) => {
+        const Edu = formData.education.filter((_: any, i: number) => i !== index);
+        setFormData({ ...formData, education: Edu });
+    };
+
+
     return {
         handleAddSkill,
         handleRemoveSkill,
@@ -116,6 +144,9 @@ export default function validationHelperFns(
         addNewExperience,
         handleExperienceChange,
         deleteExperience,
+        addNewEdu,
+        handleEduChange,
+        deleteEdu
     }
 
 }

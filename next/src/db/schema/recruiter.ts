@@ -3,7 +3,7 @@ import { timestamps } from './timestamp';
 import { Users } from './user';
 
 //Recruiter Chat Session Table
-export const ChatSessions = mysqlTable('chatSessions', {
+export const ChatSessions = mysqlTable('chat_sessions', {
     id: int().primaryKey().autoincrement(),
     userId: int().references(() => Users.id).notNull(),
     title: varchar({ length: 255 }).notNull(),
@@ -11,7 +11,7 @@ export const ChatSessions = mysqlTable('chatSessions', {
 })
 
 //Recruiter User Inputs Table
-export const ChatInputs = mysqlTable('chatInputs', {
+export const ChatInputs = mysqlTable('chat_inputs', {
     id: int().primaryKey().autoincrement(),
     sessionId: int().references(() => ChatSessions.id).notNull(),
     input: varchar({ length: 1000 }).notNull(),
@@ -19,7 +19,7 @@ export const ChatInputs = mysqlTable('chatInputs', {
 })
 
 // Recruiter ChatBot Responses Table
-export const ChatResponses = mysqlTable('chatResponses', {
+export const ChatResponses = mysqlTable('chat_responses', {
     id: int().primaryKey().autoincrement(),
     sessionId: int().references(() => ChatSessions.id).notNull(),
     response: varchar({ length: 1000 }).notNull(),

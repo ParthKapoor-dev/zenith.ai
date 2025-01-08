@@ -28,7 +28,8 @@ const ValidationPage = () => {
     const [expandedSections, setExpandedSections] = useState({
         experiences: false,
         projects: false,
-        skills: false
+        skills: false,
+        education: false
     });
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [newSkill, setNewSkill] = useState('');
@@ -53,6 +54,9 @@ const ValidationPage = () => {
         addNewExperience,
         handleExperienceChange,
         deleteExperience,
+        addNewEdu,
+        handleEduChange,
+        deleteEdu
     } = validationHelperFns(formData, newSkill, skillType, setFormData, setNewSkill)
 
     const toggleSection = (section: keyof typeof expandedSections) => {
@@ -121,6 +125,106 @@ const ValidationPage = () => {
                     </AlertDescription>
                 </Alert>
             )}
+
+            {/* Education Section */}
+            <Card className="border-2 border-violet-100 shadow-lg">
+                <CardHeader className="cursor-pointer hover:bg-slate-50 transition-colors" onClick={() => toggleSection('education')}>
+                    <CardTitle className="flex justify-between items-center">
+                        <span className="flex items-center gap-2">
+                            <Badge variant="secondary" className="bg-violet-100 text-violet-800">
+                                {formData?.education?.length}
+                            </Badge>
+                            Education
+                        </span>
+                        {expandedSections.education ? <ChevronUp /> : <ChevronDown />}
+                    </CardTitle>
+                </CardHeader>
+                <AnimatePresence>
+                    {expandedSections.education && (
+                        <motion.div
+                            initial={{ height: 0, opacity: 0 }}
+                            animate={{ height: 'auto', opacity: 1 }}
+                            exit={{ height: 0, opacity: 0 }}
+                            transition={{ duration: 0.2 }}
+                        >
+                            <CardContent className="space-y-6">
+                                {formData?.education?.map((edu, index) => (
+                                    <motion.div
+                                        key={index}
+                                        initial={{ opacity: 0 }}
+                                        animate={{ opacity: 1 }}
+                                        className="p-4 border-2 rounded-lg space-y-4 relative hover:border-violet-200 transition-colors"
+                                    >
+                                        <div className="absolute -top-3 -left-3">
+                                            <Badge className="bg-violet-600">Education {index + 1}</Badge>
+                                        </div>
+                                        <Button
+                                            variant="destructive"
+                                            size="sm"
+                                            className="absolute -top-3 -right-3"
+                                            onClick={() => deleteEdu(index)}
+                                        >
+                                            <X className="w-4 h-4" />
+                                        </Button>
+                                        <div className="grid grid-cols-2 gap-4">
+                                            <Input
+                                                value={edu.instituteName}
+                                                onChange={(e) => handleEduChange(index, 'instituteName', e.target.value)}
+                                                placeholder="Institute Name"
+                                            />
+                                            <Input
+                                                value={edu.courseName}
+                                                onChange={(e) => handleEduChange(index, 'courseName', e.target.value)}
+                                                placeholder="Course Name"
+                                            />
+                                        </div>
+                                        <div className="grid grid-cols-2 gap-4">
+                                            <Input
+                                                type="date"
+                                                value={formatDate(edu.startDate)}
+                                                onChange={(e) => handleEduChange(index, 'startDate', e.target.value)}
+                                            />
+
+                                            <div className="space-y-2">
+                                                <Input
+                                                    type="date"
+                                                    value={formatDate(edu.endDate)}
+                                                    onChange={(e) => handleEduChange(index, 'endDate', e.target.value)}
+                                                    disabled={!edu.endDate}
+                                                    className="border-violet-200 focus:border-violet-400"
+                                                />
+                                                <div className="flex items-center space-x-2">
+                                                    <Checkbox
+                                                        id={`still-pursuing-${index}`}
+                                                        checked={!edu.endDate}
+                                                        onCheckedChange={(checked: boolean) =>
+                                                            handleEduChange(index, 'endDate', checked ? '' : new Date().toString())
+                                                        }
+                                                    />
+                                                    <label
+                                                        htmlFor={`still-pursuing-${index}`}
+                                                        className="text-sm text-gray-600"
+                                                    >
+                                                        Still Pursuing
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </motion.div>
+                                ))}
+                                <Button
+                                    onClick={addNewEdu}
+                                    variant="outline"
+                                    className="w-full mt-4 border-dashed border-2 hover:border-violet-400 hover:text-violet-600"
+                                >
+                                    <Plus className="w-4 h-4 mr-2" />
+                                    Add New Education
+                                </Button>
+                            </CardContent>
+                        </motion.div>
+                    )}
+                </AnimatePresence>
+            </Card>
 
             {/* Experience Section */}
             <Card className="border-2 border-violet-100 shadow-lg">
