@@ -1,8 +1,9 @@
-from fastapi import APIRouter, HTTPException, Depends, status
-from pydantic import ValidationError
+from fastapi import APIRouter, HTTPException, Depends, status, WebSocket
+from pydantic import ValidationError, BaseModel
 import numpy as np
 from app.services.hunter import vectorize_query
 from app.db.upstash_vector import index
+from app.services.chatbot import chat
 
 router = APIRouter()
 
@@ -29,6 +30,26 @@ def searching_recruiter(query):
             detail=str(e)
         )
     except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"An unexpected error occurred: {str(e)}"
+        )
+
+class ChatRequest(BaseModel):
+    user_input: str    
+
+@router.post("/chat")
+async def recruiter_chatbot_endpoint(req: ChatRequest):
+    try:
+        print(req.user_input)
+        response = chat(req.user_input)
+        return {"resp": response}
+
+        # async for chunk in chat(user_input):
+        #     await websocket.send_text(chunk)
+        #     await asyncio.sleep(0.01)
+    except Exception as e:
+        print("Error Occured", str(e))
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"An unexpected error occurred: {str(e)}"

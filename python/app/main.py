@@ -1,13 +1,27 @@
-from fastapi import APIRouter, HTTPException, Depends, status
-from fastapi import FastAPI, Request
+from fastapi import APIRouter, HTTPException, Depends, status, FastAPI, WebSocket, Request
 from fastapi.security.api_key import APIKeyHeader
+from fastapi.middleware.cors import CORSMiddleware
 from app.routes import candidates, testing, recruiters
+from app.services.chatbot import chat
 
 app = FastAPI(
     title="Jobverse AI",
     description="AI Recruitment Platform",
     version="1.0.0",
 )
+
+origins = [
+    "http://localhost:3000",  # Allow requests from Next.js
+    "http://127.0.0.1:3000",
+]
+
+# app.add_middleware(
+#     CORSMiddleware,
+#     allow_origins=origins,
+#     allow_credentials=True,
+#     allow_methods=["*"],
+#     allow_headers=["*"],
+# )
 
 # # API Key Authentication
 # API_KEY = "my-secret-api-key"

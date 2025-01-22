@@ -1,11 +1,17 @@
 import { ChatInput, ChatResponse } from '@/types/chatbot';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Bot, Loader2, User2 } from 'lucide-react';
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 
 interface ChatAreaProps {
     messages: (ChatInput | ChatResponse)[]
     isTyping: boolean
 }
+
+// TODO: Better Styling -> Able to differenciate between Chat Input and Bot Response, Maybe something like perplexity's design type
+
+// TODO: Automatic Scrolling to below, whenever a new chat response is received
 
 export default function ChatArea({ messages, isTyping }: ChatAreaProps) {
     return (
@@ -28,7 +34,7 @@ export default function ChatArea({ messages, isTyping }: ChatAreaProps) {
                     <AnimatePresence initial={false}>
                         {messages.map((message) => (
                             <motion.div
-                                key={message.id + (isChatInput(message) ? '-input' : '-resp') }
+                                key={message.id + (isChatInput(message) ? '-input' : '-resp')}
                                 initial={{ opacity: 0, y: 20 }}
                                 animate={{ opacity: 1, y: 0 }}
                                 exit={{ opacity: 0, y: -20 }}
@@ -46,7 +52,13 @@ export default function ChatArea({ messages, isTyping }: ChatAreaProps) {
                                         <Bot className="w-4 h-4" />
                                     )}
                                 </div>
-                                <div className="flex-1 prose prose-zinc dark:prose-invert max-w-none">
+                                {/* <div className="prose prose-zinc dark:prose-invert max-w-none">
+                                    <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                                        {(message as ChatInput).input || (message as ChatResponse).response}
+                                    </ReactMarkdown>
+                                </div> */}
+                                <div className="flex-1 prose prose-zinc dark:prose-invert max-w-none"
+                                    style={{ whiteSpace: "pre-wrap" }}>
                                     {(message as ChatInput).input || (message as ChatResponse).response}
                                 </div>
                             </motion.div>

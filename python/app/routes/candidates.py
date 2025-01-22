@@ -21,9 +21,6 @@ def resume_feedback():
 @router.post("/")
 def add_candidate(candidate_data : Candidate):
     try:
-
-        # candidate_data = await request.json()
-
         # Validate input
         vector = vectorize_candidate(candidate_data)
         candidate_id = candidate_data.userId

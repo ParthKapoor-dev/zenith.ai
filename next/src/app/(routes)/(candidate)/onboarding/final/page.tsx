@@ -96,7 +96,6 @@ const UserPreferencesPage = () => {
         setIsSubmitting(true);
 
         try {
-            await new Promise(resolve => setTimeout(resolve, 3000));
             await finalizeAccount(formData);
             router.push('/')
             console.log(formData);

@@ -40,12 +40,9 @@ export default function ChatSidebar({
 
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
-
-
     const handleOpenSession = async (sessionId: number) => {
         setIsSidebarOpen(false);
         setLoading(true);
-        await new Promise(resolve => setTimeout(resolve, 1500));
         await getChatSession(sessionId);
         setLoading(false);
     }

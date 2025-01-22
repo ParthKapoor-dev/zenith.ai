@@ -76,7 +76,6 @@ export default function UploadResDialog({ className }: { className?: string }) {
         setIsUploading(true);
         try {
             // Simulating upload
-            await new Promise(resolve => setTimeout(resolve, 2000));
             toast({
                 title: "Resume uploaded successfully",
                 description: "Your profile has been updated"

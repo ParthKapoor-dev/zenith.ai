@@ -1,22 +1,11 @@
 'use client'
 
-import React, { useState, useRef, useEffect, use } from 'react';
-import { Button } from '@/components/ui/button';
+import React, { useState, useRef, useEffect } from 'react';
 import { Textarea } from '@/components/ui/textarea';
-import { ScrollArea } from '@/components/ui/scroll-area';
 import {
-    Sheet,
-    SheetContent,
-    SheetTrigger,
-} from '@/components/ui/sheet';
-import {
-    MenuIcon,
-    Plus,
-    MessageSquare,
     CornerRightDown,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { DialogTitle } from '@/components/ui/dialog';
 import ChatArea from '../../../../components/recruiter/chat/ChatArea';
 import { ChatInput, ChatResponse, ChatSession } from '@/types/chatbot';
 import getAllSessions from '@/actions/recruiter/chat/getAllSessions';
@@ -28,7 +17,6 @@ import createChatSession from "@/actions/recruiter/chat/createSession";
 import getSession from "@/actions/recruiter/chat/getSession";
 import Loader from './Loader';
 import ChatSidebar from '../../../../components/recruiter/chat/Sidebar';
-
 
 const MIN_HEIGHT = 64;
 const MAX_HEIGHT = 200;
@@ -124,7 +112,7 @@ const AIChatInterface = () => {
         }
 
         setIsTyping(true);
-        const botResponse = await genBotResponse(userMessage)!;
+        const botResponse = await genBotResponse(userMessage);
         setIsTyping(false);
 
         const botMessage: ChatResponse = {

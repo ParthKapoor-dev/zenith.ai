@@ -1,4 +1,4 @@
-import { int, mysqlTable, varchar } from 'drizzle-orm/mysql-core';
+import { int, mysqlTable, text, varchar } from 'drizzle-orm/mysql-core';
 import { timestamps } from './timestamp';
 import { Users } from './user';
 
@@ -22,6 +22,6 @@ export const ChatInputs = mysqlTable('chat_inputs', {
 export const ChatResponses = mysqlTable('chat_responses', {
     id: int().primaryKey().autoincrement(),
     sessionId: int().references(() => ChatSessions.id).notNull(),
-    response: varchar({ length: 1000 }).notNull(),
+    response: text().notNull(),
     ...timestamps
 })

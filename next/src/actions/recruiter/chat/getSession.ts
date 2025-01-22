@@ -24,6 +24,8 @@ export default async function getSession(
             return new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime();
         });
 
+        console.log("Sorted Array", sortedArray)
+
         return sortedArray;
 
 
