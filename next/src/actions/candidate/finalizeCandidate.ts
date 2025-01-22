@@ -29,7 +29,8 @@ export default async function finalizeAccount(
             where: eq(schema.Candidates.userId, userInfo.userId),
             with: {
                 experiences: true,
-                projects: true
+                projects: 
+                true
             }
         });
 

@@ -5,14 +5,15 @@
 ### Remaining Tasks
 
 ##### Major Work
-- [ ] Recruiter Form Service: ie. create / manage forms
-- [ ] Candidate Handle Form w/ & w/o auth
+- [x] Recruiter Form Service: ie. create / manage forms
+- [x] Candidate Handle Form w/ & w/o auth
 - [ ] Notification Service
+- [ ] Chatbot WebSocket
 
 ##### UI Tasks
 - [ ] Landing Page
-- [ ] Candidate Dashboard
-- [ ] Recrutier Dashboard
+- [x] Candidate Dashboard
+- [x] Recrutier Dashboard
 - [ ] Navbar Items
 - [ ] Chatpage Interface - Recruiter
 

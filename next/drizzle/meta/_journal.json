@@ -8,6 +8,13 @@
       "when": 1735595323411,
       "tag": "0000_tiny_william_stryker",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "5",
+      "when": 1737569279953,
+      "tag": "0001_abandoned_mantis",
+      "breakpoints": true
     }
   ]
 }

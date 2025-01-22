@@ -14,7 +14,7 @@ export const ChatSessions = mysqlTable('chat_sessions', {
 export const ChatInputs = mysqlTable('chat_inputs', {
     id: int().primaryKey().autoincrement(),
     sessionId: int().references(() => ChatSessions.id).notNull(),
-    input: varchar({ length: 1000 }).notNull(),
+    input: text().notNull(),
     ...timestamps
 })
 

@@ -7,15 +7,16 @@ import remarkGfm from "remark-gfm";
 interface ChatAreaProps {
     messages: (ChatInput | ChatResponse)[]
     isTyping: boolean
+    chatRef: React.RefObject<HTMLDivElement | null>
 }
 
 // TODO: Better Styling -> Able to differenciate between Chat Input and Bot Response, Maybe something like perplexity's design type
 
 // TODO: Automatic Scrolling to below, whenever a new chat response is received
 
-export default function ChatArea({ messages, isTyping }: ChatAreaProps) {
+export default function ChatArea({ messages, isTyping, chatRef }: ChatAreaProps) {
     return (
-        <div className="flex-1 overflow-y-auto">
+        <div className="flex-1 overflow-y-auto scroll-smooth" ref={chatRef}>
             {messages.length === 0 ? (
                 <div className="h-full flex items-center justify-center">
                     <div className="text-center space-y-4">

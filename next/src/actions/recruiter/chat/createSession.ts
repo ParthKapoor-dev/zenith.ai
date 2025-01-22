@@ -17,7 +17,7 @@ export default async function createChatSession(
 
         const chatSession = await db.insert(schema.ChatSessions).values({
             userId: user.id,
-            title: title || new Date().toString()
+            title: title?.split('').slice(0, 250).join('') || new Date().toString()
         }).$returningId();
 
         return chatSession[0].id;

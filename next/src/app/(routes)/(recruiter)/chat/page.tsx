@@ -3,7 +3,10 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Textarea } from '@/components/ui/textarea';
 import {
+    ChevronRight,
     CornerRightDown,
+    Loader2,
+    Users,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import ChatArea from '../../../../components/recruiter/chat/ChatArea';
@@ -17,6 +20,10 @@ import createChatSession from "@/actions/recruiter/chat/createSession";
 import getSession from "@/actions/recruiter/chat/getSession";
 import Loader from './Loader';
 import ChatSidebar from '../../../../components/recruiter/chat/Sidebar';
+import getRankedList from '@/actions/recruiter/chat/getRankedList';
+import { AnimatePresence, motion } from 'framer-motion';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
 
 const MIN_HEIGHT = 64;
 const MAX_HEIGHT = 200;
@@ -24,12 +31,14 @@ const MAX_HEIGHT = 200;
 const AIChatInterface = () => {
     const [messages, setMessages] = useState<(ChatInput | ChatResponse)[]>([]);
     const [inputValue, setInputValue] = useState('');
+    const [rankedList, setRankedList] = useState([]);
     const [isTyping, setIsTyping] = useState(false);
     const [loading, setLoading] = useState(false);
     const [chatSessions, setChatSessions] = useState<ChatSession[]>([]);
     const [currentSession, setCurrentSession] = useState<number | null>(null);
     const textareaRef = useRef<HTMLTextAreaElement>(null);
     const [user, setUser] = useState<User | null>(null);
+    const chatContainerRef = useRef<HTMLDivElement>(null);
 
     //Server Actions
     const getChatSessions = async () =>
@@ -38,14 +47,14 @@ const AIChatInterface = () => {
     const genBotResponse = async (msg: ChatInput) =>
         (await fetchServerAction<string>(() => handelUserInput(msg)))!;
 
-    const createSession = async (title?: string) => {
-        const sessionId: number = (await fetchServerAction<number>(() => createChatSession(title)))!;
-        setCurrentSession(sessionId);
-        return sessionId;
-    }
+    const createSession = async (title?: string) =>
+        (await fetchServerAction<number>(() => createChatSession(title))) as number;
 
     const getChatSession = async (sessionId: number) =>
         setMessages((await fetchServerAction(() => getSession(sessionId)))!);
+
+    const genRankedList = async (query: string) =>
+        setRankedList((await fetchServerAction(() => getRankedList(query))));
 
     // Auto-resize textarea
     useEffect(() => {
@@ -57,18 +66,11 @@ const AIChatInterface = () => {
         }
     }, [inputValue]);
 
-
     useEffect(() => {
-        console.log("ALL CHAT MESSAGES ", messages);
-    }, [messages])
-
-    useEffect(() => {
-        console.log("ALL CHAT SESSIONS ", chatSessions);
-    }, [chatSessions])
-
-    useEffect(() => {
-        console.log("CURRENT SESSION ", currentSession);
-    }, [currentSession])
+        if (chatContainerRef.current) {
+            chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
+        }
+    }, [messages, isTyping]);
 
 
     useEffect(() => {
@@ -85,6 +87,7 @@ const AIChatInterface = () => {
         if (!sessionId) {
             setLoading(true);
             sessionId = await createSession(inputValue);
+            setCurrentSession(sessionId);
             setLoading(false);
         }
 
@@ -134,6 +137,15 @@ const AIChatInterface = () => {
         }
     };
 
+    const [isLoadingCandidates, setIsLoadingCandidates] = useState(false);
+    const handleRankedList = async () => {
+        setIsLoadingCandidates(true);
+        try {
+            await genRankedList((messages[messages.length - 2] as ChatInput).input);
+        } finally {
+            setIsLoadingCandidates(false);
+        }
+    };
 
     return (
         <div className="flex h-[80vh] relative">
@@ -153,35 +165,103 @@ const AIChatInterface = () => {
                 ? <Loader loadingText='Loading Chat' />
                 : (<div className="flex-1 flex flex-col h-full relative pt-16">
 
-                    <ChatArea messages={messages} isTyping={isTyping} />
+                    <ChatArea messages={messages} isTyping={isTyping} chatRef={chatContainerRef} />
 
-                    {/* Enhanced Input Area */}
-                    <div className="">
-                        <div className="max-w-3xl mx-auto p-4">
-                            <div className="relative border border-black/10 dark:border-white/10 focus-within:border-black/20 dark:focus-within:border-white/20 rounded-2xl bg-black/[0.03] dark:bg-white/[0.03]">
-                                <div className="flex flex-col">
-                                    <div className="overflow-y-auto">
-                                        <Textarea
-                                            ref={textareaRef}
-                                            value={inputValue}
-                                            onChange={(e) => setInputValue(e.target.value)}
-                                            onKeyDown={handleKeyPress}
-                                            placeholder="Send a message..."
-                                            className={cn(
-                                                "max-w-full rounded-2xl pr-10 pt-3 pb-3 placeholder:text-black/70 dark:placeholder:text-white/70 border-none text-black dark:text-white resize-none bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0 leading-[1.2]",
-                                                `min-h-[${MIN_HEIGHT}px]`
-                                            )}
-                                        />
-                                    </div>
-                                </div>
+                    <AnimatePresence>
+                        {rankedList.length > 0 && (
+                            <motion.div
+                                initial={{ opacity: 0, height: 0 }}
+                                animate={{ opacity: 1, height: "auto" }}
+                                exit={{ opacity: 0, height: 0 }}
+                                className="border-t border-zinc-200 dark:border-zinc-700 max-w-3xl mx-auto w-full "
+                            >
+                                <Card className="m-4 bg-white dark:bg-zinc-800">
+                                    <CardHeader>
+                                        <CardTitle className="text-lg font-semibold">
+                                            Top Candidates
+                                        </CardTitle>
+                                        <CardDescription>
+                                            Based on your requirements
+                                        </CardDescription>
+                                    </CardHeader>
+                                    <CardContent>
+                                        <div className="space-y-2">
+                                            {rankedList.map(({ user: { id, name, email } }, index) => (
+                                                <motion.div
+                                                    key={id}
+                                                    initial={{ opacity: 0, x: -20 }}
+                                                    animate={{ opacity: 1, x: 0 }}
+                                                    transition={{ delay: index * 0.1 }}
+                                                    className="flex items-center gap-3 p-3 rounded-lg hover:bg-zinc-100 dark:hover:bg-zinc-700/50 transition-colors"
+                                                >
+                                                    <div className="w-8 h-8 rounded-full bg-violet-100 dark:bg-violet-900/50 flex items-center justify-center">
+                                                        <span className="text-sm font-medium text-violet-700 dark:text-violet-300">
+                                                            {index + 1}
+                                                        </span>
+                                                    </div>
+                                                    <div className="flex-1">
+                                                        <h4 className="font-medium">{name}</h4>
+                                                        <p className="text-sm text-zinc-600 dark:text-zinc-400">{email}</p>
+                                                    </div>
+                                                    <ChevronRight className="w-4 h-4 text-zinc-400" />
+                                                </motion.div>
+                                            ))}
+                                        </div>
+                                    </CardContent>
+                                </Card>
+                            </motion.div>
+                        )}
+                    </AnimatePresence>
 
+                    {/* Input Area with Rank Button */}
+                    <div className="border-t border-zinc-200 dark:border-zinc-700 p-4">
+                        <div className="max-w-3xl mx-auto flex gap-4">
+                            <div className="flex-1 relative">
+                                <Textarea
+                                    ref={textareaRef}
+                                    value={inputValue}
+                                    onChange={(e) => setInputValue(e.target.value)}
+                                    onKeyDown={handleKeyPress}
+                                    placeholder="Send a message..."
+                                    className={cn(
+                                        "resize-none rounded-lg pr-10 border-zinc-200 dark:border-zinc-700",
+                                        "focus:ring-2 focus:ring-violet-500 dark:focus:ring-violet-400",
+                                        "bg-white dark:bg-zinc-800",
+                                        `min-h-[${MIN_HEIGHT}px]`
+                                    )}
+                                />
                                 <CornerRightDown
                                     className={cn(
-                                        "absolute right-3 top-3 w-4 h-4 transition-all duration-200 dark:text-white",
+                                        "absolute right-3 top-3 w-4 h-4 transition-all duration-200",
+                                        "text-zinc-400 dark:text-zinc-500",
                                         inputValue ? "opacity-100 scale-100" : "opacity-30 scale-95"
                                     )}
                                 />
                             </div>
+
+                            {messages.length >= 2 && (
+                                <Button
+                                    onClick={handleRankedList}
+                                    disabled={isLoadingCandidates}
+                                    className={cn(
+                                        "flex items-center gap-2 bg-violet-600 hover:bg-violet-700",
+                                        "text-white px-4 py-2 rounded-lg transition-colors",
+                                        "disabled:opacity-50 disabled:cursor-not-allowed"
+                                    )}
+                                >
+                                    {isLoadingCandidates ? (
+                                        <>
+                                            <Loader2 className="w-4 h-4 animate-spin" />
+                                            <span>Loading...</span>
+                                        </>
+                                    ) : (
+                                        <>
+                                            <Users className="w-4 h-4" />
+                                            <span>Find Candidates</span>
+                                        </>
+                                    )}
+                                </Button>
+                            )}
                         </div>
                     </div>
                 </div>)}
