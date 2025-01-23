@@ -19,11 +19,11 @@ export default function ChatArea({ messages, isTyping, chatRef }: ChatAreaProps)
             {messages.length === 0 ? (
                 <div className="h-full flex items-center justify-center">
                     <div className="text-center space-y-4">
-                        <Bot className="w-12 h-12 mx-auto text-[#922bff]" />
-                        <h1 className="text-2xl font-semibold text-purple-800 dark:text-[#922bff]">
+                        <Bot className="w-12 h-12 mx-auto " />
+                        <h1 className="text-2xl font-semibold ">
                             Recruitment Assistant
                         </h1>
-                        <p className="text-purple-600 dark:text-[#922bff] max-w-md">
+                        <p className=" max-w-md">
                             I can help you find the perfect candidates for your positions.
                             Start by describing the role you're looking to fill.
                         </p>

@@ -16,23 +16,21 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body
-        className={cn('bg-gradient-to-br from-slate-50 via-fuchsia-50 to-violet-50', darkMode2)}
-      >
+    <html lang="en" suppressHydrationWarning>
+      <body suppressHydrationWarning>
         <Providers>
-          {/* <Navbar /> */}
-          <Navbar />
-          <main className="py-[10vh] max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            {children}
-          </main>
+
+          <div
+            className={'bg-gradient-to-br from-slate-50 via-fuchsia-50 to-violet-50 dark:from-[#0d3647] dark:via-black dark:to-[#000008]'} suppressHydrationWarning>
+
+            <Navbar />
+            <main className="py-[10vh] max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+              {children}
+            </main>
+          </div>
+
         </Providers>
       </body>
     </html>
   );
 }
-
-const lightMode1 = `bg-gradient-to-br from-slate-50 via-fuchsia-50 to-violet-50`
-
-const darkMode1: ClassNameValue= " dark:from-[#3c0a3d] dark:via-[#050115] dark:to-[#000000]"
-const darkMode2 = `dark:from-[#0d3647] dark:via-black dark:to-[#000008]`

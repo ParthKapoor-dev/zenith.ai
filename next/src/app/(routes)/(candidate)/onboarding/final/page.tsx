@@ -114,7 +114,7 @@ const UserPreferencesPage = () => {
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
-                    className="fixed inset-0 bg-white z-50 flex flex-col items-center justify-center"
+                    className="fixed inset-0 z-50 flex flex-col items-center justify-center"
                 >
                     <div className="text-center space-y-6 max-w-md mx-auto p-6">
                         <motion.div
@@ -209,8 +209,8 @@ const UserPreferencesPage = () => {
                                                 </SelectContent>
                                             </Select>
                                         </div>
-                                        <Alert className="bg-blue-50 text-blue-800 border-blue-200">
-                                            <AlertCircle className="h-4 w-4" />
+                                        <Alert className="bg-blue-50 text-blue-800 dark:bg-blue-800/20 dark:text-blue-50 border-blue-200 dark:border-blue-900">
+                                            <AlertCircle className="h-4 w-4 " />
                                             <AlertDescription>
                                                 Please ensure your salary expectations are realistic and aligned with market standards for better chances of being shortlisted.
                                             </AlertDescription>

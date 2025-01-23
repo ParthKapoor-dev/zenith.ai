@@ -185,7 +185,7 @@ export default function Navbar() {
                                 <NavigationMenuList>
                                     {currentNavItems.map((item, index) => (
                                         <NavigationMenuItem key={index}>
-                                            <NavigationMenuTrigger className='border shadow-sm'>
+                                            <NavigationMenuTrigger className='border shadow-sm dark:bg-cyan-500/50'>
                                                 {item.icon}
                                                 {item.trigger}
                                             </NavigationMenuTrigger>
@@ -199,7 +199,7 @@ export default function Navbar() {
 
                             {/* Notifications */}
                             <DropdownMenu>
-                                <DropdownMenuTrigger asChild>
+                                    <DropdownMenuTrigger asChild className='border shadow-sm'>
                                     <Button variant="ghost" size="icon" className="relative">
                                         <Bell className="h-5 w-5" />
                                         <span className="absolute top-0 right-0 h-2 w-2 bg-red-500 rounded-full" />

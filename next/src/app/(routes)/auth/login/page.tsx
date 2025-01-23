@@ -52,7 +52,7 @@ const LoginPage = () => {
         animate={{ opacity: 1, y: 0 }}
         className="w-full max-w-lg relative z-10"
       >
-        <Card className="backdrop-blur-xl bg-white/80 dark:bg-purple-300/20 shadow-2xl border-0 overflow-hidden relative">
+        <Card className="backdrop-blur-xl bg-white/80 dark:bg-purple-100/10 shadow-2xl border-0 overflow-hidden relative">
           {/* Hero Section */}
           <CardContent className="pt-16 pb-8 px-8 ">
 
@@ -81,13 +81,13 @@ const LoginPage = () => {
                   />
                   <span className="text-xl font-bold bg-gradient-to-r 
                 from-[#1b132c] to-[#0d3647] 
-                dark:from-[#d6eaf3] dark:to-[#1fa6b8] 
+                dark:from-cyan-400 dark:to-cyan-500/80 
                 bg-clip-text text-transparent">
                     Zenith AI
                   </span>
                 </motion.div>
               </h1>
-              <p className="text-slate-600">Revolutionizing recruitment with AI</p>
+              <p className="text-slate-600 dark:text-cyan-300/70">Revolutionizing recruitment with AI</p>
             </motion.div>
 
             <Tabs

@@ -8,9 +8,12 @@ export default function Providers({ children }: {
 }) {
 
     return (
-        <ThemeProvider attribute="class" defaultTheme="dark" enableSystem disableTransitionOnChange>
-            {children}
-            <Toaster />
-        </ThemeProvider>
+        <>
+            <ThemeProvider attribute="class" defaultTheme="dark" >
+                {children}
+                <Toaster />
+            </ThemeProvider>
+        </>
+
     )
 }

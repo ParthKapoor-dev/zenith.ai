@@ -12,6 +12,8 @@ import fetchServerAction from '@/lib/fetchHelper';
 import getJobDetails from '@/actions/recruiter/jobs/getJobDetails';
 import { Job } from '@/types/job';
 import { toast } from '@/hooks/use-toast';
+import { BorderBeam } from '@/components/ui/border-beam';
+import { ShineBorder } from '@/components/ui/shine-border';
 
 interface QueryResponse {
     indivCount: {
@@ -44,66 +46,68 @@ const ShareLinkCard = ({ jobId }: { jobId: string }) => {
     };
 
     return (
-        <Card className="shadow-lg border-2 bg-gradient-to-r from-violet-50 to-fuchsia-50">
-            <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                    <Share2 className="h-5 w-5 text-violet-600" />
-                    Share Job Application
-                </CardTitle>
-                <CardDescription>
-                    Share this link with potential candidates
-                </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-                <div className="flex gap-2">
-                    <Input
-                        value={applicationLink}
-                        readOnly
-                        className="bg-white"
-                    />
-                    <Button
-                        onClick={copyLink}
-                        variant="outline"
-                        className="min-w-[100px]"
-                    >
-                        {copied ? (
-                            <Check className="h-4 w-4 text-green-600" />
-                        ) : (
-                            <Copy className="h-4 w-4" />
-                        )}
-                        <span className="ml-2">{copied ? 'Copied!' : 'Copy'}</span>
-                    </Button>
-                </div>
-                <div className="flex gap-2">
-                    {['LinkedIn', 'Twitter', 'Email'].map((platform) => (
+        <ShineBorder className='w-full p-0 rounded-xl' color={["#FE8FB5", "#FFBE7B", "#FFBE7B"]}>
+            <Card className="shadow-lg border-2 bg-gradient-to-r from-violet-50 to-fuchsia-50 dark:from-blue-400/20 dark:to-cyan-200/10">
+                <CardHeader>
+                    <CardTitle className="flex items-center gap-2">
+                        <Share2 className="h-5 w-5 text-violet-600" />
+                        Share Job Application
+                    </CardTitle>
+                    <CardDescription>
+                        Share this link with potential candidates
+                    </CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                    <div className="flex gap-2">
+                        <Input
+                            value={applicationLink}
+                            readOnly
+                            className="bg-white dark:bg-zinc-800"
+                        />
                         <Button
-                            key={platform}
+                            onClick={copyLink}
                             variant="outline"
-                            className="flex-1"
-                            onClick={() => {
-                                const text = `We're hiring! Check out this position: ${applicationLink}`;
-                                let url = '';
-                                switch (platform) {
-                                    case 'LinkedIn':
-                                        url = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(applicationLink)}`;
-                                        break;
-                                    case 'Twitter':
-                                        url = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}`;
-                                        break;
-                                    case 'Email':
-                                        url = `mailto:?subject=Job Opportunity&body=${encodeURIComponent(text)}`;
-                                        break;
-                                }
-                                window.open(url, '_blank');
-                            }}
+                            className="min-w-[100px]"
                         >
-                            {platform}
-                            <ExternalLink className="ml-2 h-4 w-4" />
+                            {copied ? (
+                                <Check className="h-4 w-4 text-green-600" />
+                            ) : (
+                                <Copy className="h-4 w-4" />
+                            )}
+                            <span className="ml-2">{copied ? 'Copied!' : 'Copy'}</span>
                         </Button>
-                    ))}
-                </div>
-            </CardContent>
-        </Card>
+                    </div>
+                    <div className="flex gap-2">
+                        {['LinkedIn', 'Twitter', 'Email'].map((platform) => (
+                            <Button
+                                key={platform}
+                                variant="outline"
+                                className="flex-1 bg-black/80"
+                                onClick={() => {
+                                    const text = `We're hiring! Check out this position: ${applicationLink}`;
+                                    let url = '';
+                                    switch (platform) {
+                                        case 'LinkedIn':
+                                            url = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(applicationLink)}`;
+                                            break;
+                                        case 'Twitter':
+                                            url = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}`;
+                                            break;
+                                        case 'Email':
+                                            url = `mailto:?subject=Job Opportunity&body=${encodeURIComponent(text)}`;
+                                            break;
+                                    }
+                                    window.open(url, '_blank');
+                                }}
+                            >
+                                {platform}
+                                <ExternalLink className="ml-2 h-4 w-4" />
+                            </Button>
+                        ))}
+                    </div>
+                </CardContent>
+            </Card>
+        </ShineBorder>
     );
 };
 
@@ -145,7 +149,7 @@ const JobAnalyticsDashboard = ({ params }: { params: Promise<{ slug: string }> }
                 {/* Header Section */}
                 <div className="flex flex-col md:flex-row justify-between items-center gap-4 mb-8">
                     <div>
-                        <h1 className="text-2xl md:text-3xl font-bold text-gray-900">
+                        <h1 className="text-2xl md:text-3xl font-bold dark:text-gray-300">
                             Job Analytics Dashboard
                         </h1>
                         <p className="text-gray-500 mt-1">
@@ -176,11 +180,11 @@ const JobAnalyticsDashboard = ({ params }: { params: Promise<{ slug: string }> }
                     <div className="lg:col-span-8 space-y-6">
                         <ShareLinkCard jobId={jobDetails.id} />
 
-                        <Card className="shadow-md border border-violet-100 bg-white">
+                        <Card className="shadow-md border border-violet-100 dark:border-zinc-800 bg-white dark:bg-purple-100/10">
                             <CardHeader className="pb-4">
                                 <div className="flex justify-between items-center">
                                     <div>
-                                        <CardTitle className="text-xl font-bold text-gray-900">{jobDetails.title}</CardTitle>
+                                        <CardTitle className="text-xl font-bold ">{jobDetails.title}</CardTitle>
                                         <CardDescription className="text-gray-500 mt-1">{jobDetails.companyName}</CardDescription>
                                     </div>
                                     <Badge variant="secondary" className="bg-violet-100 text-violet-600">
@@ -207,9 +211,11 @@ const JobAnalyticsDashboard = ({ params }: { params: Promise<{ slug: string }> }
                                         </ResponsiveContainer>
                                     </div>
                                 ) : (
-                                    <div className="h-72 flex flex-col justify-center items-center text-center p-6 bg-gray-50 rounded-lg">
+                                    <div className="h-72 flex flex-col justify-center items-center text-center p-6 bg-gray-50 dark:bg-purple-400/20 rounded-lg">
                                         <User className="w-12 h-12 text-violet-600 mb-4" />
-                                        <h3 className="text-lg font-semibold text-gray-800 mb-2">No Applications Yet</h3>
+                                        <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-2">
+                                            No Applications Yet
+                                        </h3>
                                         <p className="text-gray-500 max-w-sm">
                                             Share your job posting to start receiving applications.
                                         </p>
@@ -221,7 +227,7 @@ const JobAnalyticsDashboard = ({ params }: { params: Promise<{ slug: string }> }
 
                     {/* Right Column */}
                     <div className="lg:col-span-4 space-y-6">
-                        <Card className="shadow-md border border-violet-100 bg-white">
+                        <Card className="shadow-md border dark:border-zinc-800 border-violet-100 bg-white dark:bg-purple-100/10">
                             <CardHeader className="pb-4">
                                 <CardTitle className="flex justify-between items-center text-lg">
                                     <span>Applications Overview</span>
@@ -254,7 +260,7 @@ const JobAnalyticsDashboard = ({ params }: { params: Promise<{ slug: string }> }
                             </CardContent>
                         </Card>
 
-                        <Card className="shadow-md border border-violet-100 bg-white">
+                        <Card className="shadow-md border dark:border-zinc-800 border-violet-100 bg-white dark:bg-purple-100/10">
                             <CardHeader className="pb-4">
                                 <CardTitle className="text-lg">Job Details</CardTitle>
                             </CardHeader>
@@ -269,12 +275,12 @@ const JobAnalyticsDashboard = ({ params }: { params: Promise<{ slug: string }> }
                                     ].map((item, index) => (
                                         <div
                                             key={index}
-                                            className="flex items-start gap-3 p-3 rounded-lg bg-gray-50"
+                                            className="flex items-start gap-3 p-3 rounded-lg bg-gray-50 dark:bg-purple-400/20"
                                         >
                                             <item.icon className="h-5 w-5 text-violet-600 mt-1" />
                                             <div>
                                                 <p className="text-sm text-gray-500">{item.label}</p>
-                                                <p className="text-gray-900 font-medium">{item.text}</p>
+                                                <p className="font-medium">{item.text}</p>
                                             </div>
                                         </div>
                                     ))}

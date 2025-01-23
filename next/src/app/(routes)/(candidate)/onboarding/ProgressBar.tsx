@@ -26,9 +26,9 @@ interface StepperProps {
     currentStep: number; // 0-based index
 }
 
-const   ProgressBar = ({ currentStep }: StepperProps) => {
+const ProgressBar = ({ currentStep }: StepperProps) => {
 
-    if(currentStep > 2) currentStep = 2;
+    if (currentStep > 2) currentStep = 2;
 
     return (
         <div className="w-full max-w-3xl mx-auto mb-12 max-md:max-w-xl">
@@ -60,7 +60,7 @@ const   ProgressBar = ({ currentStep }: StepperProps) => {
                                     backgroundColor: isCompleted || isActive ? 'rgb(124, 58, 237)' : 'rgb(229, 231, 235)',
                                 }}
                                 transition={{ duration: 0.2 }}
-                                className={`relative flex items-center justify-center w-12 h-12 max-md:w-8 max-md:h-8 rounded-full shadow-lg`}
+                                className={`relative flex items-center justify-center w-12 h-12 max-md:w-8 max-md:h-8 rounded-full shadow-lg ${isActive && "dark:!bg-purple-950"}`}
                             >
                                 <StepIcon className={`w-6 h-6 max-md:w-4 max-md:h-4 ${isCompleted || isActive ? 'text-white' : 'text-gray-400'}`} />
 
@@ -95,7 +95,7 @@ const   ProgressBar = ({ currentStep }: StepperProps) => {
                     );
                 })}
             </div>
-        </div>
+        </div >
     );
 };
 

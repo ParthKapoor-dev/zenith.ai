@@ -50,7 +50,7 @@ const JobPostingPage = () => {
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
-                    className="fixed inset-0 bg-gradient-to-br from-violet-50 to-fuchsia-50 z-50 flex items-center justify-center"
+                    className="fixed inset-0 z-50 flex items-center justify-center"
                 >
                     <div className="text-center space-y-6 max-w-md mx-auto p-6">
                         <motion.div
@@ -76,7 +76,7 @@ const JobPostingPage = () => {
                 <motion.div
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
-                    className="min-h-screen pb-4 sm:pb-6 lg:pb-8"
+                    className="min-h-screen pb-4 sm:pb-6 lg:pb-8 "
                 >
                     <div className="max-w-3xl mx-auto">
                         <div className="text-center mb-8">
@@ -88,7 +88,7 @@ const JobPostingPage = () => {
                             </p>
                         </div>
 
-                        <Card className="shadow-lg border-2">
+                            <Card className="shadow-lg border-[0.5px] dark:bg-purple-100/10">
                             <CardHeader>
                                 <CardTitle>Job Details</CardTitle>
                                 <CardDescription>
