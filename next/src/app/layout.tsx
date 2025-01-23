@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import "./globals.css";
 import Providers from "@/Providers";
 import Navbar from "@/components/Header";
+import { cn } from "@/lib/utils";
+import { ClassNameValue } from "tailwind-merge";
 
 export const metadata: Metadata = {
   title: "JobVerse.AI",
@@ -16,7 +18,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`bg-gradient-to-br from-slate-50 via-fuchsia-50 to-violet-50`}
+        className={cn('bg-gradient-to-br from-slate-50 via-fuchsia-50 to-violet-50', darkMode2)}
       >
         <Providers>
           {/* <Navbar /> */}
@@ -29,3 +31,8 @@ export default function RootLayout({
     </html>
   );
 }
+
+const lightMode1 = `bg-gradient-to-br from-slate-50 via-fuchsia-50 to-violet-50`
+
+const darkMode1: ClassNameValue= " dark:from-[#3c0a3d] dark:via-[#050115] dark:to-[#000000]"
+const darkMode2 = `dark:from-[#0d3647] dark:via-black dark:to-[#000008]`

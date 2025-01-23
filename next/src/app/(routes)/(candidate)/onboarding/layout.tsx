@@ -28,15 +28,15 @@ export default async function OnboardingLayout({
     const headersList = await headers();
     const pathname = headersList.get("x-current-url")?.toString() || '';
 
-    if (!candidate?.resume) {
-        currentStep = 0;
-        if (pathname != steps.resume) redirect(steps.resume)
-    } else if (!candidate.isComplete) {
-        if (pathname != steps.validation && pathname != steps.final)
-            redirect(steps.validation)
-        if (pathname == steps.validation) currentStep = 1;
-        else if (pathname == steps.final) currentStep = 2;
-    } else redirect('/')
+    // if (!candidate?.resume) {
+    //     currentStep = 0;
+    //     if (pathname != steps.resume) redirect(steps.resume)
+    // } else if (!candidate.isComplete) {
+    //     if (pathname != steps.validation && pathname != steps.final)
+    //         redirect(steps.validation)
+    //     if (pathname == steps.validation) currentStep = 1;
+    //     else if (pathname == steps.final) currentStep = 2;
+    // } else redirect('/')
 
     return (
         <div>

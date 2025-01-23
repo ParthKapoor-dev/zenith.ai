@@ -42,7 +42,7 @@ const RecruiterDashboard = () => {
             >
                 {/* Action Cards */}
                 <motion.div variants={itemVariants} className="col-span-2 md:col-span-1">
-                    <Card className="bg-gradient-to-br from-purple-500 to-purple-600 text-white overflow-hidden relative">
+                    <Card className="bg-gradient-to-br from-purple-500 to-purple-600 text-white overflow-hidden relative dark:from-darkPurple ">
                         <CardContent className="p-6">
                             <motion.div
                                 className="absolute top-0 right-0 w-32 h-32 opacity-10"
@@ -78,7 +78,7 @@ const RecruiterDashboard = () => {
 
                 {/* AI Assistant Card */}
                 <motion.div variants={itemVariants} className="col-span-2 md:col-span-1">
-                    <Card className="bg-gradient-to-br from-blue-500 to-blue-600 text-white overflow-hidden relative">
+                    <Card className="bg-gradient-to-br from-blue-500 to-blue-600 text-white overflow-hidden relative dark:from-lightCyan/30">
                         <CardContent className="p-6">
                             <motion.div
                                 className="absolute top-0 right-0 w-32 h-32 opacity-10"
@@ -113,7 +113,7 @@ const RecruiterDashboard = () => {
                 </motion.div>
 
                 {/* Jobs Overview */}
-                <Card className="col-span-2">
+                <Card className="col-span-2 dark:bg-purple-300/10">
                     <CardHeader className="flex flex-row items-center justify-between">
                         <div>
                             <CardTitle className="text-2xl font-bold">Your Job Listings</CardTitle>

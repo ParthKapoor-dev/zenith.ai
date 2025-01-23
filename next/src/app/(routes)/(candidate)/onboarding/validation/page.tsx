@@ -127,8 +127,8 @@ const ValidationPage = () => {
             )}
 
             {/* Education Section */}
-            <Card className="border-2 border-violet-100 shadow-lg">
-                <CardHeader className="cursor-pointer hover:bg-slate-50 transition-colors" onClick={() => toggleSection('education')}>
+            <Card className="border-[0.5px] border-violet-100 dark:bg-purple-100/10 overflow-hidden dark:border-zinc-600 shadow-lg ">
+                <CardHeader className="cursor-pointer hover:bg-slate-50 dark:hover:bg-zinc-700 transition-colors" onClick={() => toggleSection('education')}>
                     <CardTitle className="flex justify-between items-center">
                         <span className="flex items-center gap-2">
                             <Badge variant="secondary" className="bg-violet-100 text-violet-800">
@@ -153,7 +153,7 @@ const ValidationPage = () => {
                                         key={index}
                                         initial={{ opacity: 0 }}
                                         animate={{ opacity: 1 }}
-                                        className="p-4 border-2 rounded-lg space-y-4 relative hover:border-violet-200 transition-colors"
+                                        className="p-4 border-[0.5px] rounded-lg space-y-4 relative hover:border-violet-200 dark:hover:border-violet-700 dark:border-zinc-500 transition-colors"
                                     >
                                         <div className="absolute -top-3 -left-3">
                                             <Badge className="bg-violet-600">Education {index + 1}</Badge>
@@ -215,7 +215,7 @@ const ValidationPage = () => {
                                 <Button
                                     onClick={addNewEdu}
                                     variant="outline"
-                                    className="w-full mt-4 border-dashed border-2 hover:border-violet-400 hover:text-violet-600"
+                                    className="w-full mt-4 border-dashed border-2 hover:border-violet-400 hover:text-violet-600 dark:bg-violet-100/10 "
                                 >
                                     <Plus className="w-4 h-4 mr-2" />
                                     Add New Education
@@ -227,8 +227,8 @@ const ValidationPage = () => {
             </Card>
 
             {/* Experience Section */}
-            <Card className="border-2 border-violet-100 shadow-lg">
-                <CardHeader className="cursor-pointer hover:bg-slate-50 transition-colors" onClick={() => toggleSection('experiences')}>
+            <Card className="border-[0.5px] border-violet-100 dark:bg-purple-100/10 overflow-hidden dark:border-zinc-600 shadow-lg">
+                <CardHeader className="cursor-pointer hover:bg-slate-50 dark:hover:bg-zinc-700 transition-colors" onClick={() => toggleSection('experiences')}>
                     <CardTitle className="flex justify-between items-center">
                         <span className="flex items-center gap-2">
                             <Badge variant="secondary" className="bg-violet-100 text-violet-800">
@@ -253,7 +253,7 @@ const ValidationPage = () => {
                                         key={index}
                                         initial={{ opacity: 0 }}
                                         animate={{ opacity: 1 }}
-                                        className="p-4 border-2 rounded-lg space-y-4 relative hover:border-violet-200 transition-colors"
+                                        className="p-4 border-2 rounded-lg space-y-4 relative hover:border-violet-200 dark:hover:border-violet-700 transition-colors"
                                     >
                                         <div className="absolute -top-3 -left-3">
                                             <Badge className="bg-violet-600">Experience {index + 1}</Badge>
@@ -322,7 +322,7 @@ const ValidationPage = () => {
                                 <Button
                                     onClick={addNewExperience}
                                     variant="outline"
-                                    className="w-full mt-4 border-dashed border-2 hover:border-violet-400 hover:text-violet-600"
+                                    className="w-full mt-4 border-dashed border-2 hover:border-violet-400 hover:text-violet-600 dark:bg-violet-100/10"
                                 >
                                     <Plus className="w-4 h-4 mr-2" />
                                     Add New Experience
@@ -334,8 +334,8 @@ const ValidationPage = () => {
             </Card>
 
             {/* Projects Section - Similar enhancements as Experience section */}
-            <Card className="border-2 border-violet-100 shadow-lg">
-                <CardHeader className="cursor-pointer hover:bg-slate-50 transition-colors" onClick={() => toggleSection('projects')}>
+            <Card className="border-[0.5px] border-violet-100 dark:bg-purple-100/10 overflow-hidden dark:border-zinc-600 shadow-lg">
+                <CardHeader className="cursor-pointer hover:bg-slate-50 dark:hover:bg-zinc-700 transition-colors" onClick={() => toggleSection('projects')}>
                     <CardTitle className="flex justify-between items-center">
                         <span className="flex items-center gap-2">
                             <Badge variant="secondary" className="bg-violet-100 text-violet-800">
@@ -360,7 +360,7 @@ const ValidationPage = () => {
                                         key={index}
                                         initial={{ opacity: 0 }}
                                         animate={{ opacity: 1 }}
-                                        className="p-4 border-2 rounded-lg space-y-4 relative hover:border-violet-200 transition-colors"
+                                        className="p-4 border-2 rounded-lg space-y-4 relative hover:border-violet-200 dark:hover:border-violet-700 transition-colors"
                                     >
                                         <div className="absolute -top-3 -left-3">
                                             <Badge className="bg-violet-600">Project {index + 1}</Badge>
@@ -421,7 +421,7 @@ const ValidationPage = () => {
                                 <Button
                                     onClick={addNewProject}
                                     variant="outline"
-                                    className="w-full mt-4 border-dashed border-2 hover:border-violet-400 hover:text-violet-600"
+                                    className="w-full mt-4 border-dashed border-2 hover:border-violet-400 hover:text-violet-600 dark:bg-violet-100/10"
                                 >
                                     <Plus className="w-4 h-4 mr-2" />
                                     Add New Project
@@ -433,8 +433,8 @@ const ValidationPage = () => {
             </Card>
 
             {/* Skills Section - Enhanced with better visual hierarchy */}
-            <Card className="border-2 border-violet-100 shadow-lg">
-                <CardHeader className="cursor-pointer hover:bg-slate-50 transition-colors" onClick={() => toggleSection('skills')}>
+            <Card className="border-[0.5px] border-violet-100 dark:bg-purple-100/10 overflow-hidden dark:border-zinc-600 shadow-lg">
+                <CardHeader className="cursor-pointer hover:bg-slate-50 dark:hover:bg-zinc-700 transition-colors" onClick={() => toggleSection('skills')}>
                     <CardTitle className="flex justify-between items-center">
                         <span className="flex items-center gap-2">
                             <Badge variant="secondary" className="bg-violet-100 text-violet-800">

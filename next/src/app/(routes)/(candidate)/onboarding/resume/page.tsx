@@ -10,6 +10,7 @@ import { IoMdPlanet } from "react-icons/io";
 import uploadResume from '@/actions/candidate/resumeUpload';
 import User from '@/types/user';
 import { useUser } from '@/hooks/useUser';
+import { BorderBeam } from '@/components/ui/border-beam';
 
 const UploadResumePage = () => {
     const [isDragging, setIsDragging] = useState(false);
@@ -119,9 +120,7 @@ const UploadResumePage = () => {
                 className="w-full max-w-lg relative z-10 flex flex-col gap-8"
             >
 
-
-
-                <Card className="backdrop-blur-xl bg-white/80 shadow-2xl border-0">
+                <Card className="backdrop-blur-xl bg-white/80 dark:bg-purple-500/10 shadow-2xl border-0 relative">
                     <CardContent className="py-8 px-8 flex flex-col gap-10">
                         <motion.div
                             initial={{ opacity: 0 }}
@@ -144,8 +143,8 @@ const UploadResumePage = () => {
                             </h1>
 
                             <div className="flex gap-1 items-center max-md:flex-col">
-                                <Sparkles className="w-5 h-5 text-violet-600 mt-1 flex-shrink-0" />
-                                <p className="text-sm text-violet-700 text-center">
+                                <Sparkles className="w-5 h-5 text-violet-600 dark:text-cyan-400 mt-1 flex-shrink-0" />
+                                <p className="text-sm text-violet-700 dark:text-cyan-200 text-center">
                                     Take the first step towards your dream job. Upload your resume to access AI-powered job matching and career opportunities.
                                 </p>
                             </div>
@@ -201,7 +200,7 @@ const UploadResumePage = () => {
                             <Button
                                 onClick={handleSubmit}
                                 disabled={!file || isUploading}
-                                className="w-full h-12 bg-gradient-to-r from-violet-600 to-fuchsia-600 text-white hover:from-violet-700 hover:to-fuchsia-700 transition-all"
+                                className="w-full h-12 bg-gradient-to-r from-violet-600 to-fuchsia-600 text-white hover:from-violet-700 hover:to-fuchsia-700 dark:from-cyan-400 dark:to-violet-700 transition-all"
                             >
                                 {isUploading ? (
                                     <Loader2 className="w-5 h-5 animate-spin" />
@@ -225,6 +224,7 @@ const UploadResumePage = () => {
                             </p>
                         </motion.div>
                     </CardContent>
+                    <BorderBeam duration={6} />
                 </Card>
             </motion.div>
         </div>

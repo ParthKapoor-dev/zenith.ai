@@ -5,12 +5,13 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
-import { Briefcase, User, Globe, Sparkles, ArrowRight, Loader2 } from 'lucide-react';
+import { Briefcase, User, Globe, Sparkles, ArrowRight, Loader2, Brain } from 'lucide-react';
 import { FaGoogle } from "react-icons/fa";
 import { IoMdPlanet } from "react-icons/io";
 import { toast } from '@/hooks/use-toast';
 import handleGoogleLogin from '@/actions/auth/login';
 import { UserRole } from '@/types/user';
+import { BorderBeam } from '@/components/ui/border-beam';
 
 const LoginPage = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -51,7 +52,7 @@ const LoginPage = () => {
         animate={{ opacity: 1, y: 0 }}
         className="w-full max-w-lg relative z-10"
       >
-        <Card className="backdrop-blur-xl bg-white/80 shadow-2xl border-0 overflow-hidden">
+        <Card className="backdrop-blur-xl bg-white/80 dark:bg-purple-300/20 shadow-2xl border-0 overflow-hidden relative">
           {/* Hero Section */}
           <CardContent className="pt-16 pb-8 px-8 ">
 
@@ -64,16 +65,27 @@ const LoginPage = () => {
 
               <h1 className="text-3xl font-bold mb-2 flex items-center justify-center gap-4">
                 <motion.div
-                  initial={{ scale: 0.8, opacity: 0 }}
-                  animate={{ scale: 1, opacity: 1 }}
-                  transition={{ duration: 0.5 }}
-                  className=" bg-white rounded-full p-2 shadow-lg"
+                  whileHover={{
+                    rotate: [0, -10, 10, 0],
+                    scale: 1.05
+                  }}
+                  transition={{
+                    duration: 0.3,
+                    type: "spring",
+                    stiffness: 300
+                  }}
+                  className="flex items-center gap-2 cursor-pointer"
                 >
-                  <IoMdPlanet className="w-8 h-8 text-purple-600" />
+                  <Brain
+                    className="w-8 h-8 text-[#1b132c] dark:text-[#d6eaf3]"
+                  />
+                  <span className="text-xl font-bold bg-gradient-to-r 
+                from-[#1b132c] to-[#0d3647] 
+                dark:from-[#d6eaf3] dark:to-[#1fa6b8] 
+                bg-clip-text text-transparent">
+                    Zenith AI
+                  </span>
                 </motion.div>
-                <span className="bg-gradient-to-r from-violet-600 to-fuchsia-600 bg-clip-text text-transparent">
-                  JobverseAI
-                </span>
               </h1>
               <p className="text-slate-600">Revolutionizing recruitment with AI</p>
             </motion.div>
@@ -83,17 +95,17 @@ const LoginPage = () => {
               onValueChange={setActiveTab}
               className="w-full"
             >
-              <TabsList className="grid w-full h-full grid-cols-2 mb-8">
+              <TabsList className="grid w-full h-full grid-cols-2 mb-8 dark:bg-zinc-900 ">
                 <TabsTrigger
                   value="candidate"
-                  className="flex items-center gap-2 py-3 data-[state=active]:bg-gradient-to-r data-[state=active]:from-violet-50 data-[state=active]:to-fuchsia-50"
+                  className="flex items-center gap-2 py-3 data-[state=active]:bg-gradient-to-r data-[state=active]:from-violet-50 data-[state=active]:to-fuchsia-50 dark:data-[state=active]:from-purple-500 dark:data-[state=active]:to-purple-700 "
                 >
                   <User className="w-4 h-4" />
                   <span>Job Seeker</span>
                 </TabsTrigger>
                 <TabsTrigger
                   value="recruiter"
-                  className="flex items-center gap-2 py-3 data-[state=active]:bg-gradient-to-r data-[state=active]:from-violet-50 data-[state=active]:to-fuchsia-50"
+                  className="flex items-center gap-2 py-3 data-[state=active]:bg-gradient-to-r data-[state=active]:from-violet-50 data-[state=active]:to-fuchsia-50 dark:data-[state=active]:from-purple-500 dark:data-[state=active]:to-purple-700"
                 >
                   <Briefcase className="w-4 h-4" />
                   <span>Recruiter</span>
@@ -109,7 +121,7 @@ const LoginPage = () => {
                   transition={{ duration: 0.4 }}
                 >
                   <TabsContent value="candidate" className="mt-0 space-y-6">
-                    <div className="bg-violet-50 rounded-lg p-4 flex items-start space-x-3">
+                    <div className="bg-violet-50 dark:bg-violet-200 rounded-lg p-4 flex items-start space-x-3">
                       <Sparkles className="w-5 h-5 text-violet-600 mt-1 flex-shrink-0" />
                       <p className="text-sm text-violet-700">
                         Get matched with your dream job using our advanced AI algorithms. Join thousands of successful professionals.
@@ -118,7 +130,7 @@ const LoginPage = () => {
                     <Button
                       onClick={() => handleLogin('candidate')}
                       disabled={isLoading}
-                      className="w-full h-12 bg-white hover:bg-gray-50 text-slate-800 border shadow-sm relative overflow-hidden group"
+                      className="w-full h-12 bg-white hover:bg-gray-50 text-slate-800 dark:bg-cyan-100 border shadow-sm relative overflow-hidden group"
                     >
                       <div className="flex items-center justify-center">
                         {isLoading ? (
@@ -135,7 +147,7 @@ const LoginPage = () => {
                   </TabsContent>
 
                   <TabsContent value="recruiter" className="mt-0 space-y-6">
-                    <div className="bg-fuchsia-50 rounded-lg p-4 flex items-start space-x-3">
+                    <div className="bg-fuchsia-50 dark:bg-fuchsia-100 rounded-lg p-4 flex items-start space-x-3">
                       <Sparkles className="w-5 h-5 text-fuchsia-600 mt-1 flex-shrink-0" />
                       <p className="text-sm text-fuchsia-700">
                         Access our AI-powered platform to find the perfect candidates. Save time and resources with intelligent matching.
@@ -144,7 +156,7 @@ const LoginPage = () => {
                     <Button
                       onClick={() => handleLogin('recruiter')}
                       disabled={isLoading}
-                      className="w-full h-12 bg-white hover:bg-gray-50 text-slate-800 border shadow-sm relative overflow-hidden group"
+                      className="w-full h-12 bg-white hover:bg-gray-50 dark:bg-cyan-100 text-slate-800 border shadow-sm relative overflow-hidden group"
                     >
                       <div className="flex items-center justify-center">
                         {isLoading ? (
@@ -177,6 +189,7 @@ const LoginPage = () => {
               </p>
             </motion.div>
           </CardContent>
+          <BorderBeam duration={5} />
         </Card>
       </motion.div>
     </div>

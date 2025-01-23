@@ -21,6 +21,25 @@ export default async function updateProfile(
           otherSkills : userData.otherSkills
         })
 
+        for (let edu of userData.education) {
+            if (edu.id == -1)
+                await db.insert(schema.Education).values({
+                    userId: user.id,
+                    courseName: edu.courseName,
+                    instituteName: edu.instituteName,
+                    startDate: new Date(edu.startDate),
+                    endDate: edu.endDate ? new Date(edu.endDate) : null,
+                })
+            else await db.update(schema.Education).set({
+                userId: user.id,
+                courseName: edu.courseName,
+                instituteName: edu.instituteName,
+                startDate: new Date(edu.startDate),
+                endDate: edu.endDate ? new Date(edu.endDate) : null,
+            }).where(eq(schema.Education.id, edu.id))
+        }
+
+
         for (let exp of userData.experiences) {
             if (exp.id == -1)
                 await db.insert(schema.Experiences).values({

@@ -6,9 +6,9 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue, SelectGroup, SelectLabel } from "@/components/ui/select";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Loader2, DollarSign, Briefcase, Clock, AlertCircle, X } from 'lucide-react';
+import { Loader2, AlertCircle, X } from 'lucide-react';
 import { employmentTypes, roles as availRoles } from '@/db/schema/enum';
 
 import { useRef } from 'react';
@@ -17,7 +17,8 @@ import fetchServerAction from '@/lib/fetchHelper';
 import fetchCandidate from '@/actions/candidate/fetchCandidate';
 import Candidate from '@/types/candidate';
 import finalizeAccount from '@/actions/candidate/finalizeCandidate';
-import { useRouter } from 'next/navigation';
+import { useRouter } from 'next/navigation';    
+import { ShineBorder } from '@/components/ui/shine-border';
 
 const currencies = [
     { code: 'USD', symbol: '$', name: 'US Dollar' },
@@ -142,9 +143,9 @@ const UserPreferencesPage = () => {
                 <motion.div
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
-                    className="min-h-screen bg-gray-50 px-4 sm:px-6 lg:px-8"
+                    className="min-h-screen px-4 sm:px-6 lg:px-8"
                 >
-                    <div className="max-w-3xl mx-auto">
+                    <div className="max-w-3xl mx-auto ">
                         <div className="text-center mb-8">
                             <h1 className="text-3xl font-bold bg-gradient-to-r from-violet-600 to-fuchsia-600 bg-clip-text text-transparent">
                                 Career Preferences
@@ -154,135 +155,138 @@ const UserPreferencesPage = () => {
                             </p>
                         </div>
 
-                        <Card className="shadow-lg border-2">
-                            <CardHeader>
-                                <CardTitle>Salary Expectations</CardTitle>
-                                <CardDescription>
-                                    Set your preferred salary and employment details
-                                </CardDescription>
-                            </CardHeader>
-                            <CardContent className="space-y-8">
-                                {/* Salary Section */}
-                                <div className="space-y-4">
-                                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                                        <div className="relative">
-                                            <Input
-                                                type="number"
-                                                value={formData.salaryExpectation || ""}
-                                                onChange={(e) => setFormData({ ...formData, salaryExpectation: e.target.value })}
-                                                placeholder="Enter amount"
-                                                className="pl-8"
-                                            />
-                                            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500">
-                                                {currencies.find(c => c.code === formData.currencyType)?.symbol}
-                                            </span>
-                                        </div>
+                        <ShineBorder color={["#A07CFE", "#FE8FB5", "#FFBE7B"]} className='dark:bg-purple-100/10 shadow-xl '>
+                            <Card className=" bg-white/0 shadow-none border-none">
+                                <CardHeader>
+                                    <CardTitle>Salary Expectations</CardTitle>
+                                    <CardDescription>
+                                        Set your preferred salary and employment details
+                                    </CardDescription>
+                                </CardHeader>
+                                <CardContent className="space-y-8">
+                                    {/* Salary Section */}
+                                    <div className="space-y-4">
+                                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                            <div className="relative">
+                                                <Input
+                                                    type="number"
+                                                    value={formData.salaryExpectation || ""}
+                                                    onChange={(e) => setFormData({ ...formData, salaryExpectation: e.target.value })}
+                                                    placeholder="Enter amount"
+                                                    className="pl-8"
+                                                />
+                                                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500">
+                                                    {currencies.find(c => c.code === formData.currencyType)?.symbol}
+                                                </span>
+                                            </div>
 
+                                            <Select
+                                                value={formData.currencyType || undefined}
+                                                onValueChange={(value: any) => setFormData({ ...formData, currencyType: value })}
+                                            >
+                                                <SelectTrigger >
+                                                    <SelectValue placeholder="Select currency" />
+                                                </SelectTrigger>
+                                                <SelectContent>
+                                                    {currencies.map((currency) => (
+                                                        <SelectItem key={currency.code} value={currency.code}>
+                                                            {currency.code} - {currency.name}
+                                                        </SelectItem>
+                                                    ))}
+                                                </SelectContent>
+                                            </Select>
+
+                                            <Select
+                                                value={formData.salaryPeriod || undefined}
+                                                onValueChange={(value: any) => setFormData({ ...formData, salaryPeriod: value })}
+                                            >
+                                                <SelectTrigger>
+                                                    <SelectValue placeholder="Salary period" />
+                                                </SelectTrigger>
+                                                <SelectContent>
+                                                    <SelectItem value="monthly">Per Month</SelectItem>
+                                                    <SelectItem value="annual">Per Annum</SelectItem>
+                                                </SelectContent>
+                                            </Select>
+                                        </div>
+                                        <Alert className="bg-blue-50 text-blue-800 border-blue-200">
+                                            <AlertCircle className="h-4 w-4" />
+                                            <AlertDescription>
+                                                Please ensure your salary expectations are realistic and aligned with market standards for better chances of being shortlisted.
+                                            </AlertDescription>
+                                        </Alert>
+                                    </div>
+
+                                    {/* Employment Type */}
+                                    <div className="space-y-2">
+                                        <label className="text-sm font-medium">Employment Type</label>
+                                        <div className="flex flex-wrap gap-2">
+                                            {employmentTypes.map((type) => (
+                                                <Badge
+                                                    key={type}
+                                                    variant={formData.employmentType === type ? "default" : "outline"}
+                                                    className={`cursor-pointer ${formData.employmentType === type
+                                                        ? 'bg-violet-600 hover:bg-violet-700'
+                                                        : 'hover:border-violet-600 hover:text-violet-600'
+                                                        }`}
+                                                    onClick={() => setFormData({ ...formData, employmentType: type })}
+                                                >
+                                                    {type}
+                                                </Badge>
+                                            ))}
+                                        </div>
+                                    </div>
+
+
+                                    {/* Job Roles */}
+
+                                    <div className="space-y-2">
+                                        <label className="text-sm font-medium">
+                                            Preferred Roles (Select up to 5)
+                                        </label>
+                                        <MultiSelectRoles
+                                            selected={formData.preferredRole || []}
+                                            onChange={(roles) => setFormData({ ...formData, preferredRole: roles })}
+                                            maxSelections={5}
+                                        />
+                                    </div>
+
+                                    {/* Availability */}
+                                    <div className="space-y-2">
+                                        <label className="text-sm font-medium">Availability</label>
                                         <Select
-                                            value={formData.currencyType || undefined}
-                                            onValueChange={(value: any) => setFormData({ ...formData, currencyType: value })}
+                                            value={formData.availability}
+                                            onValueChange={(value: any) => setFormData({ ...formData, availability: value })}
                                         >
                                             <SelectTrigger>
-                                                <SelectValue placeholder="Select currency" />
+                                                <SelectValue placeholder="Select availability" />
                                             </SelectTrigger>
                                             <SelectContent>
-                                                {currencies.map((currency) => (
-                                                    <SelectItem key={currency.code} value={currency.code}>
-                                                        {currency.code} - {currency.name}
+                                                {availabilityOptions.map((option) => (
+                                                    <SelectItem key={option.value} value={option.value}>
+                                                        {option.label}
                                                     </SelectItem>
                                                 ))}
                                             </SelectContent>
                                         </Select>
-
-                                        <Select
-                                            value={formData.salaryPeriod || undefined}
-                                            onValueChange={(value: any) => setFormData({ ...formData, salaryPeriod: value })}
-                                        >
-                                            <SelectTrigger>
-                                                <SelectValue placeholder="Salary period" />
-                                            </SelectTrigger>
-                                            <SelectContent>
-                                                <SelectItem value="monthly">Per Month</SelectItem>
-                                                <SelectItem value="annual">Per Annum</SelectItem>
-                                            </SelectContent>
-                                        </Select>
                                     </div>
-                                    <Alert className="bg-blue-50 text-blue-800 border-blue-200">
-                                        <AlertCircle className="h-4 w-4" />
-                                        <AlertDescription>
-                                            Please ensure your salary expectations are realistic and aligned with market standards for better chances of being shortlisted.
-                                        </AlertDescription>
-                                    </Alert>
-                                </div>
 
-                                {/* Employment Type */}
-                                <div className="space-y-2">
-                                    <label className="text-sm font-medium">Employment Type</label>
-                                    <div className="flex flex-wrap gap-2">
-                                        {employmentTypes.map((type) => (
-                                            <Badge
-                                                key={type}
-                                                variant={formData.employmentType === type ? "default" : "outline"}
-                                                className={`cursor-pointer ${formData.employmentType === type
-                                                    ? 'bg-violet-600 hover:bg-violet-700'
-                                                    : 'hover:border-violet-600 hover:text-violet-600'
-                                                    }`}
-                                                onClick={() => setFormData({ ...formData, employmentType: type })}
-                                            >
-                                                {type}
-                                            </Badge>
-                                        ))}
-                                    </div>
-                                </div>
+                                    {error && (
+                                        <Alert variant="destructive">
+                                            <AlertDescription>{error}</AlertDescription>
+                                        </Alert>
+                                    )}
 
-
-                                {/* Job Roles */}
-
-                                <div className="space-y-2">
-                                    <label className="text-sm font-medium">
-                                        Preferred Roles (Select up to 5)
-                                    </label>
-                                    <MultiSelectRoles
-                                        selected={formData.preferredRole || []}
-                                        onChange={(roles) => setFormData({ ...formData, preferredRole: roles })}
-                                        maxSelections={5}
-                                    />
-                                </div>
-
-                                {/* Availability */}
-                                <div className="space-y-2">
-                                    <label className="text-sm font-medium">Availability</label>
-                                    <Select
-                                        value={formData.availability}
-                                        onValueChange={(value: any) => setFormData({ ...formData, availability: value })}
+                                    <Button
+                                        onClick={handleSubmit}
+                                        className="w-full bg-gradient-to-r from-violet-600 to-fuchsia-600 text-white hover:opacity-90 transition-opacity"
                                     >
-                                        <SelectTrigger>
-                                            <SelectValue placeholder="Select availability" />
-                                        </SelectTrigger>
-                                        <SelectContent>
-                                            {availabilityOptions.map((option) => (
-                                                <SelectItem key={option.value} value={option.value}>
-                                                    {option.label}
-                                                </SelectItem>
-                                            ))}
-                                        </SelectContent>
-                                    </Select>
-                                </div>
-
-                                {error && (
-                                    <Alert variant="destructive">
-                                        <AlertDescription>{error}</AlertDescription>
-                                    </Alert>
-                                )}
-
-                                <Button
-                                    onClick={handleSubmit}
-                                    className="w-full bg-gradient-to-r from-violet-600 to-fuchsia-600 text-white hover:opacity-90 transition-opacity"
-                                >
-                                    Save Preferences
-                                </Button>
-                            </CardContent>
-                        </Card>
+                                        Save Preferences
+                                    </Button>
+                                </CardContent>
+                                {/* <BorderBeam size={200} duration={8} /> */}
+                            </Card>
+                        </ShineBorder>
                     </div>
                 </motion.div>
             )}
@@ -331,7 +335,7 @@ const MultiSelectRoles = ({
     return (
         <div className="relative w-full">
             <div
-                className="relative w-full border rounded-md shadow-sm"
+                className="relative w-full border dark:border-gray-100 rounded-md shadow-sm"
                 onClick={() => {
                     setOpen(true);
                     inputRef.current?.focus();
@@ -356,7 +360,7 @@ const MultiSelectRoles = ({
                     ))}
                     <input
                         ref={inputRef}
-                        className="flex-1 bg-transparent outline-none min-w-[120px] placeholder:text-gray-500"
+                        className="flex-1 bg-transparent outline-none min-w-[120px] placeholder:text-gray-500 "
                         placeholder={selected.length === 0 ? "Search roles..." : ""}
                         value={searchValue}
                         onChange={(e) => setSearchValue(e.target.value)}
@@ -379,7 +383,7 @@ const MultiSelectRoles = ({
                             initial={{ opacity: 0, y: -10 }}
                             animate={{ opacity: 1, y: 0 }}
                             exit={{ opacity: 0, y: -10 }}
-                            className="absolute w-full z-50 top-full mt-1 bg-white rounded-md border shadow-lg max-h-60 overflow-auto"
+                            className="absolute w-full z-50 top-full mt-1 bg-white dark:bg-darkPurple rounded-md border shadow-lg max-h-60 overflow-auto"
                         >
                             <div className="p-1">
                                 {filteredRoles.length === 0 ? (
@@ -406,7 +410,7 @@ const MultiSelectRoles = ({
                               flex items-center justify-between px-2 py-1.5 text-sm cursor-pointer
                               ${selected.includes(role)
                                                                 ? 'bg-violet-50 text-violet-900'
-                                                                : 'hover:bg-gray-50'
+                                                                : 'hover:bg-gray-50 dark:hover:bg-purple-700'
                                                             }`}
                                                         onClick={() => handleSelect(role)}
                                                     >

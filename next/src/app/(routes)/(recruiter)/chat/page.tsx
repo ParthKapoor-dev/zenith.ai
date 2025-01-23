@@ -162,13 +162,17 @@ const AIChatInterface = () => {
             {/* Main Chat Area */}
             {loading
                 ? <Loader loadingText='Loading Chat' />
-                : (<div className="flex-1 flex flex-col h-full relative pt-16">
+                : (<div className="flex-1 flex flex-col h-full relative">
 
-                    <ChatArea messages={messages} isTyping={isTyping} chatRef={chatContainerRef} />
+                    <ChatArea
+                        messages={messages}
+                        isTyping={isTyping}
+                        chatRef={chatContainerRef}
+                        user={user as User} />
 
                     {/* Input Area with Rank Button */}
                     <div className=" p-4">
-                        <div className="max-w-3xl mx-auto flex gap-4">
+                        <div className="max-w-3xl mx-auto flex gap-4 items-center">
                             <div className="flex-1 relative">
                                 <Textarea
                                     ref={textareaRef}
@@ -178,7 +182,7 @@ const AIChatInterface = () => {
                                     placeholder="Send a message..."
                                     className={cn(
                                         "resize-none rounded-lg pr-10 border-zinc-200 dark:border-zinc-700",
-                                        "focus:ring-2 focus:ring-violet-500 dark:focus:ring-violet-400",
+                                        "focus:ring-2 focus-visible:ring-lightCyan dark:focus:ring-violet-400",
                                         "bg-white dark:bg-zinc-800",
                                         `min-h-[${MIN_HEIGHT}px]`
                                     )}
@@ -197,7 +201,7 @@ const AIChatInterface = () => {
                                     onClick={handleRankedList}
                                     disabled={isLoadingCandidates}
                                     className={cn(
-                                        "flex items-center gap-2 bg-violet-600 hover:bg-violet-700",
+                                        "flex items-center gap-2 bg-darkCyan hover:bg-cyan-600 dark:bg-darkPurple dark:hover:bg-purple-500",
                                         "text-white px-4 py-2 rounded-lg transition-colors",
                                         "disabled:opacity-50 disabled:cursor-not-allowed"
                                     )}

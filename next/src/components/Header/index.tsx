@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, use } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
@@ -23,27 +23,19 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { IoMdPlanet } from "react-icons/io";
 import {
-    Menu, X, User, Bell, Search, Briefcase, ChevronDown,
-    LogOut, Settings, HelpCircle, FileText, Building,
-    MessageSquare, Calendar, BookMarked, Users, PieChart
+    Menu, X, User, Bell, Briefcase, ChevronDown,
+    LogOut, Settings, HelpCircle, FileText, Users,
+    Brain
 } from 'lucide-react';
 import handleLogout from '@/actions/auth/logout';
 import { mutate } from 'swr';
 import UserProps from '@/types/user';
 import { useUser } from '@/hooks/useUser';
 import Image from 'next/image';
-
+import { ThemeBtn } from '../theme';
 
 export default function Navbar() {
-
     const [user, setUser] = useState<UserProps | null>(null);
-
-    useEffect(() => {
-        const userData: UserProps | null = useUser();
-        if (userData) setUser(userData)
-    }, [])
-
-
     const router = useRouter();
     const [isScrolled, setIsScrolled] = useState(false);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -58,6 +50,11 @@ export default function Navbar() {
         : '';
 
     useEffect(() => {
+        const userData: UserProps | null = useUser();
+        if (userData) setUser(userData);
+    }, []);
+
+    useEffect(() => {
         const handleScroll = () => {
             setIsScrolled(window.scrollY > 10);
         };
@@ -65,14 +62,9 @@ export default function Navbar() {
         return () => window.removeEventListener('scroll', handleScroll);
     }, []);
 
-
     async function handleLogoutButton() {
-        console.log("Clicked on logout");
         await handleLogout();
-        console.log("Handled Logout");
-        mutate('/api/user');
-        console.log("Mutated Logout");
-        location.reload()
+        location.reload();
     }
 
     const candidateNavItems = [
@@ -139,26 +131,31 @@ export default function Navbar() {
     );
 
     return (
-        <header className={`fixed top-0 w-full z-50 transition-all duration-300 ${isScrolled ? 'bg-white/80 backdrop-blur-lg shadow-sm' : 'bg-transparent'
-            }`}>
+        <header className={`fixed top-0 w-full z-50 transition-all duration-300 ${isScrolled ? 'bg-background/80 backdrop-blur-lg shadow-sm' : 'bg-transparent'}`}>
             <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="flex justify-between items-center h-16">
                     {/* Logo */}
                     <Link href="/">
                         <motion.div
-                            initial={{ opacity: 0 }}
-                            animate={{ opacity: 1 }}
+                            whileHover={{
+                                rotate: [0, -10, 10, 0],
+                                scale: 1.05
+                            }}
+                            transition={{
+                                duration: 0.3,
+                                type: "spring",
+                                stiffness: 300
+                            }}
                             className="flex items-center gap-2 cursor-pointer"
                         >
-                            <motion.div
-                                whileHover={{ rotate: 360 }}
-                                transition={{ duration: 0.5 }}
-                                className="bg-white rounded-full p-1 shadow-sm"
-                            >
-                                <IoMdPlanet className="w-6 h-6 text-purple-600" />
-                            </motion.div>
-                            <span className="text-xl font-bold bg-gradient-to-r from-violet-600 to-fuchsia-600 bg-clip-text text-transparent">
-                                JobverseAI
+                            <Brain
+                                className="w-8 h-8 text-[#1b132c] dark:text-[#d6eaf3]"
+                            />
+                            <span className="text-xl font-bold bg-gradient-to-r 
+                from-[#1b132c] to-[#0d3647] 
+                dark:from-[#d6eaf3] dark:to-[#1fa6b8] 
+                bg-clip-text text-transparent">
+                                Zenith AI
                             </span>
                         </motion.div>
                     </Link>
@@ -166,6 +163,7 @@ export default function Navbar() {
                     {!user ? (
                         // Non-authenticated navigation
                         <div className="flex items-center gap-4">
+                            <ThemeBtn />
                             <Button
                                 variant="ghost"
                                 onClick={() => router.push('/about')}
@@ -173,7 +171,7 @@ export default function Navbar() {
                                 About
                             </Button>
                             <Button
-                                className="bg-gradient-to-r from-violet-600 to-fuchsia-600 text-white"
+                                className="bg-gradient-to-r from-[#1b132c] to-[#0d3647] dark:from-[#d6eaf3] dark:to-[#1fa6b8] text-white"
                                 onClick={() => router.push('/auth/login')}
                             >
                                 Login
@@ -182,11 +180,12 @@ export default function Navbar() {
                     ) : (
                         // Authenticated navigation
                         <div className="hidden md:flex items-center gap-6">
+                            <ThemeBtn />
                             <NavigationMenu>
                                 <NavigationMenuList>
                                     {currentNavItems.map((item, index) => (
                                         <NavigationMenuItem key={index}>
-                                            <NavigationMenuTrigger>
+                                            <NavigationMenuTrigger className='border shadow-sm'>
                                                 {item.icon}
                                                 {item.trigger}
                                             </NavigationMenuTrigger>
@@ -222,7 +221,7 @@ export default function Navbar() {
                             <DropdownMenu>
                                 <DropdownMenuTrigger asChild>
                                     <Button variant="ghost" className="flex items-center gap-2">
-                                        <div className="w-8 h-8 rounded-full bg-gradient-to-r from-violet-400 to-fuchsia-400 flex items-center justify-center overflow-hidden">
+                                        <div className="w-8 h-8 rounded-full bg-gradient-to-r from-[#1b132c] to-[#0d3647] dark:from-[#d6eaf3] dark:to-[#1fa6b8] flex items-center justify-center overflow-hidden">
                                             {user.image ? (
                                                 <Image src={user.image} alt=''
                                                     width={40}
@@ -288,13 +287,13 @@ export default function Navbar() {
                         initial={{ opacity: 0, height: 0 }}
                         animate={{ opacity: 1, height: "auto" }}
                         exit={{ opacity: 0, height: 0 }}
-                        className="md:hidden bg-white border-t"
+                        className="md:hidden bg-background border-t"
                     >
                         <div className="px-4 pt-2 pb-3 space-y-1">
                             {!user ? (
                                 <>
-                                    <a href="/about" className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50">About</a>
-                                    <a href="/login" className="block px-3 py-2 rounded-md text-base font-medium text-purple-600 hover:text-purple-700 hover:bg-gray-50">Login</a>
+                                    <a href="/about" className="block px-3 py-2 rounded-md text-base font-medium text-foreground hover:bg-accent">About</a>
+                                    <a href="/login" className="block px-3 py-2 rounded-md text-base font-medium text-[#1b132c] dark:text-[#d6eaf3] hover:bg-accent">Login</a>
                                 </>
                             ) : (
                                 <>
@@ -303,17 +302,17 @@ export default function Navbar() {
                                             <a
                                                 key={index}
                                                 href={item.href}
-                                                className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50"
+                                                className="block px-3 py-2 rounded-md text-base font-medium text-foreground hover:bg-accent"
                                             >
                                                 {item.title}
                                             </a>
                                         ))
                                     )}
-                                    <a href="/settings" className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50">Settings</a>
-                                    <a href="/help" className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50">Help Center</a>
+                                    <a href="/settings" className="block px-3 py-2 rounded-md text-base font-medium text-foreground hover:bg-accent">Settings</a>
+                                    <a href="/help" className="block px-3 py-2 rounded-md text-base font-medium text-foreground hover:bg-accent">Help Center</a>
                                     <button
                                         onClick={handleLogoutButton}
-                                        className="block w-full text-left px-3 py-2 rounded-md text-base font-medium text-red-600 hover:text-red-700 hover:bg-gray-50"
+                                        className="block w-full text-left px-3 py-2 rounded-md text-base font-medium text-red-600 hover:bg-accent"
                                     >
                                         Log out
                                     </button>
@@ -323,6 +322,6 @@ export default function Navbar() {
                     </motion.div>
                 )}
             </AnimatePresence>
-        </header >
+        </header>
     );
-};
+}

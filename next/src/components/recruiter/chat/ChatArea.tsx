@@ -4,30 +4,26 @@ import { Bot, Loader2, User2 } from 'lucide-react';
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import DisplayList from './DisplayList';
+import User from '@/types/user';
 
 interface ChatAreaProps {
-    messages: (ChatInput | ChatResponse | RankedList)[]
-    isTyping: boolean
-    chatRef: React.RefObject<HTMLDivElement | null>
+    messages: (ChatInput | ChatResponse | RankedList)[];
+    isTyping: boolean;
+    chatRef: React.RefObject<HTMLDivElement | null>;
+    user: User
 }
 
-// TODO: Better Styling -> Able to differenciate between Chat Input and Bot Response, Maybe something like perplexity's design type
-
-// TODO: Automatic Scrolling to below, whenever a new chat response is received
-
 export default function ChatArea({ messages, isTyping, chatRef }: ChatAreaProps) {
-
-    console.log(messages)
     return (
         <div className="flex-1 overflow-y-auto scroll-smooth" ref={chatRef}>
             {messages.length === 0 ? (
                 <div className="h-full flex items-center justify-center">
                     <div className="text-center space-y-4">
-                        <Bot className="w-12 h-12 mx-auto text-zinc-400" />
-                        <h1 className="text-2xl font-semibold text-zinc-800 dark:text-zinc-200">
+                        <Bot className="w-12 h-12 mx-auto text-[#922bff]" />
+                        <h1 className="text-2xl font-semibold text-purple-800 dark:text-[#922bff]">
                             Recruitment Assistant
                         </h1>
-                        <p className="text-zinc-600 dark:text-zinc-400 max-w-md">
+                        <p className="text-purple-600 dark:text-[#922bff] max-w-md">
                             I can help you find the perfect candidates for your positions.
                             Start by describing the role you're looking to fill.
                         </p>
@@ -36,7 +32,7 @@ export default function ChatArea({ messages, isTyping, chatRef }: ChatAreaProps)
             ) : (
                 <div className="max-w-3xl mx-auto px-4 py-8 space-y-6">
                     <AnimatePresence initial={false}>
-                        {messages.map((message) => (
+                        {messages.map((message) =>
                             isRankedList(message) ? (
                                 <DisplayList rankedList={message} key={message.id + '-list'} />
                             ) : (
@@ -45,42 +41,42 @@ export default function ChatArea({ messages, isTyping, chatRef }: ChatAreaProps)
                                     initial={{ opacity: 0, y: 20 }}
                                     animate={{ opacity: 1, y: 0 }}
                                     exit={{ opacity: 0, y: -20 }}
-                                    className="flex gap-4"
+                                    className={`flex gap-4 ${isChatInput(message) ? 'justify-end' : 'justify-start'}`}
                                 >
-                                    <div className={`flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center
-                                            ${(message as ChatInput).input
-                                            ? 'bg-violet-100 dark:bg-violet-900/50 text-violet-600 dark:text-violet-400'
-                                            : 'bg-emerald-100 dark:bg-emerald-900/50 text-emerald-600 dark:text-emerald-400'
-                                        }`}
+                                    {!isChatInput(message) && (
+                                        <div className="flex-shrink-0 w-8 h-8 rounded-full bg-lightCyan dark:bg-purple-900/50 flex items-center justify-center">
+                                            <Bot className="w-4 h-4 text-darkCyan dark:text-purple-400" />
+                                        </div>
+                                    )}
+                                        {/* bg-[#a9cad9] text-[#061117] dark:bg-[#172227] */}
+                                    <div
+                                        className={`p-4 rounded-lg ${isChatInput(message)
+                                            ? ' text-[#061117]  dark:text-white text-lg'
+                                            
+                                                : 'bg-lightCyan text-darkCyan dark:bg-purple-400/20     dark:text-purple-200 text-lg'
+                                            }`} style={{ whiteSpace: 'pre-wrap' }}
                                     >
-                                        {(message as ChatInput).input ? (
-                                            <User2 className="w-4 h-4" />
-                                        ) : (
-                                            <Bot className="w-4 h-4" />
-                                        )}
-                                    </div>
-                                    {/* <div className="prose prose-zinc dark:prose-invert max-w-none">
-                                    <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                                        {/* <ReactMarkdown remarkPlugins={[remarkGfm]}> */}
                                         {(message as ChatInput).input || (message as ChatResponse).response}
-                                    </ReactMarkdown>
-                                </div> */}
-                                    <div className="flex-1 prose prose-zinc dark:prose-invert max-w-none"
-                                        style={{ whiteSpace: "pre-wrap" }}>
-                                        {(message as ChatInput).input || (message as ChatResponse).response}
+                                        {/* </ReactMarkdown> */}
                                     </div>
+                                    {/* {isChatInput(message) && (
+                                        <div className="flex-shrink-0 w-8 h-8 rounded-full bg-purple-900/50 flex items-center justify-center">
+                                            <User2 className="w-4 h-4 text-white" />
+                                        </div>
+                                    )} */}
                                 </motion.div>
                             )
-                        ))}
+                        )}
                     </AnimatePresence>
-
                     {isTyping && (
                         <motion.div
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
-                            className="flex gap-4"
+                            className="flex gap-4 justify-start"
                         >
-                            <div className="w-8 h-8 rounded-full bg-emerald-100 dark:bg-emerald-900/50 flex items-center justify-center">
-                                <Bot className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
+                            <div className="w-8 h-8 rounded-full bg-purple-100 dark:bg-purple-900/50 flex items-center justify-center">
+                                <Bot className="w-4 h-4 text-purple-600 dark:text-purple-400" />
                             </div>
                             <motion.div
                                 animate={{ opacity: [0.4, 1, 0.4] }}
@@ -88,20 +84,18 @@ export default function ChatArea({ messages, isTyping, chatRef }: ChatAreaProps)
                                 className="flex gap-1 items-center"
                             >
                                 <Loader2 className="w-4 h-4 animate-spin" />
-                                <span className="text-sm text-zinc-500">Thinking...</span>
+                                <span className="text-sm text-purple-500">Thinking...</span>
                             </motion.div>
                         </motion.div>
                     )}
                 </div>
             )}
         </div>
-
-    )
+    );
 }
 
-
 const isChatInput = (message: ChatInput | ChatResponse): message is ChatInput =>
-    (message as ChatInput).input !== undefined
+    (message as ChatInput).input !== undefined;
 
 const isRankedList = (message: ChatInput | ChatResponse | RankedList): message is RankedList =>
-    (message as RankedList).rankedCandidates !== undefined
+    (message as RankedList).rankedCandidates !== undefined;

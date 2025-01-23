@@ -57,7 +57,7 @@ export default function ChatSidebar({
     };
 
     return (
-        <Sheet open={isSidebarOpen} onOpenChange={setIsSidebarOpen}>
+        <Sheet open={isSidebarOpen} onOpenChange={setIsSidebarOpen} >
             <SheetTrigger asChild>
                 <Button
                     variant="ghost"
@@ -69,7 +69,7 @@ export default function ChatSidebar({
             </SheetTrigger>
             <SheetContent
                 side="left"
-                className="w-80 p-0"
+                className="w-80 p-0 py-10 bg-gradient-to-bl dark:from-[#0d3647] dark:via-black dark:to-[#000008]"
             >
                 <DialogTitle />
                 <div className="flex flex-col h-full">

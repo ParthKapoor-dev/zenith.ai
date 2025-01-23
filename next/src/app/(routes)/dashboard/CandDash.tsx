@@ -6,6 +6,7 @@ import User from '@/types/user';
 import Candidate from '@/types/candidate';
 import ProfileCard from '@/components/candidate/ProfileCard';
 import List from '@/components/candidate/List';
+import { LineShadowText } from '@/components/ui/line-shadow-text';
 
 interface CandDashProps {
     user: User,
@@ -21,7 +22,10 @@ const CandidateDashboard = ({ user, candidate }: CandDashProps) => {
                 {/* Welcome Section */}
                 <motion.div variants={itemVariants} className="text-center mb-8">
                     <h1 className="text-4xl font-bold bg-gradient-to-r from-violet-600 to-fuchsia-600 bg-clip-text text-transparent mb-2">
-                        Welcome back, {user?.name || 'Candidate'}
+                        Welcome back,
+                        <LineShadowText className='italic ml-2'>
+                            {user?.name || 'Candidate'}
+                        </LineShadowText>
                     </h1>
                     <p className="text-slate-600">Your professional journey with JobverseAI</p>
                 </motion.div>
