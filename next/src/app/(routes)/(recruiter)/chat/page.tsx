@@ -10,7 +10,7 @@ import {
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import ChatArea from '../../../../components/recruiter/chat/ChatArea';
-import { ChatInput, ChatResponse, ChatSession } from '@/types/chatbot';
+import { ChatInput, ChatResponse, ChatSession, RankedList } from '@/types/chatbot';
 import getAllSessions from '@/actions/recruiter/chat/getAllSessions';
 import fetchServerAction from '@/lib/fetchHelper';
 import User from '@/types/user';
@@ -21,17 +21,14 @@ import getSession from "@/actions/recruiter/chat/getSession";
 import Loader from './Loader';
 import ChatSidebar from '../../../../components/recruiter/chat/Sidebar';
 import getRankedList from '@/actions/recruiter/chat/getRankedList';
-import { AnimatePresence, motion } from 'framer-motion';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 
 const MIN_HEIGHT = 64;
 const MAX_HEIGHT = 200;
 
 const AIChatInterface = () => {
-    const [messages, setMessages] = useState<(ChatInput | ChatResponse)[]>([]);
+    const [messages, setMessages] = useState<(ChatInput | ChatResponse | RankedList)[]>([]);
     const [inputValue, setInputValue] = useState('');
-    const [rankedList, setRankedList] = useState([]);
     const [isTyping, setIsTyping] = useState(false);
     const [loading, setLoading] = useState(false);
     const [chatSessions, setChatSessions] = useState<ChatSession[]>([]);
@@ -53,8 +50,10 @@ const AIChatInterface = () => {
     const getChatSession = async (sessionId: number) =>
         setMessages((await fetchServerAction(() => getSession(sessionId)))!);
 
-    const genRankedList = async (query: string) =>
-        setRankedList((await fetchServerAction(() => getRankedList(query))));
+    const genRankedList = async (query: string) => {
+        const list = await fetchServerAction(() => getRankedList(query, currentSession as number))
+        setMessages(prev => [...prev, list])
+    }
 
     // Auto-resize textarea
     useEffect(() => {
@@ -167,54 +166,8 @@ const AIChatInterface = () => {
 
                     <ChatArea messages={messages} isTyping={isTyping} chatRef={chatContainerRef} />
 
-                    <AnimatePresence>
-                        {rankedList.length > 0 && (
-                            <motion.div
-                                initial={{ opacity: 0, height: 0 }}
-                                animate={{ opacity: 1, height: "auto" }}
-                                exit={{ opacity: 0, height: 0 }}
-                                className="border-t border-zinc-200 dark:border-zinc-700 max-w-3xl mx-auto w-full "
-                            >
-                                <Card className="m-4 bg-white dark:bg-zinc-800">
-                                    <CardHeader>
-                                        <CardTitle className="text-lg font-semibold">
-                                            Top Candidates
-                                        </CardTitle>
-                                        <CardDescription>
-                                            Based on your requirements
-                                        </CardDescription>
-                                    </CardHeader>
-                                    <CardContent>
-                                        <div className="space-y-2">
-                                            {rankedList.map(({ user: { id, name, email } }, index) => (
-                                                <motion.div
-                                                    key={id}
-                                                    initial={{ opacity: 0, x: -20 }}
-                                                    animate={{ opacity: 1, x: 0 }}
-                                                    transition={{ delay: index * 0.1 }}
-                                                    className="flex items-center gap-3 p-3 rounded-lg hover:bg-zinc-100 dark:hover:bg-zinc-700/50 transition-colors"
-                                                >
-                                                    <div className="w-8 h-8 rounded-full bg-violet-100 dark:bg-violet-900/50 flex items-center justify-center">
-                                                        <span className="text-sm font-medium text-violet-700 dark:text-violet-300">
-                                                            {index + 1}
-                                                        </span>
-                                                    </div>
-                                                    <div className="flex-1">
-                                                        <h4 className="font-medium">{name}</h4>
-                                                        <p className="text-sm text-zinc-600 dark:text-zinc-400">{email}</p>
-                                                    </div>
-                                                    <ChevronRight className="w-4 h-4 text-zinc-400" />
-                                                </motion.div>
-                                            ))}
-                                        </div>
-                                    </CardContent>
-                                </Card>
-                            </motion.div>
-                        )}
-                    </AnimatePresence>
-
                     {/* Input Area with Rank Button */}
-                    <div className="border-t border-zinc-200 dark:border-zinc-700 p-4">
+                    <div className=" p-4">
                         <div className="max-w-3xl mx-auto flex gap-4">
                             <div className="flex-1 relative">
                                 <Textarea

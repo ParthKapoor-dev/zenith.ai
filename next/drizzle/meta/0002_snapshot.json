@@ -1,8 +1,8 @@
 {
   "version": "5",
   "dialect": "mysql",
-  "id": "abd55b22-eeb7-4a80-a4eb-36a42d17cef7",
-  "prevId": "00000000-0000-0000-0000-000000000000",
+  "id": "f67c2c0c-c852-40dc-8f9a-c26b5892bb3d",
+  "prevId": "cbd8b736-5d8a-458e-9611-09b03b9930c5",
   "tables": {
     "candidates": {
       "name": "candidates",
@@ -783,8 +783,8 @@
           "notNull": true,
           "autoincrement": false
         },
-        "chatSessionId": {
-          "name": "chatSessionId",
+        "listId": {
+          "name": "listId",
           "type": "int",
           "primaryKey": false,
           "notNull": true,
@@ -813,12 +813,12 @@
           "onDelete": "no action",
           "onUpdate": "no action"
         },
-        "ranked_candidates_chatSessionId_chat_sessions_id_fk": {
-          "name": "ranked_candidates_chatSessionId_chat_sessions_id_fk",
+        "ranked_candidates_listId_ranked_list_id_fk": {
+          "name": "ranked_candidates_listId_ranked_list_id_fk",
           "tableFrom": "ranked_candidates",
-          "tableTo": "chat_sessions",
+          "tableTo": "ranked_list",
           "columnsFrom": [
-            "chatSessionId"
+            "listId"
           ],
           "columnsTo": [
             "id"
@@ -834,11 +834,73 @@
             "id"
           ]
         },
-        "ranked_candidates_chatSessionId_candidateId_pk": {
-          "name": "ranked_candidates_chatSessionId_candidateId_pk",
+        "ranked_candidates_listId_candidateId_pk": {
+          "name": "ranked_candidates_listId_candidateId_pk",
           "columns": [
-            "chatSessionId",
+            "listId",
             "candidateId"
+          ]
+        }
+      },
+      "uniqueConstraints": {},
+      "checkConstraint": {}
+    },
+    "ranked_list": {
+      "name": "ranked_list",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": true
+        },
+        "sessionId": {
+          "name": "sessionId",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "updatedAt": {
+          "name": "updatedAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "onUpdate": true,
+          "default": "(now())"
+        },
+        "createdAt": {
+          "name": "createdAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "(now())"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "ranked_list_sessionId_chat_sessions_id_fk": {
+          "name": "ranked_list_sessionId_chat_sessions_id_fk",
+          "tableFrom": "ranked_list",
+          "tableTo": "chat_sessions",
+          "columnsFrom": [
+            "sessionId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {
+        "ranked_list_id": {
+          "name": "ranked_list_id",
+          "columns": [
+            "id"
           ]
         }
       },

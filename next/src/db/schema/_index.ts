@@ -2,7 +2,7 @@ import { relations } from 'drizzle-orm';
 
 import { Users } from "./user"
 import { Candidates, Education, Experiences, Projects } from './candidate';
-import { ChatSessions, ChatInputs, ChatResponses } from './recruiter';
+import { ChatSessions, ChatInputs, ChatResponses, RankedLists, RankedCandidates } from './recruiter';
 import { JobApplications, Jobs } from './jobs';
 
 
@@ -20,7 +20,8 @@ export const CandidateRelations = relations(Candidates, ({ one, many }) => ({
     experiences: many(Experiences),
     projects: many(Projects),
     education: many(Education),
-    applications: many(JobApplications)
+    applications: many(JobApplications),
+    rankings: many(RankedCandidates)
 }));
 
 export const ExperienceRelations = relations(Experiences, ({ one }) => ({
@@ -41,21 +42,31 @@ export const EducationRelations = relations(Education, ({ one }) => ({
 
 // Recruiter
 export const ChatSessionRelations = relations(ChatSessions, ({ one, many }) => ({
-    user: one(Users, {
-        fields: [ChatSessions.userId], references: [Users.id]
-    }),
+    user: one(Users, { fields: [ChatSessions.userId], references: [Users.id] }),
+    rankedLists: many(RankedLists),
     chatInputs: many(ChatInputs),
     chatResponses: many(ChatResponses)
 }))
 
 export const ChatInputsRelations = relations(ChatInputs, ({ one }) => ({
-    session: one(ChatSessions,
-        { fields: [ChatInputs.sessionId], references: [ChatSessions.id] })
+    session: one(ChatSessions, { fields: [ChatInputs.sessionId], references: [ChatSessions.id] })
 }))
 
 export const ChatResponsesRelations = relations(ChatResponses, ({ one }) => ({
-    session: one(ChatSessions,
-        { fields: [ChatResponses.sessionId], references: [ChatSessions.id] })
+    session: one(ChatSessions, { fields: [ChatResponses.sessionId], references: [ChatSessions.id] })
+}))
+
+export const RankedListsRelations = relations(RankedLists, ({ one, many }) => ({
+    session: one(ChatSessions, { fields: [RankedLists.sessionId], references: [ChatSessions.id] }),
+    rankedCandidates: many(RankedCandidates)
+}))
+
+export const RankedCandidatesRelations = relations(RankedCandidates, ({ one }) => ({
+    candidate: one(Candidates, {
+        fields: [RankedCandidates.candidateId], references: [Candidates.userId]
+    }),
+    list: one(RankedLists,
+        { fields: [RankedCandidates.listId], references: [RankedLists.id] })
 }))
 
 
@@ -86,7 +97,9 @@ const schema = {
     Projects,
     Education,
     JobApplications,
-    Jobs
+    Jobs,
+    RankedLists,
+    RankedCandidates
 };
 export default schema;
 
@@ -100,5 +113,7 @@ export {
     Projects,
     Education,
     JobApplications,
-    Jobs
+    Jobs,
+    RankedLists,
+    RankedCandidates
 } 

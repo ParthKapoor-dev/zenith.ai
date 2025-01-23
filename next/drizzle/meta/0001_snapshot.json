@@ -1,8 +1,8 @@
 {
   "version": "5",
   "dialect": "mysql",
-  "id": "9612fa09-7178-4095-8a70-e22d057fd0b6",
-  "prevId": "04760e18-5304-4f94-afe9-df87d4bc92c1",
+  "id": "cbd8b736-5d8a-458e-9611-09b03b9930c5",
+  "prevId": "abd55b22-eeb7-4a80-a4eb-36a42d17cef7",
   "tables": {
     "candidates": {
       "name": "candidates",
@@ -766,6 +766,102 @@
       "uniqueConstraints": {},
       "checkConstraint": {}
     },
+    "ranked_candidates": {
+      "name": "ranked_candidates",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": true
+        },
+        "candidateId": {
+          "name": "candidateId",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "chatSessionId": {
+          "name": "chatSessionId",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "score": {
+          "name": "score",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "updatedAt": {
+          "name": "updatedAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "onUpdate": true,
+          "default": "(now())"
+        },
+        "createdAt": {
+          "name": "createdAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "(now())"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "ranked_candidates_candidateId_candidates_userId_fk": {
+          "name": "ranked_candidates_candidateId_candidates_userId_fk",
+          "tableFrom": "ranked_candidates",
+          "tableTo": "candidates",
+          "columnsFrom": [
+            "candidateId"
+          ],
+          "columnsTo": [
+            "userId"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "ranked_candidates_chatSessionId_chat_sessions_id_fk": {
+          "name": "ranked_candidates_chatSessionId_chat_sessions_id_fk",
+          "tableFrom": "ranked_candidates",
+          "tableTo": "chat_sessions",
+          "columnsFrom": [
+            "chatSessionId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {
+        "ranked_candidates_id": {
+          "name": "ranked_candidates_id",
+          "columns": [
+            "id"
+          ]
+        },
+        "ranked_candidates_chatSessionId_candidateId_pk": {
+          "name": "ranked_candidates_chatSessionId_candidateId_pk",
+          "columns": [
+            "chatSessionId",
+            "candidateId"
+          ]
+        }
+      },
+      "uniqueConstraints": {},
+      "checkConstraint": {}
+    },
     "users": {
       "name": "users",
       "columns": {
@@ -846,11 +942,7 @@
   "views": {},
   "_meta": {
     "schemas": {},
-    "tables": {
-      "\"chatInputs\"": "\"chat_inputs\"",
-      "\"chatResponses\"": "\"chat_responses\"",
-      "\"chatSessions\"": "\"chat_sessions\""
-    },
+    "tables": {},
     "columns": {}
   },
   "internal": {

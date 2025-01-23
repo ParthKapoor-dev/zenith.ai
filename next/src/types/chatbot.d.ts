@@ -22,3 +22,16 @@ export interface ChatSession {
     updatedAt: Date;
     createdAt: Date;
 }
+
+export interface RankedList {
+    id: number,
+    rankedCandidates: RankedCandidate[]
+    updatedAt: Date,
+    createdAt: Date
+}
+
+export interface RankedCandidate {
+    candidateId: number,
+    listId: number,
+    score: number,
+}

@@ -3,7 +3,7 @@
 import { db } from "@/db";
 import schema from "@/db/schema/_index";
 import { verifySession } from "@/lib/session"
-import { ChatInput, ChatResponse, ChatSession } from "@/types/chatbot";
+import { ChatInput, ChatResponse, ChatSession, RankedList } from "@/types/chatbot";
 import { eq } from "drizzle-orm";
 
 export default async function getSession(
@@ -12,17 +12,24 @@ export default async function getSession(
 
     try {
 
-        const inputs = await db.query.ChatInputs.findMany({
-            where: eq(schema.ChatInputs.sessionId, sessionId)
-        }) as ChatInput[];
+        await verifySession();
 
-        const responses = await db.query.ChatResponses.findMany({
-            where: eq(schema.ChatResponses.sessionId, sessionId)
-        }) as ChatResponse[];
+        const session = await db.query.ChatSessions.findFirst({
+            where: eq(schema.ChatSessions.id, sessionId),
+            with: {
+                chatInputs: true,
+                chatResponses: true,
+                rankedLists:
+                    { with: { rankedCandidates: { with: { candidate: { with: { user: true } } } } } }
+            }
+        })
 
-        const sortedArray = [...inputs, ...responses].sort((a, b) => {
-            return new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime();
-        });
+        const inputs = session?.chatInputs as ChatInput[];
+        const responses = session?.chatResponses as ChatResponse[];
+        const lists = session?.rankedLists as RankedList[]
+
+        const sortedArray = [...inputs, ...responses, ...lists].sort((a, b) =>
+            new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime())
 
         console.log("Sorted Array", sortedArray)
 
