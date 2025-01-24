@@ -5,7 +5,7 @@ from app.routes import candidates, testing, recruiters
 from app.services.chatbot import chat
 
 app = FastAPI(
-    title="Jobverse AI",
+    title="Zenith AI",
     description="AI Recruitment Platform",
     version="1.0.0",
 )

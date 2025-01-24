@@ -182,7 +182,7 @@ const LoginPage = () => {
               className="mt-8 text-center space-y-4"
             >
               <p className="text-sm text-slate-500">
-                By continuing, you agree to JobverseAI's{' '}
+                By continuing, you agree to Zenith AI's{' '}
                 <a href="#" className="text-purple-600 hover:text-purple-700 hover:underline">Terms of Service</a>
                 {' '}and{' '}
                 <a href="#" className="text-purple-600 hover:text-purple-700 hover:underline">Privacy Policy</a>

@@ -24,7 +24,7 @@ const CandidateDashboard = ({ user, candidate }: CandDashProps) => {
                     <h1 className="text-5xl font-bold bg-gradient-to-r from-violet-600 to-fuchsia-600 bg-clip-text text-transparent mb-2 leading-none tracking-tight">
                         Welcome back, {user?.name || 'Candidate'}
                     </h1>
-                    <p className="text-slate-600 tracking-tight ">Your professional journey with JobverseAI</p>
+                    <p className="text-slate-600 tracking-tight ">Your professional journey with Zenith AI</p>
                 </motion.div>
 
                 <div className="flex flex-col justify-center gap-4 ">

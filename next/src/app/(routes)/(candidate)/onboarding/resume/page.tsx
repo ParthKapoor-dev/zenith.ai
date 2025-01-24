@@ -149,9 +149,6 @@ const UploadResumePage = () => {
                                 </p>
                             </div>
 
-                            {/* <p className="text-slate-600">
-                                Upload your resume to continue with JobverseAI
-                            </p> */}
                         </motion.div>
 
                         <motion.div
