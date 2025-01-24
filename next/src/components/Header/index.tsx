@@ -131,7 +131,7 @@ export default function Navbar() {
     );
 
     return (
-        <header className={`fixed top-0 w-full z-50 transition-all duration-300 ${isScrolled ? 'bg-background/80 backdrop-blur-lg shadow-sm' : 'bg-transparent'}`}>
+        <header className={`fixed top-0 w-full z-50 transition-all duration-300 ${isScrolled ? 'bg-purple-100/20 backdrop-blur-lg shadow-sm' : 'bg-transparent'}`}>
             <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="flex justify-between items-center h-16">
                     {/* Logo */}
@@ -171,7 +171,7 @@ export default function Navbar() {
                                 About
                             </Button>
                             <Button
-                                className="bg-gradient-to-r from-[#1b132c] to-[#0d3647] dark:from-[#d6eaf3] dark:to-[#1fa6b8] text-white"
+                                className="bg-gradient-to-r from-[#1b132c] to-[#0d3647] dark:from-purple-500 dark:to-cyan-500 text-white"
                                 onClick={() => router.push('/auth/login')}
                             >
                                 Login

@@ -95,7 +95,7 @@ const LoginPage = () => {
               onValueChange={setActiveTab}
               className="w-full"
             >
-              <TabsList className="grid w-full h-full grid-cols-2 mb-8 dark:bg-zinc-900 ">
+              <TabsList className="grid w-full h-full grid-cols-2 mb-8 dark:bg-black ">
                 <TabsTrigger
                   value="candidate"
                   className="flex items-center gap-2 py-3 data-[state=active]:bg-gradient-to-r data-[state=active]:from-violet-50 data-[state=active]:to-fuchsia-50 dark:data-[state=active]:from-purple-500 dark:data-[state=active]:to-purple-700 "

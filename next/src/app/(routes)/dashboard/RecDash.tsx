@@ -33,7 +33,7 @@ const RecruiterDashboard = () => {
     )
     
     return (
-        <div className="p-8 max-w-7xl mx-auto space-y-8">
+        <div className="p-8 max-w-7xl mx-auto space-y-8 min-h-screen">
             <motion.div
                 variants={containerVariants}
                 initial="hidden"

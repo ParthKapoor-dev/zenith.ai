@@ -82,7 +82,7 @@ const ShareLinkCard = ({ jobId }: { jobId: string }) => {
                             <Button
                                 key={platform}
                                 variant="outline"
-                                className="flex-1 bg-black/80"
+                                className="flex-1 dark:bg-black/80 dark:hover:bg-zinc-800 "
                                 onClick={() => {
                                     const text = `We're hiring! Check out this position: ${applicationLink}`;
                                     let url = '';
