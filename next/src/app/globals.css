@@ -76,7 +76,7 @@
 
 @layer base {
   * {
-    @apply border-border;
+    @apply border-border !tracking-tight;
   }
   body {
     @apply bg-background text-foreground font-['Inter'];
