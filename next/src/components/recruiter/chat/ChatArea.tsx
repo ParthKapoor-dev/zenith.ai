@@ -43,11 +43,11 @@ export default function ChatArea({ messages, isTyping, chatRef }: ChatAreaProps)
                                     exit={{ opacity: 0, y: -20 }}
                                     className={`flex gap-4 ${isChatInput(message) ? 'justify-end' : 'justify-start'}`}
                                 >
-                                    {!isChatInput(message) && (
+                                    {/* {!isChatInput(message) && (
                                         <div className="flex-shrink-0 w-8 h-8 rounded-full bg-lightCyan dark:bg-purple-900/50 flex items-center justify-center">
                                             <Bot className="w-4 h-4 text-darkCyan dark:text-purple-400" />
                                         </div>
-                                    )}
+                                    )} */}
                                         {/* bg-[#a9cad9] text-[#061117] dark:bg-[#172227] */}
                                     <div
                                         className={`p-4 rounded-lg ${isChatInput(message)

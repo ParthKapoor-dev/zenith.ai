@@ -15,7 +15,7 @@ import { Share, User } from "lucide-react";
 export function LargeFeatureSection() {
     const features = [
         {
-            title: "Intelligent Screening Chat",
+            title: "Intelligent Screening Chatbot",
             description:
                 "Interactive AI assistant that helps you refine your search criteria and understand candidate potential.",
 

@@ -147,81 +147,85 @@ const AIChatInterface = () => {
     };
 
     return (
-        <div className="flex h-[80vh] relative">
-            {/* Sidebar for both Mobile and Desktop */}
-            <ChatSidebar
-                setLoading={setLoading}
-                getChatSession={getChatSession}
-                setCurrentSession={setCurrentSession}
-                setMessages={setMessages}
-                textareaRef={textareaRef}
-                chatSessions={chatSessions}
-                currentSession={currentSession}
-            />
+        <div className="flex inset-0 absolute h-screen pt-[8vh]">
+            {loading ? (
+                <Loader loadingText='Loading Chat' />
+            ) : (
+                <div className="flex w-full h-full relative">
+                    {/* Sidebar (will now handle both mobile and desktop views) */}
+                    <ChatSidebar
+                        setLoading={setLoading}
+                        getChatSession={getChatSession}
+                        setCurrentSession={setCurrentSession}
+                        setMessages={setMessages}
+                        textareaRef={textareaRef}
+                        chatSessions={chatSessions}
+                        currentSession={currentSession}
+                    />
 
-            {/* Main Chat Area */}
-            {loading
-                ? <Loader loadingText='Loading Chat' />
-                : (<div className="flex-1 flex flex-col h-full relative">
+                    {/* Main Chat Area - Now takes remaining space */}
+                    <div className='flex flex-col flex-1'>
+                        <ChatArea
+                            messages={messages}
+                            isTyping={isTyping}
+                            chatRef={chatContainerRef}
+                            user={user as User}
+                        />
 
-                    <ChatArea
-                        messages={messages}
-                        isTyping={isTyping}
-                        chatRef={chatContainerRef}
-                        user={user as User} />
+                        {/* Input Area with Rank Button */}
+                        <div className="p-4">
+                            <div className="max-w-3xl mx-auto flex gap-4 items-center">
+                                <div className="flex-1 relative">
+                                    <Textarea
+                                        ref={textareaRef}
+                                        value={inputValue}
+                                        onChange={(e) => setInputValue(e.target.value)}
+                                        onKeyDown={handleKeyPress}
+                                        placeholder="Send a message..."
+                                        className={cn(
+                                            "resize-none rounded-lg pr-10 border-zinc-200 dark:border-zinc-700",
+                                            "focus:ring-2 focus-visible:ring-lightCyan dark:focus:ring-violet-400",
+                                            "bg-white dark:bg-zinc-800",
+                                            `min-h-[${MIN_HEIGHT}px]`
+                                        )}
+                                    />
+                                    <CornerRightDown
+                                        className={cn(
+                                            "absolute right-3 top-3 w-4 h-4 transition-all duration-200",
+                                            "text-zinc-400 dark:text-zinc-500",
+                                            inputValue ? "opacity-100 scale-100" : "opacity-30 scale-95"
+                                        )}
+                                    />
+                                </div>
 
-                    {/* Input Area with Rank Button */}
-                    <div className=" p-4">
-                        <div className="max-w-3xl mx-auto flex gap-4 items-center">
-                            <div className="flex-1 relative">
-                                <Textarea
-                                    ref={textareaRef}
-                                    value={inputValue}
-                                    onChange={(e) => setInputValue(e.target.value)}
-                                    onKeyDown={handleKeyPress}
-                                    placeholder="Send a message..."
-                                    className={cn(
-                                        "resize-none rounded-lg pr-10 border-zinc-200 dark:border-zinc-700",
-                                        "focus:ring-2 focus-visible:ring-lightCyan dark:focus:ring-violet-400",
-                                        "bg-white dark:bg-zinc-800",
-                                        `min-h-[${MIN_HEIGHT}px]`
-                                    )}
-                                />
-                                <CornerRightDown
-                                    className={cn(
-                                        "absolute right-3 top-3 w-4 h-4 transition-all duration-200",
-                                        "text-zinc-400 dark:text-zinc-500",
-                                        inputValue ? "opacity-100 scale-100" : "opacity-30 scale-95"
-                                    )}
-                                />
+                                {messages.length >= 2 && (
+                                    <Button
+                                        onClick={handleRankedList}
+                                        disabled={isLoadingCandidates}
+                                        className={cn(
+                                            "flex items-center gap-2 bg-darkCyan hover:bg-cyan-600 dark:bg-darkPurple dark:hover:bg-purple-500",
+                                            "text-white px-4 py-2 rounded-lg transition-colors",
+                                            "disabled:opacity-50 disabled:cursor-not-allowed"
+                                        )}
+                                    >
+                                        {isLoadingCandidates ? (
+                                            <>
+                                                <Loader2 className="w-4 h-4 animate-spin" />
+                                                <span>Loading...</span>
+                                            </>
+                                        ) : (
+                                            <>
+                                                <Users className="w-4 h-4" />
+                                                <span>Find Candidates</span>
+                                            </>
+                                        )}
+                                    </Button>
+                                )}
                             </div>
-
-                            {messages.length >= 2 && (
-                                <Button
-                                    onClick={handleRankedList}
-                                    disabled={isLoadingCandidates}
-                                    className={cn(
-                                        "flex items-center gap-2 bg-darkCyan hover:bg-cyan-600 dark:bg-darkPurple dark:hover:bg-purple-500",
-                                        "text-white px-4 py-2 rounded-lg transition-colors",
-                                        "disabled:opacity-50 disabled:cursor-not-allowed"
-                                    )}
-                                >
-                                    {isLoadingCandidates ? (
-                                        <>
-                                            <Loader2 className="w-4 h-4 animate-spin" />
-                                            <span>Loading...</span>
-                                        </>
-                                    ) : (
-                                        <>
-                                            <Users className="w-4 h-4" />
-                                            <span>Find Candidates</span>
-                                        </>
-                                    )}
-                                </Button>
-                            )}
                         </div>
                     </div>
-                </div>)}
+                </div>
+            )}
         </div>
     );
 };

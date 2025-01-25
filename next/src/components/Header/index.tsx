@@ -117,7 +117,7 @@ export default function Navbar() {
                     <NavigationMenuLink asChild>
                         <Link
                             href={item.href}
-                            className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
+                            className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent dark:hover:bg-zinc-700 hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
                         >
                             <div className="text-sm font-medium leading-none">{item.title}</div>
                             <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
@@ -185,11 +185,11 @@ export default function Navbar() {
                                 <NavigationMenuList>
                                     {currentNavItems.map((item, index) => (
                                         <NavigationMenuItem key={index}>
-                                            <NavigationMenuTrigger className='border shadow-sm dark:bg-cyan-500/50'>
+                                            <NavigationMenuTrigger className='border shadow-sm '>
                                                 {item.icon}
                                                 {item.trigger}
                                             </NavigationMenuTrigger>
-                                            <NavigationMenuContent>
+                                            <NavigationMenuContent className='dark:bg-purple-100/10'>
                                                 {renderNavigationContent(item.content)}
                                             </NavigationMenuContent>
                                         </NavigationMenuItem>
@@ -235,7 +235,7 @@ export default function Navbar() {
                                         <ChevronDown className="h-4 w-4" />
                                     </Button>
                                 </DropdownMenuTrigger>
-                                <DropdownMenuContent align="end" className="w-56">
+                                    <DropdownMenuContent align="end" className="w-56">
                                     <DropdownMenuLabel>
                                         {user.name}
                                     </DropdownMenuLabel>
