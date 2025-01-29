@@ -3,40 +3,30 @@
 import { db } from "@/db";
 import schema from "@/db/schema/_index";
 import { verifySession } from "@/lib/session";
-import { ChatInput } from "@/types/chatbot";
-import axios from "axios";
+import { ChatInput, ChatResponse } from "@/types/chatbot";
 
-export default async function handelUserInput(
+export default async function saveChat(
     userInput: ChatInput,
-): Promise<string> {
-    const url = process.env.PYTHON_BACKEND + "/recruiters/chat";
-
+    resp: ChatResponse
+) {
     try {
-        // 1. Get User Session
+
+        console.log(userInput);
+        console.log(resp);
+
         await verifySession();
 
-        //2. Generating Response
-        const resp = await axios.post<{ resp: string }>(url, { user_input: userInput.input })
-        console.log(resp)
-        const botResp = resp.data.resp;
-
-        // 3. Save Chat Log: Add User Input & Bot Response in the Background
-        process.nextTick(async () => {
-            await db.insert(schema.ChatInputs).values({
-                sessionId: userInput.sessionId,
-                input: userInput.input,
-            });
-
-            await db.insert(schema.ChatResponses).values({
-                sessionId: userInput.sessionId,
-                response: botResp,
-            });
-
-            console.log("Log Saved");
+        await db.insert(schema.ChatInputs).values({
+            sessionId: userInput.sessionId,
+            input: userInput.input,
         });
 
-        console.log("Sending Back BotResp");
-        return botResp;
+        await db.insert(schema.ChatResponses).values({
+            sessionId: userInput.sessionId,
+            response: resp.response,
+        });
+
+        console.log("Log Saved");
     } catch (error: any) {
         console.log(error)
         console.log(error.response)

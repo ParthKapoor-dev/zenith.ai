@@ -2,7 +2,7 @@ from fastapi import APIRouter, HTTPException, Depends, status, FastAPI, WebSocke
 from fastapi.security.api_key import APIKeyHeader
 from fastapi.middleware.cors import CORSMiddleware
 from app.routes import candidates, testing, recruiters
-from app.services.chatbot import chat
+from app.routes.chatbot import handle_ws_chatbot
 
 app = FastAPI(
     title="Zenith AI",
@@ -44,3 +44,8 @@ app.include_router(testing.router, prefix='/testing', tags=['Testing Routes'])
 @app.get("/")
 def read_root():
     return {"message" : "Welcome to Jobverse AI"}
+
+
+@app.websocket("/chat")
+async def websocket_chatbot_endpoint(websocket: WebSocket):
+    await handle_ws_chatbot(websocket)

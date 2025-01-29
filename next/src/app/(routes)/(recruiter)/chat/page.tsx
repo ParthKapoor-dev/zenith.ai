@@ -1,33 +1,35 @@
 'use client'
 
-import React, { useState, useRef, useEffect } from 'react';
-import { Textarea } from '@/components/ui/textarea';
-import {
-    ChevronRight,
-    CornerRightDown,
-    Loader2,
-    Users,
-} from 'lucide-react';
+import React, { useState, useRef, useEffect, useCallback } from 'react';
+import { CornerRightDown, Loader2, Users } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import ChatArea from '../../../../components/recruiter/chat/ChatArea';
-import { ChatInput, ChatResponse, ChatSession, RankedList } from '@/types/chatbot';
-import getAllSessions from '@/actions/recruiter/chat/getAllSessions';
 import fetchServerAction from '@/lib/fetchHelper';
-import User from '@/types/user';
 import { useUser } from '@/hooks/useUser';
-import handelUserInput from '@/actions/recruiter/chat/handleInput';
-import createChatSession from "@/actions/recruiter/chat/createSession";
-import getSession from "@/actions/recruiter/chat/getSession";
-import Loader from './Loader';
-import ChatSidebar from '../../../../components/recruiter/chat/Sidebar';
-import getRankedList from '@/actions/recruiter/chat/getRankedList';
+
+import ChatArea from '@/components/recruiter/chat/ChatArea';
+import { Textarea } from '@/components/ui/textarea';
+import ChatSidebar from '@/components/recruiter/chat/Sidebar';
 import { Button } from '@/components/ui/button';
+
+import { ChatInput, ChatResponse, ChatSession, RankedList } from '@/types/chatbot';
+import User from '@/types/user';
+
+import createChatSession from '@/actions/recruiter/chat/createSession';
+import getSession from '@/actions/recruiter/chat/getSession';
+import getAllSessions from '@/actions/recruiter/chat/getAllSessions';
+import getRankedList from '@/actions/recruiter/chat/getRankedList';
+
+import Loader from './Loader';
+import saveChat from '@/actions/recruiter/chat/handleInput';
 
 const MIN_HEIGHT = 64;
 const MAX_HEIGHT = 200;
 
+const socketUrl = process.env.NEXT_PUBLIC_CHATBOT_BACKEND + '/chat';
+
 const AIChatInterface = () => {
     const [messages, setMessages] = useState<(ChatInput | ChatResponse | RankedList)[]>([]);
+    const [socket, setSocket] = useState<WebSocket | null>(null);
     const [inputValue, setInputValue] = useState('');
     const [isTyping, setIsTyping] = useState(false);
     const [loading, setLoading] = useState(false);
@@ -41,14 +43,17 @@ const AIChatInterface = () => {
     const getChatSessions = async () =>
         setChatSessions((await fetchServerAction<ChatSession[]>(getAllSessions, []))!);
 
-    const genBotResponse = async (msg: ChatInput) =>
-        (await fetchServerAction<string>(() => handelUserInput(msg)))!;
+    const handleSaveChat = async (inp: ChatInput, resp: ChatResponse) =>
+        await fetchServerAction(() => saveChat(inp, resp));
 
     const createSession = async (title?: string) =>
         (await fetchServerAction<number>(() => createChatSession(title))) as number;
 
-    const getChatSession = async (sessionId: number) =>
-        setMessages((await fetchServerAction(() => getSession(sessionId)))!);
+    const getChatSession = async (sessionId: number) => {
+        const newMessages = (await fetchServerAction(() => getSession(sessionId)))!;
+        setMessages(newMessages)
+        socket?.send(JSON.stringify({ type: 'init', sessionId: currentSession, messages: newMessages }));
+    }
 
     const genRankedList = async (query: string) => {
         const list = await fetchServerAction(() => getRankedList(query, currentSession as number))
@@ -65,22 +70,79 @@ const AIChatInterface = () => {
         }
     }, [inputValue]);
 
+    // Scroll to Bottom
     useEffect(() => {
         if (chatContainerRef.current) {
             chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
         }
     }, [messages, isTyping]);
 
-
     useEffect(() => {
         const userInfo = useUser();
         if (userInfo) setUser(userInfo);
 
         getChatSessions();
+        connectSocket();
+
+        return () => socket?.close();
     }, [])
+
+    const messagesRef = useRef(messages);
+    useEffect(() => {
+        messagesRef.current = messages;
+    }, [messages]);
+
+    // Ensure a persistent WebSocket connection
+    const connectSocket = () => {
+        if (socket) return;  // Prevent duplicate connections
+
+        let reconnectTimeout: NodeJS.Timeout;
+        const newSocket = new WebSocket(socketUrl);
+        setSocket(newSocket);
+
+        newSocket.onopen = () => {
+            console.log('WebSocket connected');
+            console.log(messages)
+            if (messages.length > 0) {
+                console.log("Sending Messages")
+                newSocket.send(JSON.stringify({ type: 'init', sessionId: currentSession, messages }));
+            }
+            clearTimeout(reconnectTimeout);
+        }
+        newSocket.onclose = (event) => {
+            console.log('WebSocket disconnected. Reconnecting...');
+            if (!event.wasClean) {
+                reconnectTimeout = setTimeout(connectSocket, 3000);
+            }
+        };
+
+        newSocket.onerror = (error) => console.error('WebSocket error:', error);
+        newSocket.onmessage = (event) => handleBotResponse(JSON.parse(event.data));
+    }
+
+    // Handle streaming bot responses
+    const handleBotResponse = async (data: { text: string, done?: string }) => {
+        if (!data) return;
+        setIsTyping(false);
+
+        if (data.text) setMessages((prev) => {
+            const lastMsg = prev[prev.length - 1] as ChatResponse;
+            if (lastMsg && lastMsg.sessionId === currentSession) {
+                return prev.slice(0, -1).concat({ ...lastMsg, response: lastMsg.response + data.text });
+            }
+            return [...prev, { id: genId(), sessionId: currentSession!, response: data.text, createdAt: new Date(), updatedAt: new Date() }];
+        });
+
+        const msgs = messagesRef.current;
+        if (data.done) await handleSaveChat(
+            msgs[msgs.length - 2] as ChatInput, msgs[msgs.length - 1] as ChatResponse)
+    }
 
     const handleSend = async () => {
         if (!inputValue.trim() || !user?.id) return;
+
+        if (!socket) connectSocket();
+
 
         let sessionId = currentSession;
         if (!sessionId) {
@@ -114,18 +176,8 @@ const AIChatInterface = () => {
         }
 
         setIsTyping(true);
-        const botResponse = await genBotResponse(userMessage);
-        setIsTyping(false);
 
-        const botMessage: ChatResponse = {
-            id: genId(),
-            sessionId,
-            response: botResponse,
-            createdAt: new Date(),
-            updatedAt: new Date()
-        };
-
-        setMessages(prev => [...prev, botMessage]);
+        socket?.send(JSON.stringify({ message: userMessage.input }));
     };
 
 

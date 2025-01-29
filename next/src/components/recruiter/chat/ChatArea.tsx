@@ -12,7 +12,7 @@ interface ChatAreaProps {
     chatRef: React.RefObject<HTMLDivElement | null>;
     user: User
 }
-
+    
 export default function ChatArea({ messages, isTyping, chatRef }: ChatAreaProps) {
     return (
         <div className="flex-1 overflow-y-auto scroll-smooth" ref={chatRef}>
