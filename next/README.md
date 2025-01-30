@@ -8,14 +8,14 @@
 - [x] Recruiter Form Service: ie. create / manage forms
 - [x] Candidate Handle Form w/ & w/o auth
 - [ ] Notification Service
-- [ ] Chatbot WebSocket
+- [X] Chatbot WebSocket
 
 ##### UI Tasks
-- [ ] Landing Page
+- [X] Landing Page
 - [x] Candidate Dashboard
 - [x] Recrutier Dashboard
 - [ ] Navbar Items
-- [ ] Chatpage Interface - Recruiter
+- [X] Chatpage Interface - Recruiter
 
 
 
