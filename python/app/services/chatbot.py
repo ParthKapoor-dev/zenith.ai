@@ -1,6 +1,7 @@
-from langchain.prompts import ChatPromptTemplate, PromptTemplate
-from langchain.schema import SystemMessage, HumanMessage
+from langchain.prompts import ChatPromptTemplate, PromptTemplate, MessagesPlaceholder
+from langchain.schema import SystemMessage, HumanMessage, AIMessage
 from langchain_ollama import OllamaLLM
+from langchain_community.chat_message_histories import ChatMessageHistory
 import json
 
 # Create system message for the chatbot
@@ -19,6 +20,7 @@ system_message = """You are an expert AI recruitment assistant. Your role is to:
 # Create the chat prompt
 chat_prompt = ChatPromptTemplate.from_messages([
     ("system", system_message),
+    MessagesPlaceholder(variable_name='messages'),
     ("human", "{input}"),
 ])
 
@@ -29,29 +31,20 @@ llm = OllamaLLM(
 
 ollama_chat_chain = chat_prompt | llm
 
-async def generate_response( user_input: str) -> str:
+async def generate_response( user_input: str, chatHistory) -> str:
     """Process recruiter input and generate appropriate response"""
-    async for chunk in ollama_chat_chain.astream({"input": user_input}):
+
+    messages = chatHistory.messages
+
+    async for chunk in ollama_chat_chain.astream({"input": user_input,"messages": messages}):
         yield json.dumps({"text": chunk})
 
-    # try:
-    #     # Run the chain
-    #     response = ollama_chat_chain.invoke({"input" : user_input})
-    #     return response
-
-    # except Exception as e:
-    #     return f"I apologize, but I encountered an error. Could you please rephrase your request? Error: {str(e)}"
+    chatHistory.add_message(AIMessage(content=chunk))
+    print("Chat History", chatHistory)
 
 
-# def main():
-#     while True:
-#         user_input = input("Recruiter: ")
-#         if user_input.lower() == "exit":
-#             break
-            
-#         response = chat(user_input)
-#         print(f"Assistant: {response}")
+def main():
+    print("hello world")
 
-
-# if __name__ == "__main__":
-#     main()
+if __name__ == '__main__':
+    main()
