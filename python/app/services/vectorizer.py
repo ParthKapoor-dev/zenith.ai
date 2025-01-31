@@ -1,79 +1,107 @@
 import numpy as np
-from typing import List, Dict
+from typing import List, Dict, Optional
 from datetime import datetime
-from app.services.encoder import encode_categorical_features , GLOBAL_SKILL_KEYWORDS , embedding_model
-from app.models.candidates import Candidate, Experience, Project
+from app.services.encoder import embedding_model
+from app.models.candidates import Candidate
+import logging
+# import spacy  # Load NLP Model once at startup
 
+# Configure logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
-def extract_skills_with_experience(experiences: List[Experience], projects: List[Project], skill_keywords: List[str]) -> Dict[str, float]:
-    """
-    Dynamically extract skills from experiences and projects and map them to their respective durations.
-    """
-    skill_experience_map = {skill.lower(): 0.0 for skill in skill_keywords}  # Initialize skill duration map (all in lowercase)
+# Load NLP Model for Skill Extraction
+# try:
+#     nlp = spacy.load("en_core_web_sm")  # Replace with a domain-specific model if available
+# except Exception as e:
+#     logger.error(f"Failed to load NLP model: {e}")
+#     raise
 
-    # Extract from experiences
-    for exp in experiences:
-        duration = calculate_years(exp.startDate, exp.endDate)
-        description = exp.description.lower()
-        for skill in skill_keywords:
-            if skill.lower() in description:
-                skill_experience_map[skill.lower()] += duration
+# def extract_skills(texts: List[str]) -> List[str]:
+#     """
+#     Extract skills dynamically using NLP.
+#     This replaces the static GLOBAL_SKILL_KEYWORDS approach.
+#     """
+#     skills = set()
+#     for text in texts:
+#         try:
+#             doc = nlp(text)
+#             for token in doc:
+#                 if token.ent_type_ == "SKILL":  # Assuming a custom-trained NER model with a "SKILL" entity
+#                     skills.add(token.text.lower())
+#         except Exception as e:
+#             logger.warning(f"Failed to extract skills from text: {e}")
+#     return list(skills)
 
-    # Extract from projects
-    for proj in projects:
-        duration = calculate_years(proj.startDate, proj.endDate)
-        description = proj.description.lower()
-        for skill in skill_keywords:
-            if skill.lower() in description:
-                skill_experience_map[skill.lower()] += duration  
-
-    # Remove skills with no associated experience
-    skill_experience_map = {skill: exp for skill, exp in skill_experience_map.items() if exp > 0}
-    return skill_experience_map
-
-def vectorize_candidate(candidate_data : Candidate) -> np.ndarray:
-    """
-    Convert candidate data into a unified vector representation, including domain-specific experience.
-    """
-    # Extract text embeddings (general profile vector)
-    experiences = candidate_data.experiences
-    projects = candidate_data.projects
-    experience_descriptions = [exp.description for exp in experiences]
-    project_descriptions = [proj.description for proj in projects]
-    all_descriptions = experience_descriptions + project_descriptions
-    text_feature_vector = np.mean(embedding_model.encode(all_descriptions), axis=0)
-
-    # Extract skill-specific experience
-    skill_experience_map = extract_skills_with_experience(experiences, projects, GLOBAL_SKILL_KEYWORDS)
-
-    # Encode skill experience as a fixed-size vector (e.g., by ordering skills alphabetically)
-    skill_vector = np.zeros(len(GLOBAL_SKILL_KEYWORDS))
-    for idx, skill in enumerate(GLOBAL_SKILL_KEYWORDS):
-        skill_vector[idx] = skill_experience_map.get(skill.lower(), 0.0)  # Ensure key is lowercase
-
-    # Numerical Features (e.g., total experience, minimum salary)
-    total_experience = sum(
-        calculate_years(exp.startDate, exp.endDate) for exp in experiences
-    )
-    # Convert salaryExpectation to float for calculation
-    min_salary = float(candidate_data.salaryExpectation) / 100000.0  # Normalize salary
-
-    # Categorical Features
-    job_roles = candidate_data.preferredRole
-    availability = candidate_data.availability
-    categorical_vector = encode_categorical_features([job_roles, availability])
-
-    # Combine all features into a single vector
-    candidate_vector = np.concatenate([text_feature_vector, skill_vector, [total_experience, min_salary], categorical_vector])
-    return candidate_vector
-
-# Helper function to calculate years between two dates
-def calculate_years(start_date: str, end_date: str) -> float:
-    if not start_date or not end_date:
+def calculate_years(start_date: Optional[str], end_date: Optional[str]) -> float:
+    """Calculate years of experience, assuming ongoing jobs end today."""
+    if not start_date:
         return 0.0
-    # Convert ISO format date strings to datetime objects
-    start = datetime.fromisoformat(start_date.replace("Z", ""))  # Remove 'Z' for ISO format compatibility
-    end = datetime.fromisoformat(end_date.replace("Z", ""))
-    return (end - start).days / 365.0
+    try:
+        start = datetime.fromisoformat(start_date.replace("Z", ""))
+        end = datetime.fromisoformat(end_date.replace("Z", "")) if end_date else datetime.today()
+        return (end - start).days / 365.0
+    except Exception as e:
+        logger.warning(f"Invalid date format: {e}")
+        return 0.0
 
+def vectorize_candidate(candidate_data: Candidate) -> Dict[str, np.ndarray]:
+    """
+    Convert candidate data into a single vector representation.
+    Returns a dictionary with the single vector and metadata.
+    """
+    try:
+        experiences = candidate_data.experiences or []
+        projects = candidate_data.projects or []
+        education = candidate_data.education or []
 
+        # Combine all relevant information into a single text
+        combined_text = []
+
+        # Add skills
+        skill_texts = [exp.description for exp in experiences if exp.description] + \
+                      [proj.description for proj in projects if proj.description]
+        extracted_skills = candidate_data.proficientSkills
+        if extracted_skills:
+            combined_text.append(f"Skills: {', '.join(extracted_skills)}")
+
+        # Add experience
+        for exp in experiences:
+            years = calculate_years(exp.startDate, exp.endDate)
+            if exp.description:
+                combined_text.append(f"{exp.jobTitle} at {exp.companyName} for {years:.1f} years: {exp.description}")
+
+        # Add projects
+        for proj in projects:
+            if proj.description:
+                combined_text.append(f"Project: {proj.projectTitle}: {proj.description}")
+
+        # Add education
+        for edu in education:
+            year = edu.yearOfPassing if edu.yearOfPassing else "Ongoing"
+            combined_text.append(f"Education: {edu.degreeType} from {edu.instituteName}, batch {year}")
+
+        # Combine all text into a single string
+        combined_text = " ".join(combined_text)
+
+        # Generate a single vector for the candidate
+        candidate_vector = embedding_model.encode(combined_text)
+
+        # Metadata for filtering
+        metadata = {
+            "salary_expectation": candidate_data.salaryExpectation,
+            "employment_type": candidate_data.employmentType,
+            "preferred_role": candidate_data.preferredRole,
+            "availability": candidate_data.availability,
+            "batch_year": education[0].yearOfPassing if education else None,
+            "degree_type": education[0].degreeType if education else None,
+            "proficient_skills": extracted_skills
+        }
+
+        return {
+            "candidate_vector": candidate_vector,
+            "metadata": metadata
+        }
+    except Exception as e:
+        logger.error(f"Failed to vectorize candidate: {e}")
+        raise

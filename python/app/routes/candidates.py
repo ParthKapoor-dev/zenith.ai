@@ -22,15 +22,12 @@ def resume_feedback():
 def add_candidate(candidate_data : Candidate):
     try:
         # Validate input
-        vector = vectorize_candidate(candidate_data)
         candidate_id = candidate_data.userId
+        vectors = vectorize_candidate(candidate_data)
 
-        # Add vector to FAISS index
-        index.upsert(
-            vectors = [
-                (candidate_id , vector)
-            ]
-        )
+        index.upsert([
+            {"id": candidate_id, "vector": vectors["candidate_vector"], "metadata": vectors["metadata"]}
+        ])
 
         return {"message": "Candidate added successfully!"}
 
