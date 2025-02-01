@@ -1,33 +1,33 @@
 from fastapi import APIRouter, HTTPException, Depends, status, WebSocket
 from pydantic import ValidationError, BaseModel
 import numpy as np
-from app.services.hunter import hunt
-from app.db.upstash_vector import index
+from app.services.hunter import hunter
+from app.db.upstash_vector import index 
+from typing import Dict
+
 
 router = APIRouter()
 
+class Request(BaseModel):
+    query: str
+    structured_data: Dict
+
 # Recruiter Query
-@router.get("/query")
-async def searching_recruiter(query, structured_data):
+@router.post("/query")
+async def searching_recruiter(data: Request):
     try:
 
-        (query_vector, metadata_filters) = hunt(query, structured_data)
+        (query_vector, metadata_filters) = hunter(data.query, data.structured_data)
         
-        search_results = index.search(
+        search_results = index.query(
             vector=query_vector,
-            top_k=5,
-            metadata_filters=metadata_filters
+            top_k=5,    
+            # filter=metadata_filters,
         )
 
-        candidate_results = []
-        for candidate in search_results:
-            candidate_results.append({
-                "user_id": candidate["id"],
-                "score": candidate["score"],
-                "metadata": candidate["metadata"]
-            })
+        print(search_results)
 
-        return {"query_result", candidate_results}
+        return {"query_result": search_results} 
 
     except ValidationError as e:
         raise HTTPException(

@@ -29,6 +29,7 @@ import {
 import Loader from "./Loader";
 import fetchServerAction from "@/lib/fetchHelper";
 import StructuredDataPanel from "@/components/recruiter/chat/DisplayQuery";
+import updateData from "@/actions/recruiter/chat/updateData";
 
 // Constants
 const MIN_HEIGHT = 64;
@@ -70,6 +71,8 @@ const AIChatInterface = () => {
     any
   > | null>(null);
   const [summarizedQuery, setSummarizedQuery] = useState<string | null>(null);
+  const [isPanelOpen, setIsPanelOpen] = useState(false);
+
   // Refs
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const chatContainerRef = useRef<HTMLDivElement>(null);
@@ -105,22 +108,38 @@ const AIChatInterface = () => {
 
   const getChatSession = async (sessionId: number) =>
     await fetchServerAction(async () => {
-      const newMessages = await getSession(sessionId);
-      setMessages(newMessages);
+      const { msgs, data } = await getSession(sessionId);
+      setMessages(msgs);
+      setStructuredData({
+        preferred_skills: data?.preferred_skills,
+        experience_level: data?.experience_level,
+        salary_expectations: data?.salary_expectations,
+        employment_type: data?.employment_type,
+        current_job_status: data?.current_job_status,
+        job_responsibilities: data?.job_responsibilities,
+      });
+      setSummarizedQuery(data?.query ? data.query : null);
       socketRef.current?.send(
         JSON.stringify({
           type: "init",
           sessionId: currentSession,
-          messages: newMessages,
+          messages: msgs,
         })
       );
     });
 
-  const genRankedList = async (query: string) =>
+  const genRankedList = async () =>
     await fetchServerAction(async () => {
-      const list = await getRankedList(query, currentSession!);
+      const list = await getRankedList(
+        summarizedQuery || "",
+        structuredData,
+        currentSession!
+      );
       setMessages((prev) => [...prev, list]);
     });
+
+  const updateChatData = async (data: any | null, query: string | null) =>
+    await fetchServerAction(() => updateData(currentSession!, data, query));
 
   // WebSocket Connection Management
   const connectSocket = () => {
@@ -184,12 +203,20 @@ const AIChatInterface = () => {
 
       if (data.structured_data) {
         console.log(data.structured_data);
-        setStructuredData(data.structured_data);
+        setStructuredData(data.structured_data.properties);
+        setIsPanelOpen(true);
+        if (data.structured_data)
+          await updateChatData(data.structured_data.properties, null);
       }
 
       if (data.summarized_chat) {
-        console.log(data.summarized_chat);
-        setSummarizedQuery(data.summarized_chat)
+        const query = data.summarized_chat
+          ?.split('**Query:** "')[1]
+          ?.split('"')[0];
+        console.log(query);
+        setSummarizedQuery(query);
+        setIsPanelOpen(true);
+        if (query) await updateChatData(null, query);
       }
 
       if (data.text) {
@@ -311,15 +338,8 @@ const AIChatInterface = () => {
 
   const handleRankedList = async () => {
     setIsLoadingCandidates(true);
-    try {
-      const lastInput = messages[messages.length - 2] as ChatInput;
-      if (!lastInput?.input) throw new Error("No valid input found");
-      await genRankedList(lastInput.input);
-    } catch (error) {
-      handleError(error as Error, "generating ranked list");
-    } finally {
-      setIsLoadingCandidates(false);
-    }
+    await genRankedList();
+    setIsLoadingCandidates(false);
   };
 
   // Render
@@ -404,7 +424,8 @@ const AIChatInterface = () => {
           <StructuredDataPanel
             data={structuredData}
             query={summarizedQuery}
-            onClose={() => setStructuredData(null)}
+            isOpen={isPanelOpen}
+            onClose={() => setIsPanelOpen(false)}
           />
         )}
       </div>

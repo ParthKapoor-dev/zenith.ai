@@ -1,5 +1,6 @@
 import {
   int,
+  json,
   mysqlTable,
   primaryKey,
   text,
@@ -19,12 +20,18 @@ export const ChatSessions = mysqlTable("chat_sessions", {
   ...timestamps,
 });
 
-// export const StructuredQuery = mysqlTable("structured_query", {
-//   id: int()
-//     .primaryKey()
-//     .references(() => ChatSessions.id),
-//   ...timestamps
-//   });
+export const StructuredQuery = mysqlTable("structured_query", {
+  sessionId: int()
+    .primaryKey()
+    .references(() => ChatSessions.id),
+  preferred_skills: json().$type<string[]>().default([]),
+  experience_level: varchar({ length: 255 }),
+  salary_expectations: varchar({ length: 255 }),
+  employment_type: varchar({ length: 255 }),
+  current_job_status: varchar({ length: 255 }),
+  job_responsibilities: varchar({ length: 255 }),
+  query: text(),
+});
 
 //Recruiter User Inputs Table
 export const ChatInputs = mysqlTable("chat_inputs", {

@@ -7,31 +7,29 @@ from app.services.encoder import embedding_model
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-def hunt(summarized_query: str, structured_data: Dict):
+def hunter(summarized_query: str, structured_data: Dict):
     try:
         # Step 1: Encode the summarized query into a vector
         query_vector = embedding_model.encode(summarized_query)
 
         # Step 2: Prepare metadata filters
-        metadata_filters = {}
+        metadata_filters = []
 
+        return(
+            query_vector,
+            metadata_filters
+        )
         # Skills Filter: Allow partial matches (e.g., candidates with some but not all required skills)
         if "required_skills" in structured_data and structured_data["required_skills"]:
-            metadata_filters["proficient_skills"] = {
-                "$in": structured_data["required_skills"]
-            }
+            metadata_filters = " OR ".join([f"proficient_skills CONTAINS '{skill}'" for skill in structured_data["required_skills"]])
 
-        # Experience Level Filter: Exact match
-        if "experience_level" in structured_data and structured_data["experience_level"]:
-            metadata_filters["experience_level"] = structured_data["experience_level"]
+        # Availability Filter: Exact match
+        if "availability" in structured_data and structured_data["availability"]:
+            metadata_filters.append(f"availability = {structured_data["availability"]}")
 
-        # Employment Type Filter: Exact match
-        if "employment_type" in structured_data and structured_data["employment_type"]:
-            metadata_filters["employment_type"] = structured_data["employment_type"]
+        metadata_filters = " AND ".join([f"{item}" for item in metadata_filters])
 
-        # Current Job Status Filter: Exact match
-        if "current_job_status" in structured_data and structured_data["current_job_status"]:
-            metadata_filters["current_job_status"] = structured_data["current_job_status"]
+        print("filters", metadata_filters)
 
         return (
             query_vector,

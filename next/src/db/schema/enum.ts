@@ -48,7 +48,6 @@ export const roles = [
 
 export type Role = (typeof roles)[number]; // Restrict to valid roles
 
-
 export const availabilities = [
     "immediate",
     "15days",

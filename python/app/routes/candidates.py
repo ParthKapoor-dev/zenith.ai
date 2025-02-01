@@ -43,3 +43,10 @@ def add_candidate(candidate_data : Candidate):
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"An unexpected error occurred: {str(e)}"
         )
+
+
+@router.post("/try")
+async def add_candidate(request: Request):
+    raw_body = await request.json()
+    print("Received Raw Data:", raw_body)  # Debugging
+    return {"message": "Candidate added"}

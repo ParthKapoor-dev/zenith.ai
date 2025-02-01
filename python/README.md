@@ -8,6 +8,11 @@
 5. Query Extraction
 6. Better Vectorization & Query Search
 
+- Check Candidate Onboarding
+- Check Listing Canidates
+- Update Parser Functions
+- Update Candidate Ranked Listing
+
 ### Deployment Tasks
 1. Domain Name
 2. K8s -> Deployment -> Python

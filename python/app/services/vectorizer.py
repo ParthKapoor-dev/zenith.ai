@@ -78,8 +78,8 @@ def vectorize_candidate(candidate_data: Candidate) -> Dict[str, np.ndarray]:
 
         # Add education
         for edu in education:
-            year = edu.yearOfPassing if edu.yearOfPassing else "Ongoing"
-            combined_text.append(f"Education: {edu.degreeType} from {edu.instituteName}, batch {year}")
+            year = edu.endDate if edu.endDate else "Ongoing"
+            combined_text.append(f"Education: {edu.courseName} from {edu.instituteName}, batch {year}")
 
         # Combine all text into a single string
         combined_text = " ".join(combined_text)
@@ -93,8 +93,8 @@ def vectorize_candidate(candidate_data: Candidate) -> Dict[str, np.ndarray]:
             "employment_type": candidate_data.employmentType,
             "preferred_role": candidate_data.preferredRole,
             "availability": candidate_data.availability,
-            "batch_year": education[0].yearOfPassing if education else None,
-            "degree_type": education[0].degreeType if education else None,
+            "batch_year": education[0].endDate if education else None,
+            "degree_type": education[0].courseName if education else None,
             "proficient_skills": extracted_skills
         }
 

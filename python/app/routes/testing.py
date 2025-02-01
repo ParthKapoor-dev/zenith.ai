@@ -2,7 +2,7 @@ from fastapi import APIRouter, HTTPException, Depends, status
 from pydantic import BaseModel, ValidationError
 import numpy as np
 from app.services.vectorizer import vectorize_candidate
-from app.services.hunter import hunt
+from app.services.hunter import hunter
 from app.db.upstash_vector import index
 from tests.testing import mock_candidates
 
@@ -47,7 +47,7 @@ def testing():
     try:
 
         query1 = "Looking for a Backend Developer experienced in Python and Docker."
-        query_vector = hunt(query1, structured_data={})
+        query_vector = hunter(query1, structured_data={})
         result = index.query(
             vector=query_vector,
             top_k=3,

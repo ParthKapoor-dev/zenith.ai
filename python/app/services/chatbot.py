@@ -50,7 +50,7 @@ Remember, **your job is to refine the query and assist the user—not to decide 
 
 # Define the Pydantic model for job criteria
 class JobCriteria(BaseModel):
-    required_skills: List[str] = Field(description="List of required skills or technologies")
+    preferred_skills: List[str] = Field(description="List of required skills or technologies")
     experience_level: Optional[str] = Field(description="Desired experience level (e.g., Junior, Mid, Senior)")
     salary_expectations: Optional[str] = Field(description="Salary expectations or range")
     employment_type: Optional[str] = Field(description="Type of employment (e.g., full-time, part-time, freelancer, internship)")
