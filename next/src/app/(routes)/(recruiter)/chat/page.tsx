@@ -144,6 +144,9 @@ const AIChatInterface = () => {
   // WebSocket Connection Management
   const connectSocket = () => {
     if (socketRef.current?.readyState === WebSocket.OPEN) return;
+    if (socketRef.current) socketRef.current.close();
+
+    console.log("Current Socket", socketRef.current);
 
     try {
       const newSocket = new WebSocket(SOCKET_URL);
@@ -160,7 +163,12 @@ const AIChatInterface = () => {
 
   const handleSocketOpen = () => {
     console.log("WebSocket connected");
+    if (!socketRef.current) return;
     setSocketRetries(0);
+    toast({
+      title: "Connected",
+      description: "You are now live to chat with Zenith",
+    });
     socketRef.current?.send(
       JSON.stringify({
         type: "init",
@@ -171,21 +179,29 @@ const AIChatInterface = () => {
   };
 
   const handleSocketClose = (event: CloseEvent) => {
-    console.log("WebSocket disconnected");
+    console.log("WebSocket disconnected", event);
+
     if (!event.wasClean && socketRetries < MAX_RETRIES) {
-      setSocketRetries((prev) => prev + 1);
-      setTimeout(connectSocket, RECONNECT_DELAY);
+      console.log("Disconnection isn't clean");
+      setTimeout(() => {
+        if (!socketRef.current || socketRef.current.readyState > 1) {
+          setSocketRetries((prev) => prev + 1);
+          connectSocket();
+        }
+      }, RECONNECT_DELAY);
     } else if (socketRetries >= MAX_RETRIES) {
       toast({
         title: "Connection Error",
-        description: "Failed to establish connection. Please refresh the page.",
+        description:
+          "Failed to re-establish connection. Please refresh the page.",
         variant: "destructive",
       });
     }
   };
 
   const handleSocketError = (error: Event) => {
-    handleError(new Error(), "WebSocket connection");
+    console.log("The Real Error", error);
+    // handleError(new Error(), "WebSocket connection");
   };
 
   const handleSocketMessage = async (event: MessageEvent) => {
@@ -267,7 +283,10 @@ const AIChatInterface = () => {
     connectSocket();
 
     return () => {
-      socketRef.current?.close();
+      console.log("**********Return TRIGGERED", socketRef.current);
+      if (socketRef.current?.readyState === WebSocket.OPEN)
+        console.log("Triggered Close")
+        socketRef.current?.close();
     };
   }, []);
 
