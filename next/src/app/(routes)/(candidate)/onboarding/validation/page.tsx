@@ -87,11 +87,24 @@ const ValidationPage = () => {
         errors.push(`Experience ${index + 1}: Job title is required`);
       if (!exp.companyName)
         errors.push(`Experience ${index + 1}: Company name is required`);
+      if (!exp.startDate)
+        errors.push(`Experience ${index + 1}: Start Date is required`);
+    });
+
+    formData.education.forEach((edu, index) => {
+      if (!edu.instituteName)
+        errors.push(`Education ${index + 1}: Institute Name is required`);
+      if (!edu.courseName)
+        errors.push(`Education ${index + 1}: Course name is required`);
+      if (!edu.startDate)
+        errors.push(`Education ${index + 1}: Start Date is required`);
     });
 
     formData.projects.forEach((proj, index) => {
       if (!proj.projectTitle)
         errors.push(`Project ${index + 1}: Project title is required`);
+      if (!proj.startDate)
+        errors.push(`Experience ${index + 1}: Start Date is required`);
     });
 
     if (formData.proficientSkills.length === 0) {
@@ -132,19 +145,6 @@ const ValidationPage = () => {
           extracted information.
         </p>
       </motion.div>
-
-      {validationErrors.length > 0 && (
-        <Alert variant="destructive">
-          <AlertTriangle className="h-4 w-4" />
-          <AlertDescription>
-            <ul className="list-disc pl-4">
-              {validationErrors.map((error, index) => (
-                <li key={index}>{error}</li>
-              ))}
-            </ul>
-          </AlertDescription>
-        </Alert>
-      )}
 
       {/* Education Section */}
       <Card className="border-[0.5px] border-violet-100 dark:bg-purple-100/10 overflow-hidden dark:border-zinc-600 shadow-lg ">
@@ -650,6 +650,22 @@ const ValidationPage = () => {
           )}
         </AnimatePresence>
       </Card>
+
+      {validationErrors.length > 0 && (
+        <Alert
+          variant="destructive"
+          className="dark:bg-red-500/10 dark:text-red-300"
+        >
+          <AlertTriangle className="h-4 w-4 dark:text-red-300" />
+          <AlertDescription>
+            <ul className="list-disc pl-4">
+              {validationErrors.map((error, index) => (
+                <li key={index}>{error}</li>
+              ))}
+            </ul>
+          </AlertDescription>
+        </Alert>
+      )}
 
       <div className="flex justify-end mt-8">
         <Button

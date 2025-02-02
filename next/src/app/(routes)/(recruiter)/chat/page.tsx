@@ -161,15 +161,13 @@ const AIChatInterface = () => {
   const handleSocketOpen = () => {
     console.log("WebSocket connected");
     setSocketRetries(0);
-    if (messages.length > 0) {
-      socketRef.current?.send(
-        JSON.stringify({
-          type: "init",
-          sessionId: currentSession,
-          messages,
-        })
-      );
-    }
+    socketRef.current?.send(
+      JSON.stringify({
+        type: "init",
+        sessionId: currentSession,
+        messages,
+      })
+    );
   };
 
   const handleSocketClose = (event: CloseEvent) => {
