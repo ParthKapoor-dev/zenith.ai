@@ -3,12 +3,12 @@
 import { db } from "@/db";
 import schema from "@/db/schema/_index";
 import { verifySession } from "@/lib/session";
-import { RankedList } from "@/types/chatbot";
+import { RankedList, ChatInput, ChatResponse } from "@/types/chatbot";
 import axios from "axios";
 import { eq } from "drizzle-orm";
 
 export default async function getRankedList(
-  query: string,
+  messages: (RankedList | ChatInput | ChatResponse)[],
   structured_data: Record<string, any> | null,
   sessionId: number
 ): Promise<RankedList> {
@@ -20,12 +20,19 @@ export default async function getRankedList(
     //0. Auth
     await verifySession();
 
+    const msgs = messages.filter(
+      (item) => (item as ChatInput).input || (item as ChatResponse).response
+    );
+
+    console.log(msgs);
+
     //1. Fetching Query Result
     const {
       data: { query_result },
     } = await axios.post(url, {
-      query,
-      structured_data: structured_data,
+      messages: msgs,
+      // query,
+      // structured_data: structured_data,
     });
 
     // process.nextTick(async () => {

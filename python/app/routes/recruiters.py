@@ -2,22 +2,26 @@ from fastapi import APIRouter, HTTPException, Depends, status, WebSocket
 from pydantic import ValidationError, BaseModel
 import numpy as np
 from app.services.hunter import hunter
+from app.services.llm.summarizer import summarize_chat
+from app.models.recruiters import ChatMessage
 from app.db.upstash_vector import index 
-from typing import Dict
-
+from typing import List
 
 router = APIRouter()
 
 class Request(BaseModel):
-    query: str
-    structured_data: Dict
+    messages: List[ChatMessage]
 
 # Recruiter Query
 @router.post("/query")
 async def searching_recruiter(data: Request):
     try:
 
-        (query_vector, metadata_filters) = hunter(data.query, data.structured_data)
+
+        print("data", data)
+
+        query = await summarize_chat(data.messages)
+        (query_vector, metadata_filters) = hunter(query)
         
         search_results = index.query(
             vector=query_vector,

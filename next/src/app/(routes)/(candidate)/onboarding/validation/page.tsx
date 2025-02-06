@@ -89,6 +89,8 @@ const ValidationPage = () => {
         errors.push(`Experience ${index + 1}: Company name is required`);
       if (!exp.startDate)
         errors.push(`Experience ${index + 1}: Start Date is required`);
+      if (!exp.description)
+        errors.push(`Experience ${index + 1}: Description is required`);
     });
 
     formData.education.forEach((edu, index) => {
@@ -105,6 +107,8 @@ const ValidationPage = () => {
         errors.push(`Project ${index + 1}: Project title is required`);
       if (!proj.startDate)
         errors.push(`Experience ${index + 1}: Start Date is required`);
+      if (!proj.description)
+        errors.push(`Experience ${index + 1}: Description is required`);
     });
 
     if (formData.proficientSkills.length === 0) {

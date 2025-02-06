@@ -110,15 +110,16 @@ const AIChatInterface = () => {
     await fetchServerAction(async () => {
       const { msgs, data } = await getSession(sessionId);
       setMessages(msgs);
-      setStructuredData({
-        preferred_skills: data?.preferred_skills,
-        experience_level: data?.experience_level,
-        salary_expectations: data?.salary_expectations,
-        employment_type: data?.employment_type,
-        current_job_status: data?.current_job_status,
-        job_responsibilities: data?.job_responsibilities,
-      });
-      setSummarizedQuery(data?.query ? data.query : null);
+      if (data) {
+        setStructuredData({
+          preferred_skills: data?.preferred_skills,
+          experience_level: data?.experience_level,
+          salary_expectations: data?.salary_expectations,
+          employment_type: data?.employment_type,
+          current_job_status: data?.current_job_status,
+          job_responsibilities: data?.job_responsibilities,
+        });
+      }
       socketRef.current?.send(
         JSON.stringify({
           type: "init",
@@ -131,7 +132,7 @@ const AIChatInterface = () => {
   const genRankedList = async () =>
     await fetchServerAction(async () => {
       const list = await getRankedList(
-        summarizedQuery || "",
+        messages,
         structuredData,
         currentSession!
       );
@@ -217,10 +218,10 @@ const AIChatInterface = () => {
 
       if (data.structured_data) {
         console.log(data.structured_data);
-        setStructuredData(data.structured_data.properties);
+        setStructuredData(data.structured_data);
         setIsPanelOpen(true);
         if (data.structured_data)
-          await updateChatData(data.structured_data.properties, null);
+          await updateChatData(data.structured_data, null);
       }
 
       if (data.summarized_chat) {
@@ -285,8 +286,8 @@ const AIChatInterface = () => {
     return () => {
       console.log("**********Return TRIGGERED", socketRef.current);
       if (socketRef.current?.readyState === WebSocket.OPEN)
-        console.log("Triggered Close")
-        socketRef.current?.close();
+        console.log("Triggered Close");
+      socketRef.current?.close();
     };
   }, []);
 

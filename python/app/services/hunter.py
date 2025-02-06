@@ -7,7 +7,7 @@ from app.services.encoder import embedding_model
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-def hunter(summarized_query: str, structured_data: Dict):
+def hunter(summarized_query: str):
     try:
         # Step 1: Encode the summarized query into a vector
         query_vector = embedding_model.encode(summarized_query)
