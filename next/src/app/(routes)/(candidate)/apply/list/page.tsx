@@ -71,7 +71,7 @@ export default function AppliedJobs() {
                     </motion.div>
                 ) : (
                     <div className="space-y-4">
-                        {appliedJobs.map(({ jobs, jobApplications }, index) => (
+                        {appliedJobs.map(({ jobs, job_applications }, index) => (
                             <motion.div
                                 key={jobs.id}
                                 initial={{ opacity: 0, x: -20 }}
@@ -131,7 +131,7 @@ export default function AppliedJobs() {
                                             </div>
                                             <div className="flex items-center gap-1">
                                                 <Calendar className="w-4 h-4" />
-                                                Applied {formatDate(jobApplications.createdAt)}
+                                                Applied {formatDate(job_applications?.createdAt || "")}
                                             </div>
                                         </div>
                                     </div>

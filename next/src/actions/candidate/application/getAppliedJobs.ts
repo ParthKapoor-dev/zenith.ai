@@ -12,7 +12,7 @@ export type ActionResponse = SingleResp[]
 interface SingleResp{
     candidates: Candidate,
     jobs: Job,
-    jobApplications: JobApplication
+    job_applications: JobApplication 
 }
 
 export default async function getAppliedJobs() {
@@ -29,7 +29,8 @@ export default async function getAppliedJobs() {
             .leftJoin(schema.Candidates, eq(schema.JobApplications.applicantId, schema.Candidates.userId))
             .where(eq(schema.JobApplications.applicantId, user.id));
 
-        return AppliedJobs as ActionResponse;
+
+        return AppliedJobs as ActionResponse
 
     } catch (error) {
         throw error;
