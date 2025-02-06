@@ -1,136 +1,95 @@
+# Zenith AI
 
+Zenith AI is an AI-driven recruitment platform designed to revolutionize the hiring process. By leveraging advanced natural language processing (NLP) and vector search techniques, Zenith AI allows recruiters to interact with an intelligent chatbot that extracts and structures job requirements, ultimately returning a ranked list of candidates from a vector database.
 
-# 🌟 **Jobverse AI**  
+## Overview
 
-**Jobverse AI** is a cutting-edge job recruitment and hiring platform that leverages **AI-driven insights** to streamline the job application and hiring process. Designed to make hiring easier and more effective, Jobverse AI helps recruiters and candidates find the perfect match, faster and smarter.
+Zenith AI streamlines recruitment by enabling:
+- **Candidate Onboarding:** Candidates can create accounts, submit resumes, and provide detailed information about their experiences, projects, skills, education, salary expectations, and more.
+- **Smart Recruitment Chatbot:** Recruiters interact with a chatbot that uses state-of-the-art language models to translate natural language queries into structured job requirements.
+- **Efficient Candidate Matching:** The structured query is used to search a vector database containing candidate profiles, returning the best matches based on multiple criteria.
 
----
+## Features
 
-## 🚀 **Features**
+- **Interactive Chatbot:** Guides recruiters through a conversational interface to collect all necessary job requirements.
+- **Structured Data Extraction:** Converts natural language input into a structured JSON format using LLMs and output parsers.
+- **Vectorized Candidate Profiles:** Candidate information is vectorized and stored in a vector database for efficient similarity searches.
+- **Customizable Workflows:** Leverage LangChain and Ollama to fine-tune conversation flows and maintain chat context.
+- **Privacy and Scalability:** Self-hostable and designed to ensure data privacy while scaling with your recruitment needs.
 
-### For Candidates:
-- 📝 **Resume Upload and Management**: Easily upload and manage multiple resumes tailored for specific job applications.
-- 🔍 **AI-Powered Job Recommendations**: Personalized job suggestions based on skills, experience, and interests.
-- 📊 **Application Insights**: Track your application status and receive real-time updates.
+## Architecture
 
-### For Recruiters:
-- 🛠️ **Custom Job Workflows**: Design job workflows with custom hiring checkpoints and eligibility criteria.
-- 📋 **Candidate Pool Management**: Filter and manage candidates using **AI-powered scoring** and **role-specific filters**.
-- 🗂️ **Detailed Job Listings**: Add essential details like min CGPA, hiring workflow, roles, and eligible branches with ease.
-  
-### General Features:
-- 🌐 **Responsive and Intuitive UI**: A sleek interface built with **React.js** and **Tailwind CSS** for seamless user experience.
-- 🔐 **Secure Authentication**: Leverages modern authentication techniques for both candidates and recruiters.
-- 🖥️ **Admin Dashboard**: Comprehensive control over job postings, user data, and analytics.
-  
----
+Zenith AI consists of three main components:
 
-## 🛠️ **Tech Stack**
+1. **Candidate Module:**
+   - **Account Creation & Resume Submission:** Candidates upload their resumes and provide structured information.
+   - **Vectorization:** The candidate's data is transformed into a vector representation and stored in a vector database.
 
-| **Technology**  | **Purpose**                                   |
-|------------------|-----------------------------------------------|
-| **Next.js**      | Full-stack development with API routes       |
-| **React.js**     | Frontend framework for dynamic UI            |
-| **Tailwind CSS** | Responsive and modern design system          |
-| **Node.js**      | Backend server and API integration      |
-| **MySQL**   | Reliable relational database                 |
-| **AI Integration** | Smart recommendations and insights         |
+2. **Recruiter Chatbot:**
+   - **Chat Interface:** Recruiters interact with a chatbot to define job requirements.
+   - **LLM-Powered Query Translation:** The chatbot converts natural language queries into structured job requirements.
+   - **Conversational Memory:** Uses LangChain’s memory (e.g., `ConversationBufferWindowMemory`) to maintain context over multiple interactions.
 
----
+3. **Matching & Search:**
+   - **Vector Search:** The structured query is used to perform a similarity search in the candidate vector database.
+   - **Ranked Candidate List:** The system returns a ranked list of candidates that best match the recruiter’s requirements.
 
-## 📖 **How It Works**
+## Technologies
 
-1. **Candidate Workflow**:
-   - Sign up and upload resumes.
-   - View recommended job listings and apply directly.
-   - Track application progress via a clean dashboard.
+- **LangChain:** Manages prompt templates, conversational memory, and chaining of LLM tasks.
+- **OllamaLLM:** Provides a self-hostable LLM backend (e.g., Llama 3.2) for generating chatbot responses.
+- **Hugging Face Transformers:** For entity extraction and text generation.
+- **Pydantic:** Used for data validation and modeling (JobRequirements schema).
+- **Vector Database:** Stores candidate vectors (e.g., Pinecone, Weaviate, or a custom FAISS/Upstash solution).
+- **Python & FastAPI:** Core server and API logic.
 
-2. **Recruiter Workflow**:
-   - Create job posts with custom eligibility and workflow checkpoints.
-   - Review applicants and manage the hiring process step-by-step.
-   - Gain insights into candidate suitability with AI-driven metrics.
+## Installation
 
-3. **Admin Features**:
-   - Monitor platform usage and manage user data.
-   - Oversee hiring workflows and ensure smooth operations.
+1. **Clone the Repository:**
 
----
+   ```bash
+   git clone https://github.com/yourusername/zenith-ai.git
+   cd zenith-ai
+   ```
 
-## 🖥️ **Setup and Installation**
+2. **Create a Virtual Environment & Install Dependencies:**
 
-### **1. Prerequisites**
-- Node.js `v16+`
-- PostgreSQL or any compatible SQL database
-- Firebase credentials for authentication
+   ```bash
+   python -m venv venv
+   source venv/bin/activate  # On Windows: venv\Scripts\activate
+   pip install -r requirements.txt
+   ```
 
-### **2. Clone the Repository**
-```bash
-git clone https://github.com/<your-username>/jobverse-ai.git
-cd jobverse-ai
-```
+3. **Configure Environment Variables:**
 
-### **3. Install Dependencies**
-```bash
-npm install
-```
+   Create a `.env` file in the project root and add necessary configuration (e.g., database URL, API keys).
 
-### **4. Environment Variables**
-Create a `.env.local` file in the root directory and configure the following:
-```bash
-NEXT_PUBLIC_BASE_URL=http://localhost:3000
-FIREBASE_API_KEY=<your-firebase-api-key>
-FIREBASE_AUTH_DOMAIN=<your-auth-domain>
-DATABASE_URL=<your-database-url>
-JWT_SECRET=<your-jwt-secret>
-```
+4. **Run the Application:**
 
-### **5. Database Setup**
-Run migrations to set up your database schema:
-```bash
-npx drizzle-kit generate:pg
-npx drizzle-kit up
-```
+   ```bash
+   uvicorn app.main:app --reload
+   ```
 
-### **6. Run the Application**
-Start the development server:
-```bash
-npm run dev
-```
+## Usage
+
+- **Candidate Module:**  
+  Candidates register and submit resumes via the web interface. Their structured data is vectorized and stored.
+
+- **Recruiter Chatbot:**  
+  Recruiters interact with the chatbot by typing natural language queries. The chatbot extracts details and confirms the structured job requirements before performing candidate searches.
+
+## Contributing
+
+Contributions are welcome! Please fork the repository and submit pull requests. For major changes, please open an issue first to discuss what you would like to change.
+
+## License
+
+Zenith AI is released under the [MIT License](LICENSE).
+
+## Contact
+
+For any questions or support, please contact [your.email@example.com](mailto:your.email@example.com).
 
 ---
 
-## ✨ **Why Jobverse AI?**
-
-- **Efficiency**: Reduce hiring time by automating workflows and leveraging AI-powered insights.
-- **Simplicity**: A user-friendly platform that works for both candidates and recruiters.
-- **Scalability**: Designed with modern technologies to grow alongside your needs.
-
----
-
-## 🤝 **Contributing**
-
-Contributions are welcome! If you want to add features or report bugs, feel free to open an issue or a pull request.  
-
----
-
-## 📜 **License**
-
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for more details.
-
----
-
-## ✨ **Acknowledgments**
-
-- **React.js** and **Tailwind CSS** for building a sleek, responsive UI.
-- **MySQL** and **Drizzle ORM** for efficient and scalable data management.
-- **OpenAI** for inspiring AI-driven recommendations.
-
----
-
-## 📞 **Contact**
-
-For inquiries, contact **<parthkapoor.coder@gmail.com>** or connect with us on [LinkedIn](https://linkedin.com/in/parthkapoor08).
-
----
-
-Feel free to tweak this to better suit your project's unique attributes! If you'd like to add any other specifics, let me know. 😊
+*Zenith AI – Bringing recruitment to its peak with intelligent matching and dynamic conversations.*
