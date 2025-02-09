@@ -1,19 +1,17 @@
+import { Toaster } from "@/components/ui/toaster";
+import { ReactNode } from "react";
+import { ThemeProvider } from "./ThemeProvider";
+import { NuqsAdapter } from "nuqs/adapters/next/app";
 
-import { Toaster } from "@/components/ui/toaster"
-import { ReactNode } from "react"
-import { ThemeProvider } from "./ThemeProvider"
-
-export default function Providers({ children }: {
-    children: ReactNode
-}) {
-
-    return (
-        <>
-            <ThemeProvider attribute="class" defaultTheme="light" >
-                {children}
-                <Toaster />
-            </ThemeProvider>
-        </>
-
-    )
+export default function Providers({ children }: { children: ReactNode }) {
+  return (
+    <>
+      <NuqsAdapter>
+        <ThemeProvider attribute="class" defaultTheme="light">
+          {children}
+          <Toaster />
+        </ThemeProvider>
+      </NuqsAdapter>
+    </>
+  );
 }

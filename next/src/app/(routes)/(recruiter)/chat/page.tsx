@@ -5,6 +5,7 @@ import { CornerRightDown, Loader2, Users } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useUser } from "@/hooks/useUser";
 import { toast } from "@/hooks/use-toast";
+import { parseAsInteger, useQueryState } from "nuqs";
 
 import ChatArea from "@/components/recruiter/chat/ChatArea";
 import { Textarea } from "@/components/ui/textarea";
@@ -62,7 +63,10 @@ const AIChatInterface = () => {
   const [isTyping, setIsTyping] = useState(false);
   const [loading, setLoading] = useState(false);
   const [chatSessions, setChatSessions] = useState<ChatSession[]>([]);
-  const [currentSession, setCurrentSession] = useState<number | null>(null);
+  const [currentSession, setCurrentSession] = useQueryState<number>(
+    "session",
+    parseAsInteger
+  );
   const [isLoadingCandidates, setIsLoadingCandidates] = useState(false);
   const [socketRetries, setSocketRetries] = useState(0);
   const [user, setUser] = useState<User | null>(null);
@@ -282,6 +286,7 @@ const AIChatInterface = () => {
 
     getChatSessions();
     connectSocket();
+    if(currentSession) getChatSession(currentSession);
 
     return () => {
       console.log("**********Return TRIGGERED", socketRef.current);
