@@ -4,8 +4,8 @@ from app.config import HF_API_KEY
 from langchain_core.callbacks.streaming_stdout import StreamingStdOutCallbackHandler
 
 # llm = OllamaLLM(
-    # model="mistral",
-    # temperature=0
+#     model="mistral",
+#     temperature=0
 # )
 
 callbacks = [StreamingStdOutCallbackHandler()]
