@@ -2,6 +2,8 @@ name: Deploy FastAPI on VPS
 
 on:
   push:
+    paths:
+      - 'python/**'
     branches:
       - main  
 
