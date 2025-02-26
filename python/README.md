@@ -17,3 +17,4 @@
 1. Domain Name
 2. K8s -> Deployment -> Python
 3. Model Deployment
+4. Testing Deployment
