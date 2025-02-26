@@ -76,18 +76,16 @@ chat_prompt = ChatPromptTemplate.from_messages([
 # We instruct the assistant to return only a JSON object with no additional tokens.
 parser_prompt = ChatPromptTemplate.from_messages([
     ("system", (
-        "You are an AI Recruitment Assistant. Your role is to extract and structure the user's job requirements into valid JSON. "
-        "Return only the JSON object—do not include any extra text, headers, footers, or special tokens. "
-        "Follow this format exactly:\n\n"
+        "You are an AI Recruitment Assistant. Your role is to extract and structure the user's job requirements into a valid JSON object. "
+        "Return ONLY the JSON object that strictly follows the schema provided below. Do not include any additional commentary, explanations, or text. "
+        "Output exactly one JSON object and nothing else.\n\n"
+        "Schema:\n"
         "{format_instructions}\n\n"
-        "Instructions:\n"
-        "1. Analyze the conversation history and extract the job requirements.\n"
-        "2. Fill in the JSON structure with the extracted information.\n"
-        "3. If any field is missing or unclear, set it to null.\n"
-        "4. Output only the JSON object with no additional commentary."
+        "Ensure your output is valid JSON."
     )),
     MessagesPlaceholder(variable_name='messages'),
 ]).partial(format_instructions=requirement_parser.get_format_instructions())
+
 
 # ------------------------------
 # Summarization prompt for query generation (if needed)
@@ -125,21 +123,24 @@ async def generate_response(user_input: str, chatHistory: ChatMessageHistory) ->
         # Generate response (streaming)
         async for chunk in ollama_chat_chain.astream({"input": user_input, "messages": messages}):
             # Clean the chunk to remove any stray header/footer tokens
-            clean_chunk = clean_llm_output(chunk)
-            response_data = json.dumps({"text": clean_chunk})
+            # clean_chunk = clean_llm_output(chunk)
+            chunk_text = chunk.content if hasattr(chunk, "content") else str(chunk)
+            print(chunk)
+            response_data = json.dumps({"text": chunk_text})
             yield response_data
-            full_response += clean_chunk
+            full_response += chunk_text
 
         # Store the cleaned full response in chat history
         chatHistory.add_message(AIMessage(content=full_response))
         logger.info("Chat History Updated: %s", chatHistory)
 
-        # Extract structured information from the conversation history.
-        # Note: You might want to update the messages used for parsing (for example, use only assistant messages)
-        # If the response includes extra tokens, cleaning should help.
-        structured_raw = parser_chain.invoke({"messages": messages})
-        # Clean structured output if necessary
-        structured_clean = clean_llm_output(structured_raw) if isinstance(structured_raw, str) else structured_raw
+        test_chain = parser_prompt | llm
+        structured_raw = test_chain.invoke({"messages": messages})
+        structured_json = requirement_parser.parse(structured_raw.content)
+        logger.info("Chatbot Resp for structuring", structured_raw)
+        logger.info("JSON ", structured_json)
+        print(f"JSON Structure \n \n {structured_json} \n \n ")
+        structured_clean = clean_llm_output(structured_json) if isinstance(structured_json, str) else structured_json
 
         if structured_clean:
             logger.info("Structured Response: %s", structured_clean)
