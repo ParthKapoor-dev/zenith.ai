@@ -1,10 +1,11 @@
 # Python Server
 
 ### Pending Tasks
-6. Better Vectorization & Query Search
-
-- Check Candidate Onboarding
-- Update Candidate Ranked Listing
+1. Gemini API
+2. Better Feature Extraction
+3. Pricing Plan
+4. Pricing Features
+5. Payment Gateway
 
 ### Deployment Tasks
 1. Domain Name
