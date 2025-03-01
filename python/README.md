@@ -15,6 +15,5 @@
 
 ### Deployment Tasks
 1. Domain Name
-2. K8s -> Deployment -> Python
-3. Model Deployment
-4. Testing Deployment
+2. Docker Compose Deployment to VPS
+3. CI | CD Pipelines

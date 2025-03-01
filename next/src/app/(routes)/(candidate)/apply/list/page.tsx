@@ -66,7 +66,7 @@ export default function AppliedJobs() {
                             No Applications Yet
                         </h3>
                         <p className="text-zinc-600 dark:text-zinc-400 max-w-sm">
-                            You haven't applied to any jobs yet. Start exploring opportunities and submit your first application!
+                            You haven&apos;t applied to any jobs yet. Start exploring opportunities and submit your first application!
                         </p>
                     </motion.div>
                 ) : (

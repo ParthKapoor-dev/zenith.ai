@@ -126,7 +126,7 @@ const JobApplicationPage = ({ params }: { params: Promise<{ slug: string }> }) =
                                                 <div>
                                                     <h3 className="font-semibold text-green-700">Application Submitted</h3>
                                                     <p className="text-sm text-green-600">
-                                                        Please wait for the recruiter's response. We'll notify you of any updates.
+                                                        Please wait for the recruiter&apos;s response. We&apos;ll notify you of any updates.
                                                     </p>
                                                 </div>
                                             </div>

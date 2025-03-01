@@ -3,7 +3,7 @@ import Cookies from "js-cookie"
 
 export function useUser() {
 
-    let session = Cookies.get("user");
+    const session = Cookies.get("user");
 
     if (!session) return null
 

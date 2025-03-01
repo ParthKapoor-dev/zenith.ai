@@ -19,7 +19,7 @@ export default async function updateProfile(userData: Candidate) {
       })
       .where(eq(schema.Candidates.userId, user.id));
 
-    for (let edu of userData.education) {
+    for (const edu of userData.education) {
       if (edu.id == -1)
         await db.insert(schema.Education).values({
           userId: user.id,
@@ -41,7 +41,7 @@ export default async function updateProfile(userData: Candidate) {
           .where(eq(schema.Education.id, edu.id));
     }
 
-    for (let exp of userData.experiences) {
+    for (const exp of userData.experiences) {
       if (exp.id == -1)
         await db.insert(schema.Experiences).values({
           userId: user.id,
@@ -65,7 +65,7 @@ export default async function updateProfile(userData: Candidate) {
           .where(eq(schema.Experiences.id, exp.id));
     }
 
-    for (let proj of userData.projects) {
+    for (const proj of userData.projects) {
       if (proj.id == -1)
         await db.insert(schema.Projects).values({
           userId: user.id,

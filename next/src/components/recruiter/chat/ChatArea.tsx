@@ -25,7 +25,7 @@ export default function ChatArea({ messages, isTyping, chatRef }: ChatAreaProps)
                         </h1>
                         <p className=" max-w-md">
                             I can help you find the perfect candidates for your positions.
-                            Start by describing the role you're looking to fill.
+                            Start by describing the role you&apos;re looking to fill.
                         </p>
                     </div>
                 </div>

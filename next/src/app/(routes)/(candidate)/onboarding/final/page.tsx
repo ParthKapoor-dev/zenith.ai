@@ -185,7 +185,7 @@ const UserPreferencesPage = () => {
                 Career Preferences
               </h1>
               <p className="mt-2 text-gray-600">
-                Let's customize your job search preferences
+                Let&apos;s customize your job search preferences
               </p>
             </div>
 
