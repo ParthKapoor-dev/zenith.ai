@@ -24,5 +24,6 @@ jobs:
           script: |
             cd /home/parth/zenith.ai
             git pull origin main
+            cd python/
             docker compose down
             docker compose up -d --build
