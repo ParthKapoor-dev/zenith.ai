@@ -171,7 +171,7 @@ export default function Navbar() {
                                 About
                             </Button>
                             <Button
-                                className="bg-gradient-to-r from-[#1b132c] to-[#0d3647] dark:from-purple-500 dark:to-cyan-500 text-white"
+                                className="bg-gradient-to-r from-[#1b132c] to-[#0d3647] dark:from-purple-500 dark:to-purple-500/90 text-white"
                                 onClick={() => router.push('/auth/login')}
                             >
                                 Login
