@@ -46,7 +46,7 @@ const LandingPage = () => {
   return (
     <div className="min-h-screen overflow-hidden ">
       {/* Hero Section */}
-      <div className="relative py-16 sm:py-24 px-4 sm:px-6 max-w-7xl mx-auto">
+      <div className="relative py-16 sm:py-6 px-4 sm:px-6 max-w-7xl mx-auto">
         <div className="absolute inset-0 z-0">
           <SparklesCore
             id="tsparticlesfullpage"
@@ -103,10 +103,12 @@ const LandingPage = () => {
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.6, delay: 0.5 }}
-            className="flex justify-center items-center gap-3"
+            className="flex justify-center items-center gap-20 max-md:gap-3"
           >
-            <ShinyButton>Job Seeker</ShinyButton>
-            <ShinyButton className="">Recruiter</ShinyButton>
+            
+            <ShinyButton className=" dark:bg-purple-100/10">Job Seeker</ShinyButton>
+            <ShinyButton className=" dark:bg-purple-100/10 ">Recruiter</ShinyButton>
+
           </motion.div>
         </div>
       </div>

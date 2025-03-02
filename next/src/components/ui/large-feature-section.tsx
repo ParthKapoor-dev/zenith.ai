@@ -59,7 +59,7 @@ export function LargeFeatureSection() {
                 </p>
             </div>
 
-            <div className="grid grid-cols-1 lg:grid-cols-6 mt-12 xl:border rounded-md dark:border-neutral-800 relative bg-white dark:bg-purple-100/10">
+            <div className="grid grid-cols-1 lg:grid-cols-6 mt-12 xl:border rounded-xl dark:border-neutral-800 relative bg-white dark:bg-purple-100/10">
                 {features.map((feature) => (
                     <FeatureCard key={feature.title} className={feature.className}>
                         <FeatureTitle>{feature.title}</FeatureTitle>

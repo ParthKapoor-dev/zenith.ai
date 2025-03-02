@@ -76,7 +76,7 @@ export const TextHoverEffect = ({
   }, [hovered, autoAnimate]);
 
   return (
-    <div className="relative w-full h-full">
+    <div className="relative w-full h-full max-h-72">
       {/* Particle effects */}
       <AnimatePresence>
         {particles.map((particle) => (
@@ -199,6 +199,8 @@ export const TextHoverEffect = ({
           textAnchor="middle"
           dominantBaseline="middle"
           strokeWidth="0.3"
+          strokeLinejoin="round" // Add this line
+          strokeLinecap="round" // Add this line
           className={`font-sans ${fontWeight} stroke-neutral-200 dark:stroke-neutral-800 fill-transparent ${fontSize}`}
           style={{ opacity: hovered || autoAnimate ? 1 : 0 }}
         >
@@ -212,7 +214,9 @@ export const TextHoverEffect = ({
           textAnchor="middle"
           dominantBaseline="middle"
           strokeWidth={isMobile ? "1" : "0.3"}
-          className={`font-sans ${fontWeight} fill-purple-100/40 dark:fill-purple-100/10 ${fontSize} stroke-purple-400 dark:stroke-purple-700`}
+          strokeLinejoin="round" // Add this line
+          strokeLinecap="round" // Add this line
+          className={`font-sans ${fontWeight} fill-purple-100/40 dark:fill-purple-400/20 ${fontSize} stroke-purple-400 dark:stroke-purple-700`}
           initial={{ strokeDashoffset: 1000, strokeDasharray: 1000 }}
           animate={{
             strokeDashoffset: 0,
@@ -234,6 +238,8 @@ export const TextHoverEffect = ({
           dominantBaseline="middle"
           stroke="url(#textGradient)"
           strokeWidth="1.0"
+          strokeLinejoin="round"
+          strokeLinecap="round"
           fill="url(#textGradient)"
           fillOpacity="0.8"
           mask="url(#textMask)"
