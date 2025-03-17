@@ -1,2 +1,0 @@
-ALTER TABLE `ranked_candidates` ADD `updatedAt` timestamp DEFAULT (now()) NOT NULL ON UPDATE CURRENT_TIMESTAMP;--> statement-breakpoint
-ALTER TABLE `ranked_candidates` ADD `createdAt` timestamp DEFAULT (now()) NOT NULL;

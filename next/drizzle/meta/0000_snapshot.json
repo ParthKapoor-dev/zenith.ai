@@ -1,7 +1,7 @@
 {
   "version": "5",
   "dialect": "mysql",
-  "id": "abd55b22-eeb7-4a80-a4eb-36a42d17cef7",
+  "id": "290397d6-8cd1-49bf-bdce-508fa642269d",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
     "candidates": {
@@ -769,13 +769,6 @@
     "ranked_candidates": {
       "name": "ranked_candidates",
       "columns": {
-        "id": {
-          "name": "id",
-          "type": "int",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": true
-        },
         "candidateId": {
           "name": "candidateId",
           "type": "int",
@@ -783,8 +776,8 @@
           "notNull": true,
           "autoincrement": false
         },
-        "chatSessionId": {
-          "name": "chatSessionId",
+        "listId": {
+          "name": "listId",
           "type": "int",
           "primaryKey": false,
           "notNull": true,
@@ -813,12 +806,12 @@
           "onDelete": "no action",
           "onUpdate": "no action"
         },
-        "ranked_candidates_chatSessionId_chat_sessions_id_fk": {
-          "name": "ranked_candidates_chatSessionId_chat_sessions_id_fk",
+        "ranked_candidates_listId_ranked_lists_id_fk": {
+          "name": "ranked_candidates_listId_ranked_lists_id_fk",
           "tableFrom": "ranked_candidates",
-          "tableTo": "chat_sessions",
+          "tableTo": "ranked_lists",
           "columnsFrom": [
-            "chatSessionId"
+            "listId"
           ],
           "columnsTo": [
             "id"
@@ -828,17 +821,161 @@
         }
       },
       "compositePrimaryKeys": {
-        "ranked_candidates_id": {
-          "name": "ranked_candidates_id",
+        "ranked_candidates_listId_candidateId_pk": {
+          "name": "ranked_candidates_listId_candidateId_pk",
+          "columns": [
+            "listId",
+            "candidateId"
+          ]
+        }
+      },
+      "uniqueConstraints": {},
+      "checkConstraint": {}
+    },
+    "ranked_lists": {
+      "name": "ranked_lists",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": true
+        },
+        "sessionId": {
+          "name": "sessionId",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "updatedAt": {
+          "name": "updatedAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "onUpdate": true,
+          "default": "(now())"
+        },
+        "createdAt": {
+          "name": "createdAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "(now())"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "ranked_lists_sessionId_chat_sessions_id_fk": {
+          "name": "ranked_lists_sessionId_chat_sessions_id_fk",
+          "tableFrom": "ranked_lists",
+          "tableTo": "chat_sessions",
+          "columnsFrom": [
+            "sessionId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {
+        "ranked_lists_id": {
+          "name": "ranked_lists_id",
           "columns": [
             "id"
           ]
+        }
+      },
+      "uniqueConstraints": {},
+      "checkConstraint": {}
+    },
+    "structured_query": {
+      "name": "structured_query",
+      "columns": {
+        "sessionId": {
+          "name": "sessionId",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
         },
-        "ranked_candidates_chatSessionId_candidateId_pk": {
-          "name": "ranked_candidates_chatSessionId_candidateId_pk",
+        "preferred_skills": {
+          "name": "preferred_skills",
+          "type": "json",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": "('[]')"
+        },
+        "experience_level": {
+          "name": "experience_level",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "salary_expectations": {
+          "name": "salary_expectations",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "employment_type": {
+          "name": "employment_type",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "current_job_status": {
+          "name": "current_job_status",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "job_responsibilities": {
+          "name": "job_responsibilities",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "query": {
+          "name": "query",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "structured_query_sessionId_chat_sessions_id_fk": {
+          "name": "structured_query_sessionId_chat_sessions_id_fk",
+          "tableFrom": "structured_query",
+          "tableTo": "chat_sessions",
+          "columnsFrom": [
+            "sessionId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {
+        "structured_query_sessionId": {
+          "name": "structured_query_sessionId",
           "columns": [
-            "chatSessionId",
-            "candidateId"
+            "sessionId"
           ]
         }
       },

@@ -5,29 +5,8 @@
     {
       "idx": 0,
       "version": "5",
-      "when": 1737612550033,
-      "tag": "0000_safe_william_stryker",
-      "breakpoints": true
-    },
-    {
-      "idx": 1,
-      "version": "5",
-      "when": 1737613166934,
-      "tag": "0001_heavy_weapon_omega",
-      "breakpoints": true
-    },
-    {
-      "idx": 2,
-      "version": "5",
-      "when": 1737615603799,
-      "tag": "0002_unusual_frank_castle",
-      "breakpoints": true
-    },
-    {
-      "idx": 3,
-      "version": "5",
-      "when": 1737616328961,
-      "tag": "0003_woozy_bloodstorm",
+      "when": 1742213844056,
+      "tag": "0000_soft_enchantress",
       "breakpoints": true
     }
   ]

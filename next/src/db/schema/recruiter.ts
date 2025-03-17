@@ -24,7 +24,7 @@ export const StructuredQuery = mysqlTable("structured_query", {
   sessionId: int()
     .primaryKey()
     .references(() => ChatSessions.id),
-  preferred_skills: json().$type<string[]>().default([]),
+  preferred_skills: json().$type<string[]>(),
   experience_level: varchar({ length: 255 }),
   salary_expectations: varchar({ length: 255 }),
   employment_type: varchar({ length: 255 }),
@@ -74,5 +74,5 @@ export const RankedCandidates = mysqlTable(
       .references(() => RankedLists.id),
     score: int().notNull(),
   },
-  (table) => [primaryKey({ columns: [table.listId, table.candidateId] })]
+  (table) => [primaryKey({ columns: [table.listId, table.candidateId] })],
 );

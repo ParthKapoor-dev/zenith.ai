@@ -7,7 +7,7 @@ export default function Providers({ children }: { children: ReactNode }) {
   return (
     <>
       <NuqsAdapter>
-        <ThemeProvider attribute="class" defaultTheme="light">
+        <ThemeProvider attribute="class" defaultTheme="dark">
           {children}
           <Toaster />
         </ThemeProvider>

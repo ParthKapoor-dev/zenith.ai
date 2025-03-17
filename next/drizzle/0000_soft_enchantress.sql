@@ -99,11 +99,30 @@ CREATE TABLE `projects` (
 );
 --> statement-breakpoint
 CREATE TABLE `ranked_candidates` (
-	`id` int AUTO_INCREMENT NOT NULL,
 	`candidateId` int NOT NULL,
-	`chatSessionId` int NOT NULL,
+	`listId` int NOT NULL,
 	`score` int NOT NULL,
-	CONSTRAINT `ranked_candidates_id` PRIMARY KEY(`id`)
+	CONSTRAINT `ranked_candidates_listId_candidateId_pk` PRIMARY KEY(`listId`,`candidateId`)
+);
+--> statement-breakpoint
+CREATE TABLE `ranked_lists` (
+	`id` int AUTO_INCREMENT NOT NULL,
+	`sessionId` int NOT NULL,
+	`updatedAt` timestamp NOT NULL DEFAULT (now()) ON UPDATE CURRENT_TIMESTAMP,
+	`createdAt` timestamp NOT NULL DEFAULT (now()),
+	CONSTRAINT `ranked_lists_id` PRIMARY KEY(`id`)
+);
+--> statement-breakpoint
+CREATE TABLE `structured_query` (
+	`sessionId` int NOT NULL,
+	`preferred_skills` json DEFAULT ('[]'),
+	`experience_level` varchar(255),
+	`salary_expectations` varchar(255),
+	`employment_type` varchar(255),
+	`current_job_status` varchar(255),
+	`job_responsibilities` varchar(255),
+	`query` text,
+	CONSTRAINT `structured_query_sessionId` PRIMARY KEY(`sessionId`)
 );
 --> statement-breakpoint
 CREATE TABLE `users` (
@@ -129,4 +148,6 @@ ALTER TABLE `job_applications` ADD CONSTRAINT `job_applications_jobId_jobs_id_fk
 ALTER TABLE `jobs` ADD CONSTRAINT `jobs_createdBy_users_id_fk` FOREIGN KEY (`createdBy`) REFERENCES `users`(`id`) ON DELETE no action ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE `projects` ADD CONSTRAINT `projects_userId_candidates_userId_fk` FOREIGN KEY (`userId`) REFERENCES `candidates`(`userId`) ON DELETE no action ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE `ranked_candidates` ADD CONSTRAINT `ranked_candidates_candidateId_candidates_userId_fk` FOREIGN KEY (`candidateId`) REFERENCES `candidates`(`userId`) ON DELETE no action ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE `ranked_candidates` ADD CONSTRAINT `ranked_candidates_chatSessionId_chat_sessions_id_fk` FOREIGN KEY (`chatSessionId`) REFERENCES `chat_sessions`(`id`) ON DELETE no action ON UPDATE no action;
+ALTER TABLE `ranked_candidates` ADD CONSTRAINT `ranked_candidates_listId_ranked_lists_id_fk` FOREIGN KEY (`listId`) REFERENCES `ranked_lists`(`id`) ON DELETE no action ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE `ranked_lists` ADD CONSTRAINT `ranked_lists_sessionId_chat_sessions_id_fk` FOREIGN KEY (`sessionId`) REFERENCES `chat_sessions`(`id`) ON DELETE no action ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE `structured_query` ADD CONSTRAINT `structured_query_sessionId_chat_sessions_id_fk` FOREIGN KEY (`sessionId`) REFERENCES `chat_sessions`(`id`) ON DELETE no action ON UPDATE no action;
