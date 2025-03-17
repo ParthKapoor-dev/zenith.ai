@@ -30,7 +30,7 @@ import { formatDate } from "@/lib/formatDates";
 const ValidationPage = () => {
   const getCurrentData = async () =>
     setFormData(
-      await fetchServerAction<Candidate | undefined>(fetchCandidate, undefined)
+      await fetchServerAction<Candidate | undefined>(fetchCandidate, undefined),
     );
 
   const [formData, setFormData] = useState<Candidate>();
@@ -43,7 +43,7 @@ const ValidationPage = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [newSkill, setNewSkill] = useState("");
   const [skillType, setSkillType] = useState<"proficient" | "other_skills">(
-    "proficient"
+    "proficient",
   );
   const [validationErrors, setValidationErrors] = useState<string[]>([]);
   const router = useRouter();
@@ -72,7 +72,7 @@ const ValidationPage = () => {
     newSkill,
     skillType,
     setFormData,
-    setNewSkill
+    setNewSkill,
   );
 
   const toggleSection = (section: keyof typeof expandedSections) => {
@@ -135,13 +135,13 @@ const ValidationPage = () => {
   };
 
   return (
-    <div className="max-w-4xl mx-auto p-4 space-y-6">
+    <div className="max-w-4xl max-md:w-full mx-auto p-4 max-md:p-0 max-md:m-0 space-y-6">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         className="text-center mb-8"
       >
-        <h1 className="text-3xl font-bold bg-gradient-to-r from-violet-600 to-fuchsia-600 bg-clip-text text-transparent mb-2">
+        <h1 className="text-3xl max-md:text-xl font-bold bg-gradient-to-r from-violet-600 to-fuchsia-600 bg-clip-text text-transparent mb-2">
           AI Resume Validation
         </h1>
         <p className="text-slate-600">
@@ -198,14 +198,14 @@ const ValidationPage = () => {
                     >
                       <X className="w-4 h-4" />
                     </Button>
-                    <div className="grid grid-cols-2 gap-4">
+                    <div className="grid grid-cols-2 max-md:grid-cols-1 gap-4">
                       <Input
                         value={edu.instituteName}
                         onChange={(e) =>
                           handleEduChange(
                             index,
                             "instituteName",
-                            e.target.value
+                            e.target.value,
                           )
                         }
                         placeholder="Institute Name"
@@ -218,7 +218,7 @@ const ValidationPage = () => {
                         placeholder="Course Name"
                       />
                     </div>
-                    <div className="grid grid-cols-2 gap-4">
+                    <div className="grid grid-cols-2 max-md:grid-cols-1 gap-4">
                       <Input
                         type="date"
                         value={formatDate(edu.startDate)}
@@ -245,7 +245,7 @@ const ValidationPage = () => {
                               handleEduChange(
                                 index,
                                 "endDate",
-                                checked ? "" : new Date().toString()
+                                checked ? "" : new Date().toString(),
                               )
                             }
                           />
@@ -322,14 +322,14 @@ const ValidationPage = () => {
                     >
                       <X className="w-4 h-4" />
                     </Button>
-                    <div className="grid grid-cols-2 gap-4">
+                    <div className="grid grid-cols-2 max-md:grid-cols-1 gap-4">
                       <Input
                         value={exp.jobTitle}
                         onChange={(e) =>
                           handleExperienceChange(
                             index,
                             "jobTitle",
-                            e.target.value
+                            e.target.value,
                           )
                         }
                         placeholder="Job Title"
@@ -340,13 +340,13 @@ const ValidationPage = () => {
                           handleExperienceChange(
                             index,
                             "companyName",
-                            e.target.value
+                            e.target.value,
                           )
                         }
                         placeholder="Company Name"
                       />
                     </div>
-                    <div className="grid grid-cols-2 gap-4">
+                    <div className="grid grid-cols-2 max-md:grid-cols-1 gap-4">
                       <Input
                         type="date"
                         value={formatDate(exp.startDate)}
@@ -354,7 +354,7 @@ const ValidationPage = () => {
                           handleExperienceChange(
                             index,
                             "startDate",
-                            e.target.value
+                            e.target.value,
                           )
                         }
                       />
@@ -367,7 +367,7 @@ const ValidationPage = () => {
                             handleExperienceChange(
                               index,
                               "endDate",
-                              e.target.value
+                              e.target.value,
                             )
                           }
                           disabled={!exp.endDate}
@@ -381,7 +381,7 @@ const ValidationPage = () => {
                               handleExperienceChange(
                                 index,
                                 "endDate",
-                                checked ? "" : new Date().toString()
+                                checked ? "" : new Date().toString(),
                               )
                             }
                           />
@@ -400,7 +400,7 @@ const ValidationPage = () => {
                         handleExperienceChange(
                           index,
                           "description",
-                          e.target.value
+                          e.target.value,
                         )
                       }
                       placeholder="Description"
@@ -476,12 +476,12 @@ const ValidationPage = () => {
                         handleProjectChange(
                           index,
                           "projectTitle",
-                          e.target.value
+                          e.target.value,
                         )
                       }
                       placeholder="Project Title"
                     />
-                    <div className="grid grid-cols-2 gap-4">
+                    <div className="grid grid-cols-2 max-md:grid-cols-1 gap-4">
                       <Input
                         type="date"
                         value={formatDate(project.startDate)}
@@ -489,7 +489,7 @@ const ValidationPage = () => {
                           handleProjectChange(
                             index,
                             "startDate",
-                            e.target.value
+                            e.target.value,
                           )
                         }
                       />
@@ -501,7 +501,7 @@ const ValidationPage = () => {
                             handleProjectChange(
                               index,
                               "endDate",
-                              e.target.value
+                              e.target.value,
                             )
                           }
                           disabled={!project.endDate}
@@ -515,7 +515,7 @@ const ValidationPage = () => {
                               handleProjectChange(
                                 index,
                                 "endDate",
-                                checked ? "" : new Date().toString()
+                                checked ? "" : new Date().toString(),
                               )
                             }
                           />
@@ -534,7 +534,7 @@ const ValidationPage = () => {
                         handleProjectChange(
                           index,
                           "description",
-                          e.target.value
+                          e.target.value,
                         )
                       }
                       placeholder="Description"
@@ -637,7 +637,7 @@ const ValidationPage = () => {
                       value={skillType}
                       onChange={(e) =>
                         setSkillType(
-                          e.target.value as "proficient" | "other_skills"
+                          e.target.value as "proficient" | "other_skills",
                         )
                       }
                     >

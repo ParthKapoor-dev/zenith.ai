@@ -19,16 +19,17 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body suppressHydrationWarning>
         <Providers>
-
           <div
-            className={'bg-gradient-to-br from-slate-50 via-fuchsia-50 to-violet-50 dark:from-[#0d3647] dark:via-black dark:to-[#000008] min-h-screen'} suppressHydrationWarning>
-
+            className={
+              "bg-gradient-to-br from-slate-50 via-fuchsia-50 to-violet-50 dark:from-[#0d3647] dark:via-black dark:to-[#000008] min-h-screen"
+            }
+            suppressHydrationWarning
+          >
             <Navbar />
             <main className="py-[10vh] max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
               {children}
             </main>
           </div>
-
         </Providers>
       </body>
     </html>

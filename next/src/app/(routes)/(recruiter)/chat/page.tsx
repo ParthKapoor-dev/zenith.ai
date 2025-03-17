@@ -65,7 +65,7 @@ const AIChatInterface = () => {
   const [chatSessions, setChatSessions] = useState<ChatSession[]>([]);
   const [currentSession, setCurrentSession] = useQueryState<number>(
     "session",
-    parseAsInteger
+    parseAsInteger,
   );
   const [isLoadingCandidates, setIsLoadingCandidates] = useState(false);
   const [socketRetries, setSocketRetries] = useState(0);
@@ -105,7 +105,7 @@ const AIChatInterface = () => {
       const sessionId = await createChatSession(title);
       if (sessionId && socketRef.current)
         socketRef.current.send(
-          JSON.stringify({ type: "init", sessionId, messages: [] })
+          JSON.stringify({ type: "init", sessionId, messages: [] }),
         );
       return sessionId;
     });
@@ -129,7 +129,7 @@ const AIChatInterface = () => {
           type: "init",
           sessionId: currentSession,
           messages: msgs,
-        })
+        }),
       );
     });
 
@@ -138,7 +138,7 @@ const AIChatInterface = () => {
       const list = await getRankedList(
         messages,
         structuredData,
-        currentSession!
+        currentSession!,
       );
       setMessages((prev) => [...prev, list]);
     });
@@ -179,7 +179,7 @@ const AIChatInterface = () => {
         type: "init",
         sessionId: currentSession,
         messages,
-      })
+      }),
     );
   };
 
@@ -267,7 +267,7 @@ const AIChatInterface = () => {
         const msgs = messagesRef.current;
         await handleSaveChat(
           msgs[msgs.length - 2] as ChatInput,
-          msgs[msgs.length - 1] as ChatResponse
+          msgs[msgs.length - 1] as ChatResponse,
         );
       }
     } catch (error) {
@@ -286,7 +286,7 @@ const AIChatInterface = () => {
 
     getChatSessions();
     connectSocket();
-    if(currentSession) getChatSession(currentSession);
+    if (currentSession) getChatSession(currentSession);
 
     return () => {
       console.log("**********Return TRIGGERED", socketRef.current);
@@ -344,7 +344,7 @@ const AIChatInterface = () => {
         JSON.stringify({
           type: "chat",
           message: userMessage.input,
-        })
+        }),
       );
     } catch (error) {
       handleError(error as Error, "sending message");
@@ -404,14 +404,16 @@ const AIChatInterface = () => {
                     "resize-none rounded-lg pr-10 border-zinc-200 dark:border-zinc-700",
                     "focus:ring-2 focus-visible:ring-lightCyan dark:focus:ring-violet-400",
                     "bg-white dark:bg-zinc-800",
-                    `min-h-[${MIN_HEIGHT}px]`
+                    `min-h-[${MIN_HEIGHT}px]`,
                   )}
                 />
                 <CornerRightDown
                   className={cn(
                     "absolute right-3 top-3 w-4 h-4 transition-all duration-200",
                     "text-zinc-400 dark:text-zinc-500",
-                    inputValue ? "opacity-100 scale-100" : "opacity-30 scale-95"
+                    inputValue
+                      ? "opacity-100 scale-100"
+                      : "opacity-30 scale-95",
                   )}
                 />
               </div>
@@ -423,7 +425,7 @@ const AIChatInterface = () => {
                   className={cn(
                     "flex items-center gap-2 bg-darkCyan hover:bg-cyan-600 dark:bg-darkPurple dark:hover:bg-purple-500",
                     "text-white px-4 py-2 rounded-lg transition-colors",
-                    "disabled:opacity-50 disabled:cursor-not-allowed"
+                    "disabled:opacity-50 disabled:cursor-not-allowed",
                   )}
                 >
                   {isLoadingCandidates ? (
