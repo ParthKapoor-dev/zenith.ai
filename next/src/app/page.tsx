@@ -31,6 +31,7 @@ import { TextHoverEffect } from "@/components/ui/text-hover-effect";
 import { ShinyButton } from "@/components/magicui/shiny-button";
 import { useMediaQuery } from "@/hooks/use-media-query";
 import { TextHoverMobile } from "@/components/ui/text-hover-mobile";
+import Link from "next/link";
 
 const LandingPage = () => {
   const heroWords = [
@@ -64,7 +65,7 @@ const LandingPage = () => {
             <hr className="mx-2 h-3 sm:h-4 w-px shrink-0 bg-gray-300" />
             <span
               className={cn(
-                `inline animate-gradient bg-gradient-to-r from-[#ffaa40] via-[#9c40ff] to-[#ffaa40] bg-[length:var(--bg-size)_100%] bg-clip-text text-transparent text-sm sm:text-base`
+                `inline animate-gradient bg-gradient-to-r from-[#ffaa40] via-[#9c40ff] to-[#ffaa40] bg-[length:var(--bg-size)_100%] bg-clip-text text-transparent text-sm sm:text-base`,
               )}
             >
               Introducing Zenith AI
@@ -105,10 +106,17 @@ const LandingPage = () => {
             transition={{ duration: 0.6, delay: 0.5 }}
             className="flex justify-center items-center gap-20 max-md:gap-3"
           >
-            
-            <ShinyButton className=" dark:bg-purple-100/10">Job Seeker</ShinyButton>
-            <ShinyButton className=" dark:bg-purple-100/10 ">Recruiter</ShinyButton>
+            <Link href={"/auth/login"}>
+              <ShinyButton className=" dark:bg-purple-100/10">
+                Job Seeker
+              </ShinyButton>
+            </Link>
 
+            <Link href={"/auth/login?role=recruiter"}>
+              <ShinyButton className=" dark:bg-purple-100/10 ">
+                Recruiter
+              </ShinyButton>
+            </Link>
           </motion.div>
         </div>
       </div>

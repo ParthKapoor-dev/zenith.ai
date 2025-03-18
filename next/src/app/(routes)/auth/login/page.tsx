@@ -1,36 +1,45 @@
-"use client"
+"use client";
 
-import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Card, CardContent } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
-import { Briefcase, User, Globe, Sparkles, ArrowRight, Loader2, Brain } from 'lucide-react';
+import React, { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import {
+  Briefcase,
+  User,
+  Globe,
+  Sparkles,
+  ArrowRight,
+  Loader2,
+  Brain,
+} from "lucide-react";
 import { FaGoogle } from "react-icons/fa";
 import { IoMdPlanet } from "react-icons/io";
-import { toast } from '@/hooks/use-toast';
-import handleGoogleLogin from '@/actions/auth/login';
-import { UserRole } from '@/types/user';
-import { BorderBeam } from '@/components/ui/border-beam';
+import { toast } from "@/hooks/use-toast";
+import handleGoogleLogin from "@/actions/auth/login";
+import { UserRole } from "@/types/user";
+import { BorderBeam } from "@/components/ui/border-beam";
+import { parseAsStringLiteral, useQueryState } from "nuqs";
 
 const LoginPage = () => {
   const [isLoading, setIsLoading] = useState(false);
-  const [activeTab, setActiveTab] = useState('candidate');
+  const [activeTab, setActiveTab] = useQueryState(
+    "role",
+    parseAsStringLiteral(["candidate", "recruiter"]).withDefault("candidate"),
+  );
 
   const handleLogin = async (role: UserRole) => {
     setIsLoading(true);
     try {
-
       await handleGoogleLogin(role);
-
     } catch (error: any) {
-
       console.log(error);
 
       toast({
-        variant: 'destructive',
-        title: error?.message
-      })
+        variant: "destructive",
+        title: error?.message,
+      });
     } finally {
       setIsLoading(false);
     }
@@ -40,13 +49,12 @@ const LoginPage = () => {
     initial: { opacity: 0 },
     animate: {
       opacity: 0.5,
-      transition: { duration: 1 }
-    }
+      transition: { duration: 1 },
+    },
   };
 
   return (
     <div className="relative min-h-[90vh] w-full overflow-hidden flex items-center justify-center p-4">
-
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -55,44 +63,46 @@ const LoginPage = () => {
         <Card className="backdrop-blur-xl bg-white/80 dark:bg-purple-100/10 shadow-2xl border-0 overflow-hidden relative">
           {/* Hero Section */}
           <CardContent className="pt-16 pb-8 px-8 ">
-
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.2 }}
               className="text-center mb-8"
             >
-
               <h1 className="text-3xl font-bold mb-2 flex items-center justify-center gap-4">
                 <motion.div
                   whileHover={{
                     rotate: [0, -10, 10, 0],
-                    scale: 1.05
+                    scale: 1.05,
                   }}
                   transition={{
                     duration: 0.3,
                     type: "spring",
-                    stiffness: 300
+                    stiffness: 300,
                   }}
                   className="flex items-center gap-2 cursor-pointer"
                 >
-                  <Brain
-                    className="w-8 h-8 text-[#1b132c] dark:text-[#d6eaf3]"
-                  />
-                  <span className="text-xl font-bold bg-gradient-to-r 
-                from-[#1b132c] to-[#0d3647] 
-                dark:from-cyan-400 dark:to-cyan-500/80 
-                bg-clip-text text-transparent">
+                  <Brain className="w-8 h-8 text-[#1b132c] dark:text-[#d6eaf3]" />
+                  <span
+                    className="text-xl font-bold bg-gradient-to-r
+                from-[#1b132c] to-[#0d3647]
+                dark:from-cyan-400 dark:to-cyan-500/80
+                bg-clip-text text-transparent"
+                  >
                     Zenith AI
                   </span>
                 </motion.div>
               </h1>
-              <p className="text-slate-600 dark:text-cyan-300/70">Revolutionizing recruitment with AI</p>
+              <p className="text-slate-600 dark:text-cyan-300/70">
+                Revolutionizing recruitment with AI
+              </p>
             </motion.div>
 
             <Tabs
               value={activeTab}
-              onValueChange={setActiveTab}
+              onValueChange={(val) =>
+                setActiveTab(val as "candidate" | "recruiter")
+              }
               className="w-full"
             >
               <TabsList className="grid w-full h-full grid-cols-2 mb-8 dark:bg-black ">
@@ -124,11 +134,12 @@ const LoginPage = () => {
                     <div className="bg-violet-50 dark:bg-violet-200 rounded-lg p-4 flex items-start space-x-3">
                       <Sparkles className="w-5 h-5 text-violet-600 mt-1 flex-shrink-0" />
                       <p className="text-sm text-violet-700">
-                        Get matched with your dream job using our advanced AI algorithms. Join thousands of successful professionals.
+                        Get matched with your dream job using our advanced AI
+                        algorithms. Join thousands of successful professionals.
                       </p>
                     </div>
                     <Button
-                      onClick={() => handleLogin('candidate')}
+                      onClick={() => handleLogin("candidate")}
                       disabled={isLoading}
                       className="w-full h-12 bg-white hover:bg-gray-50 text-slate-800 dark:bg-cyan-100 border shadow-sm relative overflow-hidden group"
                     >
@@ -136,7 +147,7 @@ const LoginPage = () => {
                         {isLoading ? (
                           <Loader2 className="w-5 h-5 animate-spin" />
                         ) : (
-                          <div className='flex gap-2 items-center'>
+                          <div className="flex gap-2 items-center">
                             <FaGoogle />
                             <span>Continue with Google</span>
                             <ArrowRight className="w-4 h-4 ml-2 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all" />
@@ -150,11 +161,13 @@ const LoginPage = () => {
                     <div className="bg-fuchsia-50 dark:bg-fuchsia-100 rounded-lg p-4 flex items-start space-x-3">
                       <Sparkles className="w-5 h-5 text-fuchsia-600 mt-1 flex-shrink-0" />
                       <p className="text-sm text-fuchsia-700">
-                        Access our AI-powered platform to find the perfect candidates. Save time and resources with intelligent matching.
+                        Access our AI-powered platform to find the perfect
+                        candidates. Save time and resources with intelligent
+                        matching.
                       </p>
                     </div>
                     <Button
-                      onClick={() => handleLogin('recruiter')}
+                      onClick={() => handleLogin("recruiter")}
                       disabled={isLoading}
                       className="w-full h-12 bg-white hover:bg-gray-50 dark:bg-cyan-100 text-slate-800 border shadow-sm relative overflow-hidden group"
                     >
@@ -162,7 +175,7 @@ const LoginPage = () => {
                         {isLoading ? (
                           <Loader2 className="w-5 h-5 animate-spin" />
                         ) : (
-                          <div className='flex gap-2 items-center'>
+                          <div className="flex gap-2 items-center">
                             <FaGoogle />
                             <span>Continue with Google</span>
                             <ArrowRight className="w-4 h-4 ml-2 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all" />
@@ -182,10 +195,20 @@ const LoginPage = () => {
               className="mt-8 text-center space-y-4"
             >
               <p className="text-sm text-slate-500">
-                By continuing, you agree to Zenith AI&apos;s{' '}
-                <a href="#" className="text-purple-600 hover:text-purple-700 hover:underline">Terms of Service</a>
-                {' '}and{' '}
-                <a href="#" className="text-purple-600 hover:text-purple-700 hover:underline">Privacy Policy</a>
+                By continuing, you agree to Zenith AI&apos;s{" "}
+                <a
+                  href="#"
+                  className="text-purple-600 hover:text-purple-700 hover:underline"
+                >
+                  Terms of Service
+                </a>{" "}
+                and{" "}
+                <a
+                  href="#"
+                  className="text-purple-600 hover:text-purple-700 hover:underline"
+                >
+                  Privacy Policy
+                </a>
               </p>
             </motion.div>
           </CardContent>
